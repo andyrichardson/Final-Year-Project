@@ -7,5 +7,5 @@ module.exports = {
     jwt: {
         secret: '1234'
     },
-    authServer: 'http://rendo-auth-dev'
+    authServer: 'http://fyp-auth-dev'
 };
