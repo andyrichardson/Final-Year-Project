@@ -20,7 +20,7 @@ run_dev(){
 	docker rm fyp-web-dev 2> /dev/null
 
 	# Run container
-	docker run -t -i -p 8080:80 \
+	docker run -t -i -p 80:80 \
 	-v $PWD/../src/web/:/var/www/web \
 	--name=fyp-web-dev \
 	--net=fyp-network \

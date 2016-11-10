@@ -1,9 +1,10 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const app = express();
 
-var app = express();
+const apiProxy = require('./routes/api');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -12,9 +13,12 @@ app.use(logger('dev'));
 // All pages are static
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Api proxy
+app.use(apiProxy)
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });

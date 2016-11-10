@@ -20,7 +20,7 @@ run_dev(){
 	docker rm fyp-api-dev 2> /dev/null
 
 	# Run container
-	docker run -t -i -p 80:80 \
+	docker run -t -i -p 3000:80 \
 	-v $PWD/../src/api/:/var/www/api \
 	--name=fyp-api-dev \
 	--net=fyp-network \
