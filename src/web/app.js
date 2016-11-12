@@ -4,7 +4,9 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const app = express();
 
-const apiProxy = require('./routes/api');
+// Compile javascript/react
+const compile = require('./app/compile');
+compile();
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -14,6 +16,7 @@ app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Api proxy
+const apiProxy = require('./routes/api');
 app.use(apiProxy)
 
 // catch 404 and forward to error handler

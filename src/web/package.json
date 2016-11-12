@@ -6,10 +6,15 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "browserify": "^13.1.1",
     "debug": "~2.2.0",
     "express": "~4.14.0",
     "http-proxy": "^1.15.2",
+    "jquery": "^3.1.1",
     "morgan": "~1.7.0",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "reactify": "^1.1.1",
     "serve-favicon": "~2.3.0"
   }
 }
