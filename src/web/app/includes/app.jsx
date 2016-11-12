@@ -1,14 +1,21 @@
 const React = require('react');
-const Navbar = require('./navbar.jsx')
+const ReactDOM = require('react-dom');
+const Modal = require('react-modal');
 
+// Components
+const Navbar = require('./navbar.jsx');
+
+// App component
 class App extends React.Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
   }
 
   render(){
-    return (
-      <Navbar/>
+    return(
+      <div>
+        <Navbar/>
+      </div>
     );
   }
 }

@@ -1,22 +1,17 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 
-class Navbar extends React.Component {
-  constructor() {
-    super();
-  }
+const SignIn = require('./signIn.jsx');
+const SignUp = require('./signUp.jsx');
 
+class Navbar extends React.Component {
   render(){
     return(
       <div>
-        <a onClick={(e) => this.signIn()}>Sign in</a>
-        <a>Sign up</a>
+        <SignIn/>
+        <SignUp/>
       </div>
     );
-  }
-
-  signIn(){
-    console.log('hello');
   }
 }
 
