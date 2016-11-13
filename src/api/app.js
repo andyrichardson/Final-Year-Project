@@ -20,6 +20,15 @@ Token.init(config.authServer);
 const UserModel = require('./model/user');
 UserModel.init(database);
 
+// Allow cross domain requests
+const allowCrossDomain = function(req, res, next){
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'content-type');
+  next();
+}
+app.use(allowCrossDomain);
+
 // Middleware
 app.use(logger('dev'));
 app.use(bodyParser.json());
