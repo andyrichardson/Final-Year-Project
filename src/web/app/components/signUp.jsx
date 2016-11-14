@@ -35,6 +35,7 @@ class SignUpForm extends React.Component {
     e.preventDefault(e);
     const data = this.prepareData();
 
+    // Attempt to register
     return Api.register(data)
     .then(function(data){
       if(data.statusCode == 200){
@@ -43,11 +44,6 @@ class SignUpForm extends React.Component {
       else{
         alert("Unable to regsiter: " + data.body);
       }
-    })
-    .catch(function(err){
-      console.log(err);
-      console.log('error');
-      console.log('there was an error');
     });
   }
 

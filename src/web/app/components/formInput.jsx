@@ -6,11 +6,19 @@ class FormInput extends React.Component{
     super(props);
   }
 
+  validate(value){
+    if(this.props.value === undefined){
+      return true;
+    }
+
+    return this.props.validate(value);
+  }
+
   handleChange(e) {
     const name = this.props.name;
     const value = e.target.value;
 
-    this.props.validate(value);
+    this.validate(value);
 
     const state = {};
     state[name] = value;

@@ -28,6 +28,7 @@ const schema = {
 /* VALIDATION */
 const validate = {
     all: function(user, callback){
+        console.log('validating');
         console.log(user);
         callback();
     },
@@ -44,9 +45,8 @@ let model;
 module.exports.init = function(db){
     UserHandler.init(db);
     model = Prom.promisifyAll(UserHandler.getModel(), {suffix: 'Prom'});
+    model.setUniqueKey('username');
     model.on('validate', validate.all);
-    // Session.init(db, model);
-    // compose();
 };
 
 /* LOG IN */

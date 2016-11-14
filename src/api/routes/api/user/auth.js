@@ -6,14 +6,13 @@ const User = require('../../../model/user');
 router.post('/', function(req, res){
     return User.login(req.body.username, req.body.password)
     .then(function(token){
-        res.cookie("accessToken", token);
-        res.end();
+        res.json({"accessToken": token});
     });
 });
 
 /* LOG OUT */
 router.delete('/', function(req, res){
-    return User.logout(req.cookies.accessToken)
+    return User.logout(req.body.accessToken)
     .then(function(data){
         res.clearCookie('accessToken');
         res.end();
@@ -28,8 +27,7 @@ router.patch('/', Token.validate, function(req, res){
         req.body.newPassword
     )
     .then(function(token){
-        res.cookie('accessToken', token);
-        res.end();
+        res.json({"accessToken": token});
     });
 });
 

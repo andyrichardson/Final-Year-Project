@@ -87,7 +87,7 @@ class TokenMiddleware{
     /* VALIDATE USER TOKEN */
     validate(req, res, next){
         return new Prom((resolve, reject) => {
-            const token = req.cookies.accessToken;
+            const token = req.body.accessToken;
             if(!token){
                 const error = new Error('Permission denied. Please log in');
                 error.status = 403;
