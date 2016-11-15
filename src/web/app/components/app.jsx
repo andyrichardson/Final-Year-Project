@@ -1,16 +1,25 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
-// const Modal = require('react-modal');
+const Cookie = require('../includes/cookie');
 
-// Components
+/* COMPONENTS */
 const Navbar = require('./navbar.jsx');
 
-// App component
+/* APP COMPONENT */
 class App extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {accessToken: Cookie.get("accessToken")};
+  }
+
+  isAuthenticated(){
+    return this.state.accessToken != "";
+  }
+
   render(){
     return(
       <div>
-        <Navbar/>
+        <Navbar auth={this.isAuthenticated()}/>
         {this.props.children}
       </div>
     );

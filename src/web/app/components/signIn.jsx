@@ -6,6 +6,7 @@ const Modal = require('react-modal');
 const Validate = require('./../includes/validator');
 const Api = require('./../includes/api');
 const Auth = require('./../includes/auth');
+const Cookie = require('./../includes/cookie');
 
 // Components
 const FormInput = require('./formInput.jsx');
@@ -29,27 +30,16 @@ class SignInForm extends React.Component {
   handleSubmit(e) {
     e.preventDefault(e);
 
-    return Api.login(this.state)
+    return Auth.login(this.state)
     .then(function(data){
-      if(data.statusCode == 200){
-        Auth.saveToken(data.body);
-        console.log(data.body);
-        alert("login successful");
-      }
-      else{
-        alert("Unable to login: " + data.body);
-      }
-    })
-    .catch(function(err){
-      console.log(err);
-    })
+      console.log(data);
+      console.log('error');
+    });
   }
 
   render(){
     return(
       <div>
-        <a onClick={(e) => this.showModal()}>Sign In</a>
-        <Modal isOpen={this.state.modalOpen} onRequestClose={(e) => this.hideModal()}>
           <h1>Sign In</h1>
           <form onSubmit={(e) => this.handleSubmit(e)}>
             Username
@@ -60,7 +50,6 @@ class SignInForm extends React.Component {
 
             <input type="submit" value="Submit" />
           </form>
-        </Modal>
       </div>
     );
   }

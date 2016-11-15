@@ -50,8 +50,6 @@ class SignUpForm extends React.Component {
   render(){
     return(
       <div>
-        <a onClick={(e) => this.showModal()}>Sign up</a>
-          <Modal isOpen={this.state.modalOpen} onRequestClose={(e) => this.hideModal()}>
             <h1>Sign Up</h1>
             <form onSubmit={(e) => this.handleSubmit(e)}>
               Username
@@ -70,7 +68,6 @@ class SignUpForm extends React.Component {
               <FormInput name="last" type="text" validate={Validate.lastName} parent={this}></FormInput>
               <input type="submit" value="Submit" />
             </form>
-          </Modal>
       </div>
     );
   }
