@@ -34,3 +34,15 @@ module.exports.login = function(data){
     return data;
   });
 };
+
+/* USER SEARCH */
+module.exports.search = function(string){
+  return new Prom(function(resolve, reject){
+    const result = [
+      { value: 'one', label: 'Oliver' },
+      { value: 'two', label: 'Jamie' }
+    ];
+
+    resolve(result);
+  })
+}

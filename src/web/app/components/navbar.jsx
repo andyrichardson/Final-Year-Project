@@ -2,13 +2,11 @@ const React = require('react');
 const Link = require('react-router').Link;
 const ReactDOM = require('react-dom');
 const Auth = require('../includes/auth');
+const Api = require('../includes/api');
 
 // Components
 const RB = require('react-bootstrap');
-const BSNavbar = RB.Navbar;
-const Nav = RB.Nav;
-const NavItem = RB.NavItem;
-const FormGroup = RB.NavItem;
+const Select = require('react-select');
 
 const SignIn = require('./signIn.jsx');
 const SignUp = require('./signUp.jsx');
@@ -23,14 +21,14 @@ class AuthNav extends React.Component{
 
   render(){
     return(
-      <Nav pullRight={true}>
+      <RB.Nav pullRight={true}>
         <li>
           <Link to={"/"}>Home</Link>
         </li>
         <li>
           <Link onClick={this.logout}>Logout</Link>
         </li>
-      </Nav>
+      </RB.Nav>
     );
   }
 }
@@ -51,18 +49,36 @@ class UnauthNav extends React.Component{
   }
 }
 
+/* USER SEARCH BAR */
 class SearchBar extends React.Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      options: [
+        { value: 'one', label: 'Option A' },
+        { value: 'two', label: 'Option B' }
+      ]
+    }
+  }
+
+  changeHandler(e){
+    Api.search(e.target.value)
+    .then((data) => {
+      this.setState({"options": data});
+    });
+  }
+
   render(){
     return(
-      <RB.Navbar.Form pullRight={true}>
+      <RB.Navbar.Form pullLeft={true}>
         <RB.FormGroup>
-          <RB.FormControl type="text" placeholder="Search" />
+          <Select multiple onInputKeyDown={(e) => this.changeHandler(e)} options={this.state.options}/>
         </RB.FormGroup>
-        <RB.Button type="submit">Submit</RB.Button>
       </RB.Navbar.Form>
     );
   }
 }
+
 /* NAVBAR */
 class Navbar extends React.Component {
   constructor(props){
