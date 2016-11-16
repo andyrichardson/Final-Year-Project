@@ -133,7 +133,7 @@ module.exports.search = function(query){
   return model.whereProm({username: new RegExp("^" + query + "[a-z]*")}, {limit: 5})
   .then(function(node){
     if(node[0] == undefined){
-      throw new Error("No matching users");
+      return [];
     }
 
     // Generate serch criteria
