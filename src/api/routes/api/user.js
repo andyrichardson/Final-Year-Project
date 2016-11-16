@@ -3,9 +3,11 @@ const Token = require('../../model/token');
 const User = require('../../model/user');
 
 const authRouter = require('./user/auth');
+const searchRouter = require('./user/search');
 
 /* ATHENTICATION */
 router.use('/auth', authRouter);
+router.use('/search', searchRouter);
 
 /* CREATE USER */
 router.post('/', function(req, res){
@@ -25,7 +27,7 @@ router.patch('/', Token.validate, function(req, res){
     });
 });
 
-/* GET */
+/* GET USER */
 router.get('/:username', function(req, res){
     return User.getUser(req.params.username)
     .then(function(user){

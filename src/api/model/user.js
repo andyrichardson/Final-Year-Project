@@ -128,6 +128,29 @@ module.exports.getUser = function(username){
     });
 };
 
+/* SEARCH */
+module.exports.search = function(query){
+  return model.whereProm({username: new RegExp("^" + query + "[a-z]*")}, {limit: 5})
+  .then(function(node){
+    if(node[0] == undefined){
+      throw new Error("No matching users");
+    }
+
+    // Generate serch criteria
+    const result = new Array();
+
+    for(let x in node){
+      const user = node[x];
+      result.push({
+        label: user.firstName + " " + user.lastName,
+        value: user.username
+      });
+    }
+
+    return result;
+  });
+};
+
 /* RETURN MODEL */
 module.exports.model = function(){
     return model;
