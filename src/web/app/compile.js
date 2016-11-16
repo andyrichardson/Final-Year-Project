@@ -1,8 +1,9 @@
 const browserify = require('browserify');
 const reactify = require('reactify');
 const watchify = require('watchify');
-var path = require('path');
 const fs = require('fs');
+const path = require('path');
+const colors = require('colors');
 
 // Browserify config
 const js_compiler = browserify({
@@ -16,14 +17,14 @@ const bundle_js = path.join(__dirname, '../public/res/js/bundle.js');
 
 // Bundling function
 const bundle = function(){
-  console.log('Starting Javascript compilation');
-  
+  console.log('Starting Javascript compilation'.red);
+
   // Compile Javascript
   js_compiler.bundle(function(err){
     if(err){
       return console.log(err);
     }
-    console.log('Javascript compilation complete');
+    console.log('Javascript compilation complete'.green);
   }).pipe(fs.createWriteStream(bundle_js));
 }
 
