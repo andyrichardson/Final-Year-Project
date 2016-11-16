@@ -16,6 +16,7 @@ class RouterComponent extends React.Component {
       <Router history={History}>
         <Route path="/" component={App}>
           <Route path="/login" component={SignIn}/>
+          <Route path="/register" component={SignUp}/>
         </Route>
       </Router>
     );

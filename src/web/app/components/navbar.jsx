@@ -21,7 +21,7 @@ class AuthNav extends React.Component{
 
   render(){
     return(
-      <Nav>
+      <Nav pullRight={true}>
         <li>
           <Link to={"/"}>Home</Link>
         </li>
@@ -37,7 +37,7 @@ class AuthNav extends React.Component{
 class UnauthNav extends React.Component{
   render(){
     return(
-      <Nav>
+      <Nav pullRight={true}>
         <li>
           <Link to={"/login"}>Login</Link>
         </li>

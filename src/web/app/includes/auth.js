@@ -12,20 +12,29 @@ module.exports.login = function(state){
   return Api.login(state)
   .then(function(data){
     if(data.statusCode != 200){
-      return false;
+      throw new Error(data.body)
     }
     else{
       module.exports.saveToken(data.body);
-      location.reload();
+      location.href="/";
     }
-  })
-  .catch(function(err){
-    console.log(err);
-  })
+  });
 };
+
+module.exports.signUp = function(state){
+  return Api.register(state)
+  .then(function(data){
+    if(data.statusCode != 200){
+      throw new Error(data.body)
+    }
+    else{
+      return true;
+    }
+  });
+}
 
 /* LOG OUT */
 module.exports.logout = function(){
   Cookie.delete('accessToken');
-  location.reload();
+  location.href="/";
 };

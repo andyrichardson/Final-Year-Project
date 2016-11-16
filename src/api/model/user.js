@@ -61,17 +61,18 @@ module.exports.logout = function(token){
 
 /* REGISTER/CREATE */
 module.exports.create = function(obj){
-    return Token.register(obj.username, obj.password)
-    .then(function(data){
-        const user = {
-            username: obj.username,
-            firstName: obj.firstName,
-            lastName: obj.lastName,
-            email: obj.email
-        };
+  const user = {
+      username: obj.username,
+      password: obj.password,
+      firstName: obj.firstName,
+      lastName: obj.lastName,
+      email: obj.email
+  };
 
-        return model.save(user);
-    });
+  return model.saveProm(user)
+  .then(function(){
+    return Token.register(user.username, user.password);
+  });
 };
 
 /* EDIT */
@@ -126,6 +127,7 @@ module.exports.getUser = function(username){
         return user;
     });
 };
+
 /* RETURN MODEL */
 module.exports.model = function(){
     return model;

@@ -31,10 +31,9 @@ class SignInForm extends React.Component {
     e.preventDefault(e);
 
     return Auth.login(this.state)
-    .then(function(data){
-      console.log(data);
-      console.log('error');
-    });
+    .catch(function(err){
+      alert("Sign in error: " + err);
+    })
   }
 
   render(){

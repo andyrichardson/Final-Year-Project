@@ -3,6 +3,7 @@ const ReactDOM = require('react-dom');
 const Modal = require('react-modal');
 const Validate = require('./../includes/validator');
 const Api = require('./../includes/api');
+const Auth = require('./../includes/auth');
 const FormInput = require('./formInput.jsx');
 
 class SignUpForm extends React.Component {
@@ -26,8 +27,8 @@ class SignUpForm extends React.Component {
       username: this.state.username,
       password: this.state.password,
       email: this.state.email,
-      firstName: this.state.firstName,
-      lastName: this.state.lastName
+      firstName: this.state.first,
+      lastName: this.state.last
     };
   }
 
@@ -35,16 +36,14 @@ class SignUpForm extends React.Component {
     e.preventDefault(e);
     const data = this.prepareData();
 
-    // Attempt to register
-    return Api.register(data)
-    .then(function(data){
-      if(data.statusCode == 200){
-        alert("registration successful");
-      }
-      else{
-        alert("Unable to regsiter: " + data.body);
-      }
-    });
+    return Auth.signUp(data)
+    .then(function(status){
+      alert("Registration successful");
+    })
+    .catch(function(err){
+      console.log(err);
+      alert("Unable to register: " + err.message);
+    })
   }
 
   render(){
