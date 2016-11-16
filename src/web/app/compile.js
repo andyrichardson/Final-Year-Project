@@ -1,20 +1,52 @@
-module.exports = function(){
-  const browserify = require('browserify');
-  const reactify = require('reactify');
-  var path = require('path');
-  const fs = require('fs');
+const browserify = require('browserify');
+const reactify = require('reactify');
+const watchify = require('watchify');
+var path = require('path');
+const fs = require('fs');
 
-  const js_compiler = browserify({
-    transform: reactify
-  });
-  const bundle_js = fs.createWriteStream(path.join(__dirname, '../public/res/js/bundle.js'));
+// Browserify config
+const js_compiler = browserify({
+  entries: ['app/main.js'],
+  transform: reactify,
+  plugin: [watchify]
+});
 
+// Output file
+const bundle_js = path.join(__dirname, '../public/res/js/bundle.js');
+
+// Bundling function
+const bundle = function(){
+  console.log('Starting Javascript compilation');
+  
   // Compile Javascript
-  js_compiler.add(path.join(__dirname, 'main.js'));
   js_compiler.bundle(function(err){
     if(err){
       return console.log(err);
     }
     console.log('Javascript compilation complete');
-  }).pipe(bundle_js);
+  }).pipe(fs.createWriteStream(bundle_js));
 }
+
+// Watchify
+js_compiler.on('update', bundle);
+
+module.exports = bundle;
+
+//
+// var fs = require('fs');
+// var browserify = require('browserify');
+// var watchify = require('watchify');
+//
+// var b = browserify({
+//   entries: ['path/to/entry.js'],
+//   cache: {},
+//   packageCache: {},
+//   plugin: [watchify]
+// });
+//
+// b.on('update', bundle);
+// bundle();
+//
+// function bundle() {
+//   b.bundle().pipe(fs.createWriteStream('output.js'));
+// }
