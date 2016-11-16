@@ -54,17 +54,21 @@ class SearchBar extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      options: [
+      searchResults: [
         { value: 'one', label: 'Option A' },
         { value: 'two', label: 'Option B' }
       ]
     }
   }
 
-  changeHandler(e){
-    Api.search(e.target.value)
+  changeHandler(value){
+    Api.search(value)
     .then((data) => {
-      this.setState({"options": data});
+      if(data.message != undefined){
+        return this.setState({"searchResults": null});
+      }
+
+      this.setState({"searchResults": data});
     });
   }
 
@@ -72,7 +76,7 @@ class SearchBar extends React.Component{
     return(
       <RB.Navbar.Form pullLeft={true}>
         <RB.FormGroup>
-          <Select multiple onInputKeyDown={(e) => this.changeHandler(e)} options={this.state.options}/>
+          <Select multiple onInputChange={(e) => this.changeHandler(e)} options={this.state.searchResults} />
         </RB.FormGroup>
       </RB.Navbar.Form>
     );
