@@ -1,4 +1,5 @@
 #!/bin/bash
+CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Help prompt
 print_help(){
@@ -15,7 +16,6 @@ run_dev(){
 	# Build container
 	docker build -t fyp-web:dev -f dev/web/Dockerfile .
 
-	echo "here"
 	# Kill any previous containers
 	docker rm fyp-web-dev 2> /dev/null
 
@@ -25,6 +25,23 @@ run_dev(){
 	--name=fyp-web-dev \
 	--net=fyp-network \
 	fyp-web:dev
+}
+
+# Run test container
+run_test(){
+	# Build container
+	docker build -t fyp-web:test -f $CWD/release/web/Dockerfile $CWD
+
+	# Kill any previous containers
+	docker kill fyp-web-test 2> /dev/null
+	docker rm fyp-web-test 2> /dev/null
+
+	# Run container
+	docker run -p 80:80 \
+	-v $CWD/../src/web:/var/www/web \
+	--name=fyp-web-test \
+	--net=fyp-network \
+	fyp-web:test node bin/www
 }
 
 # Run release container
@@ -41,6 +58,10 @@ case $1 in
 
 	-d | --dev)
 		run_dev
+		;;
+
+	-t | --test)
+		run_test
 		;;
 
 	"")
