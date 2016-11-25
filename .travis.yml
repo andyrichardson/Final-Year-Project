@@ -1,0 +1,14 @@
+sudo: required
+
+language: javascript
+
+services: 
+  - docker
+
+before_install:
+  - docker pull neo4j:3.0
+  - docker pull node:argon
+
+script:
+  - cd src/test
+  - npm test
