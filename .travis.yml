@@ -11,4 +11,5 @@ before_install:
 
 script:
   - cd src/test
+  - npm install
   - npm test
