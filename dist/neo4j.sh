@@ -38,7 +38,7 @@ run_test(){
   fyp-neo4j:test
 
 	# Wait for container to initialize
-  sleep 1m
+  sleep 2m
 }
 
 run_cleanup(){
