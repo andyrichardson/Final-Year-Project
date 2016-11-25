@@ -14,7 +14,7 @@ router.post('/', function(req, res){
     return User.create(req.body)
     .then(function(){
         res.status = 200;
-        res.end();
+        res.json({status:200, message:"User created."});
     });
 });
 

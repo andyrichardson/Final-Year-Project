@@ -16,7 +16,7 @@ module.exports.register = function(data){
 
   return request.postProm(baseUri + '/user', formData)
   .then(function(data){
-    return data;
+    return JSON.parse(data.body);
   });
 };
 
@@ -31,7 +31,7 @@ module.exports.login = function(data){
 
   return request.postProm(baseUri + "/user/auth", formData)
   .then(function(data){
-    return data;
+    return JSON.parse(data.body);
   });
 };
 

@@ -6,7 +6,7 @@ const User = require('../../../model/user');
 router.post('/', function(req, res){
     return User.login(req.body.username, req.body.password)
     .then(function(token){
-        res.json({"accessToken": token});
+        res.json({"accessToken": token, "status": 200});
     });
 });
 
@@ -27,7 +27,7 @@ router.patch('/', Token.validate, function(req, res){
         req.body.newPassword
     )
     .then(function(token){
-        res.json({"accessToken": token});
+        res.json({"accessToken": token, "status": 200});
     });
 });
 

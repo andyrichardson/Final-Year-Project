@@ -42,3 +42,43 @@ describe("Containers", function(){
     });
   });
 });
+
+
+describe("API Middleware", function(){
+  const api = require('../web/app/includes/api');
+  const user1 = {
+    username: "testuser",
+    password: "password",
+    email: "test@testuser.com",
+    firstName: "Test",
+    lastName: "User"
+  };
+
+  it("Register new user", function(){
+    return api.register(user1)
+    .then(function(data){
+      return assert.equal(data.status, 200);
+    });
+  });
+
+  it("Register existing user", function(){
+    return api.register(user1)
+    .then(function(data){
+      return assert.equal(data.status, 409);
+    });
+  });
+
+  it("Prevent incorrect login", function(){
+    return api.login({username: "testuser", password: "wrongpassword"})
+    .then(function(data){
+      return assert.equal(data.status, 401);
+    });
+  });
+
+  it("Allow correct login", function(){
+    return api.login({username: user1.username, password: user1.password})
+    .then(function(data){
+      return assert.equal(data.status, 200);
+    })
+  });
+});
