@@ -6,4 +6,9 @@ const userRouter = require('./api/user');
 
 router.use('/user', userRouter);
 
+router.get('/test', function(req, res, next){
+  res.status = 200;
+  res.end();
+})
+
 module.exports = router;
