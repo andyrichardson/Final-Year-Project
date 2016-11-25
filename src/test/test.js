@@ -5,7 +5,7 @@ const child_process = require("child_process");
 describe("Containers", function(){
   describe("Database server", function(){
     before(function(done){
-      this.timeout(90000);
+      this.timeout(140000);
       child_process.execFile("../../dist/neo4j.sh", ["-t"], function(err, stdout, stdin){
         assert.equal(err, undefined);
         done();
