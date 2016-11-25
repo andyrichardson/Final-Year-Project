@@ -33,13 +33,13 @@ run_test(){
 	docker build -t fyp-web:test -f $CWD/release/web/Dockerfile $CWD
 
 	# Kill any previous containers
-	docker kill fyp-web-test 2> /dev/null
-	docker rm fyp-web-test 2> /dev/null
+	docker kill fyp-web 2> /dev/null
+	docker rm fyp-web 2> /dev/null
 
 	# Run container
 	docker run -d -p 80:80 \
 	-v $CWD/../src/web:/var/www/web \
-	--name=fyp-web-test \
+	--name=fyp-web \
 	--net=fyp-network \
 	fyp-web:test
 }

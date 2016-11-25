@@ -40,12 +40,12 @@ run_test(){
 	docker build -t fyp-auth:test -f $CWD/release/auth/Dockerfile $CWD
 
 	# Kill any previous containers
-	docker kill fyp-auth-test 2> /dev/null
-	docker rm fyp-auth-test 2> /dev/null
+	docker kill fyp-auth 2> /dev/null
+	docker rm fyp-auth 2> /dev/null
 
 	docker run -d \
 	-v $PWD/../src/auth:/var/www/auth \
-	--name=fyp-auth-test \
+	--name=fyp-auth \
 	--net=fyp-network \
 	fyp-auth:test
 }

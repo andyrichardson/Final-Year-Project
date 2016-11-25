@@ -6,6 +6,7 @@ services:
   - docker
 
 before_install:
+  - cp src/test/config/auth/config.js src/auth/private/config.js
   - docker network create fyp-network
   - docker pull neo4j:3.0
   - docker pull node:argon

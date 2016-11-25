@@ -32,13 +32,13 @@ run_test(){
 	docker build -t fyp-api:test -f $CWD/release/api/Dockerfile $CWD
 
 	# Kill any previous containers
-	docker kill fyp-api-test 2> /dev/null
-	docker rm fyp-api-test 2> /dev/null
+	docker kill fyp-api 2> /dev/null
+	docker rm fyp-api 2> /dev/null
 
 	# Run container
 	docker run -d -p 3000:80 \
 	-v $CWD/../src/api/:/var/www/api \
-	--name=fyp-api-test \
+	--name=fyp-api \
 	--net=fyp-network \
 	fyp-api:test
 }

@@ -27,20 +27,20 @@ run_test(){
 	docker build -t fyp-neo4j:test -f $CWD/release/neo4j/Dockerfile $CWD
 
 	# Kill any previous containers
-  docker kill fyp-neo4j-test 2> /dev/null
-	docker rm fyp-neo4j-test 2> /dev/null
+  docker kill fyp-neo4j 2> /dev/null
+	docker rm fyp-neo4j 2> /dev/null
 
 	# Run container
 	docker run -d -p 7474:7474 \
 	-v /tmp/neo4j-test:/data \
-  --name=fyp-neo4j-test \
+  --name=fyp-neo4j \
   --net=fyp-network \
   fyp-neo4j:test
 }
 
 run_cleanup(){
-  docker kill fyp-neo4j-test 2> /dev/null
-  docker rm fyp-neo4j-test 2> /dev/null
+  docker kill fyp-neo4j 2> /dev/null
+  docker rm fyp-neo4j 2> /dev/null
   rm -r /tmp/neo4j-test
 }
 
