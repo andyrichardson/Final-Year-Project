@@ -39,15 +39,6 @@ module.exports.login = function(data){
 module.exports.search = function(string){
   return request.getProm(baseUri + "/user/search/" + string)
   .then(function(data){
-    const result = JSON.parse(data.body);
-    return result;
+    return JSON.parse(data.body);
   });
-  // return new Prom(function(resolve, reject){
-  //   const result = [
-  //     { value: 'one', label: 'Oliver' },
-  //     { value: 'two', label: 'Jamie' }
-  //   ];
-  //
-  //   resolve(result);
-  // })
-}
+};
