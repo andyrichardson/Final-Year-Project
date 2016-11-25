@@ -6,9 +6,13 @@ services:
   - docker
 
 before_install:
+  - brctl addbr fyp-bridge
+  - ip addr add 192.168.1.1 dev fyp-bridge
+  - ip link set dev fyp-bridge up
+  - echo 'DOCKER_OPTS="-b=fyp-bridge"' >> /etc/default/docker
+  - docker network create fyp-network
   - docker pull neo4j:3.0
   - docker pull node:argon
-  - docker network create fyp-network
 
 script:
   - cd src/test
