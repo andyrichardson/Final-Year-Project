@@ -8,6 +8,7 @@ services:
 before_install:
   - docker pull neo4j:3.0
   - docker pull node:argon
+  - docker network create fyp-network
 
 script:
   - cd src/test
