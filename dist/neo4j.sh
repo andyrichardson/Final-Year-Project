@@ -24,7 +24,7 @@ run_test(){
   mkdir /tmp/neo4j-test
 
 	# Build container
-	docker build -t -d fyp-neo4j:test -f $CWD/release/neo4j/Dockerfile $CWD
+	docker build -t fyp-neo4j:test -f $CWD/release/neo4j/Dockerfile $CWD
 
 	# Kill any previous containers
   docker kill fyp-neo4j-test 2> /dev/null
