@@ -14,4 +14,4 @@ npm install -g nodemon
 RUN mkdir -p /var/www/web
 WORKDIR /var/www/web
 
-CMD node bin/www
+CMD npm install && node bin/www

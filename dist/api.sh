@@ -36,11 +36,14 @@ run_test(){
 	docker rm fyp-api-test 2> /dev/null
 
 	# Run container
-	docker run -p 3000:80 \
+	docker run -d -p 3000:80 \
 	-v $CWD/../src/api/:/var/www/api \
 	--name=fyp-api-test \
 	--net=fyp-network \
 	fyp-api:test
+
+	# Wait for container to initialize
+	sleep 1m;
 }
 
 # Run release container

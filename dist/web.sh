@@ -37,11 +37,14 @@ run_test(){
 	docker rm fyp-web-test 2> /dev/null
 
 	# Run container
-	docker run -p 80:80 \
+	docker run -d -p 80:80 \
 	-v $CWD/../src/web:/var/www/web \
 	--name=fyp-web-test \
 	--net=fyp-network \
 	fyp-web:test node bin/www
+
+	# Wait for container to initialize
+	sleep 1m
 }
 
 # Run release container

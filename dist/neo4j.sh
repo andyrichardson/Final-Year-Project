@@ -24,18 +24,21 @@ run_test(){
   mkdir /tmp/neo4j-test
 
 	# Build container
-	docker build -t fyp-neo4j:test -f $CWD/dev/neo4j/Dockerfile $CWD
+	docker build -t -d fyp-neo4j:test -f $CWD/release/neo4j/Dockerfile $CWD
 
 	# Kill any previous containers
   docker kill fyp-neo4j-test 2> /dev/null
 	docker rm fyp-neo4j-test 2> /dev/null
 
 	# Run container
-	docker run -p 7474:7474 \
+	docker run -d -p 7474:7474 \
 	-v /tmp/neo4j-test:/data \
   --name=fyp-neo4j-test \
   --net=fyp-network \
   fyp-neo4j:test
+
+	# Wait for container to initialize
+  sleep 1m
 }
 
 run_cleanup(){
