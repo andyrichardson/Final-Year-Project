@@ -25,7 +25,7 @@ describe("Containers", function(){
 
   describe("Web Server", function(){
     it("Web server is active", function(done){
-      request("http://localhost:7474", function(err, response){
+      request("http://localhost/", function(err, response){
         assert.equal(err, undefined);
         assert.equal(response.statusCode, 200);
         done();

@@ -42,7 +42,6 @@ run_test(){
 	--name=fyp-web-test \
 	--net=fyp-network \
 	fyp-web:test
-
 }
 
 # Run release container
