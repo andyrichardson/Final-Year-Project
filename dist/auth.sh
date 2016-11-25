@@ -1,4 +1,5 @@
 #!/bin/bash
+CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Help prompt
 print_help(){
@@ -33,6 +34,22 @@ run_dev(){
 	fyp-auth:dev
 }
 
+# Run test container
+run_test(){
+	# Build container
+	docker build -t fyp-auth:test -f $CWD/release/auth/Dockerfile $CWD
+
+	# Kill any previous containers
+	docker kill fyp-auth-test 2> /dev/null
+	docker rm fyp-auth-test 2> /dev/null
+
+	docker run -d \
+	-v $PWD/../src/auth:/var/www/auth \
+	--name=fyp-auth-test \
+	--net=fyp-network \
+	fyp-auth:test
+}
+
 # Run release container
 run_release(){
 	echo "release is not configured"
@@ -47,6 +64,10 @@ case $1 in
 
 	-d | --dev)
 		run_dev
+		;;
+
+	-t | --test)
+		run_test
 		;;
 
 	"")
