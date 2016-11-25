@@ -8,6 +8,8 @@ describe("Containers", function(){
     before(function(done){
       this.timeout(30000);
       child_process.execFile("../../dist/neo4j.sh", ["-t"], function(err, stdout, stdin){
+        console.log(err);
+        console.log(stdout);
         assert(err == undefined);
       });
       setTimeout(done, 20000);
