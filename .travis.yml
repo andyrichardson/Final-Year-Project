@@ -13,4 +13,4 @@ before_install:
 script:
   - cd src/test
   - npm install
-  - sudo npm test
+  - npm test
