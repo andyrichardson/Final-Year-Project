@@ -43,8 +43,6 @@ run_test(){
 	--net=fyp-network \
 	fyp-web:test
 
-	# Wait for container to initialize
-	sleep 1m;
 }
 
 # Run release container

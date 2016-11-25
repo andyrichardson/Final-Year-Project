@@ -41,9 +41,6 @@ run_test(){
 	--name=fyp-api-test \
 	--net=fyp-network \
 	fyp-api:test
-
-	# Wait for container to initialize
-	sleep 1m;
 }
 
 # Run release container

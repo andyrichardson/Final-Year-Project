@@ -4,14 +4,6 @@ const child_process = require("child_process");
 
 describe("Containers", function(){
   describe("Database server", function(){
-    before(function(done){
-      this.timeout(140000);
-      child_process.execFile("../../dist/neo4j.sh", ["-t"], function(err, stdout, stdin){
-        assert.equal(err, undefined);
-        done();
-      });
-    });
-
     it("Graphing database server is active", function(done){
       request("http://localhost:7474/", function(err, response){
         assert.equal(err, undefined);
@@ -22,14 +14,6 @@ describe("Containers", function(){
   });
 
   describe("REST API Server", function(){
-    before(function(done){
-      this.timeout(90000);
-      child_process.execFile('../../dist/api.sh', ['-t'], function(err, stdout, stdin){
-        assert(err == undefined);
-        done();
-      });
-    });
-
     it("API server is active", function(done){
       request("http://localhost:3000/api/test", function(err, response){
         assert.equal(err, undefined);
@@ -40,14 +24,6 @@ describe("Containers", function(){
   });
 
   describe("Web Server", function(){
-    before(function(done){
-      this.timeout(90000);
-      child_process.execFile('../../dist/web.sh', ["-t"], function(err, stdout, stdin){
-        assert.equal(err, undefined);
-        done();
-      });
-    });
-
     it("Web server is active", function(done){
       request("http://localhost:7474", function(err, response){
         assert.equal(err, undefined);

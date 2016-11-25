@@ -9,6 +9,10 @@ before_install:
   - docker network create fyp-network
   - docker pull neo4j:3.0
   - docker pull node:argon
+  - ./dist/neo4j.sh -t
+  - ./dist/web.sh -t
+  - ./dist/api.sh -t
+  - sleep 1m
 
 script:
   - cd src/test

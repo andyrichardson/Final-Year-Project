@@ -36,9 +36,6 @@ run_test(){
   --name=fyp-neo4j-test \
   --net=fyp-network \
   fyp-neo4j:test
-
-	# Wait for container to initialize
-  sleep 2m
 }
 
 run_cleanup(){
