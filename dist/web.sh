@@ -41,10 +41,10 @@ run_test(){
 	-v $CWD/../src/web:/var/www/web \
 	--name=fyp-web-test \
 	--net=fyp-network \
-	fyp-web:test node bin/www
+	fyp-web:test
 
 	# Wait for container to initialize
-	sleep 1m
+	sleep 1m;
 }
 
 # Run release container

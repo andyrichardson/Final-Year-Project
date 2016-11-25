@@ -10,14 +10,14 @@ describe("Containers", function(){
         assert.equal(err, undefined);
         done();
       });
-    })
+    });
 
     it("Graphing database server is active", function(done){
       request("http://localhost:7474/", function(err, response){
         assert.equal(err, undefined);
         assert(response.statusCode == 200);
         done();
-      })
+      });
     });
   });
 
