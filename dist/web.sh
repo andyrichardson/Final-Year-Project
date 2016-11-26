@@ -14,15 +14,16 @@ print_help(){
 # Run development container
 run_dev(){
 	# Build container
-	docker build -t fyp-web:dev -f dev/web/Dockerfile .
+	docker build -t fyp-web:dev -f $CWD/dev/web/Dockerfile $CWD
 
 	# Kill any previous containers
-	docker rm fyp-web-dev 2> /dev/null
+	docker kill fyp-web 2> /dev/null
+	docker rm fyp-web 2> /dev/null
 
 	# Run container
 	docker run -t -i -p 80:80 \
-	-v $PWD/../src/web/:/var/www/web \
-	--name=fyp-web-dev \
+	-v $CWD/../src/web/:/var/www/web \
+	--name=fyp-web \
 	--net=fyp-network \
 	fyp-web:dev
 }

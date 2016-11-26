@@ -14,15 +14,16 @@ print_help(){
 # Run development container
 run_dev(){
 	# Build container
-	docker build -t fyp-api:dev -f dev/api/Dockerfile .
+	docker build -t fyp-api:dev -f $CWD/dev/api/Dockerfile $CWD
 
 	# Kill any previous containers
-	docker rm fyp-api-dev 2> /dev/null
+	docker kill fyp-api 2> /dev/null
+	docker rm fyp-api 2> /dev/null
 
 	# Run container
 	docker run -t -i -p 3000:80 \
-	-v $PWD/../src/api/:/var/www/api \
-	--name=fyp-api-dev \
+	-v $CWD/../src/api/:/var/www/api \
+	--name=fyp-api \
 	--net=fyp-network \
 	fyp-api:dev
 }

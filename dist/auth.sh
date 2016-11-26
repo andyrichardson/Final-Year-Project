@@ -15,21 +15,16 @@ print_help(){
 # Run development container
 run_dev(){
 	# Build container
-	docker build -t fyp-auth:dev -f dev/auth/Dockerfile .
+	docker build -t fyp-auth:dev -f $CWD/dev/auth/Dockerfile $CWD
 
 	# Kill any previous containers
-	docker rm fyp-auth-dev 1>& 2> /dev/null
-
-	# Standalone mode - expose to host
-	# if [[ "$1" == "-s" || "$1" == "--standalone" ]]; then
-	#     echo "Notice: Standalone Mode Active"
-	#     PORT_FLAG="-p 80:80"
-	# fi
+	docker kill fyp-auth 2> /dev/null
+	docker rm fyp-auth 1>& 2> /dev/null
 
 	# Run container
-	docker run -t -i $PORT_FLAG \
-	-v $PWD/../src/auth:/var/www/auth \
-	--name=fyp-auth-dev \
+	docker run -t -i -p 3001:80 \
+	-v $CWD/../src/auth:/var/www/auth \
+	--name=fyp-auth \
 	--net=fyp-network\
 	fyp-auth:dev
 }
@@ -44,7 +39,7 @@ run_test(){
 	docker rm fyp-auth 2> /dev/null
 
 	docker run -d \
-	-v $PWD/../src/auth:/var/www/auth \
+	-v $CWD/../src/auth:/var/www/auth \
 	--name=fyp-auth \
 	--net=fyp-network \
 	fyp-auth:test
