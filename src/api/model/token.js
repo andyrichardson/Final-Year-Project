@@ -7,11 +7,16 @@ const request = Rest.wrap(mime, { mime: 'application/json' });
 /* HTTP ERROR CHECKER */
 const errorCheck = function(response){
     return new Prom(function(resolve, reject){
+        if(response.status == undefined){
+          const error = new Error("Unable to communicate with authentication server.")
+          error.status = 500;
+          return reject(error);
+        }
+
         if(response.status.code != 200 && response.status.code != 201){
             console.log(response.entity);
             const error = new Error(response.entity.message);
             error.status = response.entity.status;
-
             return reject(error);
         }
 
@@ -35,15 +40,11 @@ class TokenMiddleware{
                 password: password
             }
         })
+        .catch(errorCheck)
         .then(errorCheck)
         .then(function(response){
             return response;
         })
-        .catch(function(err){
-          const error = new Error("Unable to communicate with authentication server");
-          error.status = 500;
-          throw new Error(error);
-        });
     }
 
     /* CREATE TOKEN USING USER CREDENTIALS */
@@ -56,14 +57,10 @@ class TokenMiddleware{
                 password: password
             }
         })
+        .catch(errorCheck)
         .then(errorCheck)
         .then(function(response){
             return response.entity.token;
-        })
-        .catch(function(err){
-          const error = new Error("Unable to communicate with authentication server");
-          error.status = 500;
-          throw new Error(error);
         });
     }
 
@@ -77,12 +74,8 @@ class TokenMiddleware{
                 password: password
             }
         })
-        .then(errorCheck)
-        .catch(function(err){
-          const error = new Error("Unable to communicate with authentication server");
-          error.status = 500;
-          throw new Error(error);
-        });
+        .catch(errorCheck)
+        .then(errorCheck);
     }
 
     /* DELETE TOKEN */
@@ -94,14 +87,10 @@ class TokenMiddleware{
                 token: token
             }
         })
+        .catch(errorCheck)
         .then(errorCheck)
         .then(function(response){
             return response.entity;
-        })
-        .catch(function(err){
-          const error = new Error("Unable to communicate with authentication server");
-          error.status = 500;
-          throw new Error(error);
         });
     }
 
@@ -119,15 +108,11 @@ class TokenMiddleware{
                 path: this.authServer + '/auth?token=' + token,
                 method: 'GET'
             })
+            .catch(errorCheck)
             .then(errorCheck)
             .then(function(response){
                 req.auth = response.entity;
                 return next();
-            })
-            .catch(function(err){
-              const error = new Error("Unable to communicate with authentication server");
-              error.status = 500;
-              throw new Error(error);
             });
         });
     }
