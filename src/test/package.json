@@ -5,12 +5,15 @@
   "main": "index.js",
   "scripts": {
     "run": "mocha",
-    "test": "mocha"
+    "test": "mocha run.js"
   },
   "author": "Andy Richardson",
   "license": "ISC",
   "dependencies": {
+    "colors": "^1.1.2",
+    "jsdom": "^9.8.3",
     "mocha": "^3.1.2",
+    "mocha-jsdom": "^1.1.0",
     "request": "^2.79.0"
   }
 }
