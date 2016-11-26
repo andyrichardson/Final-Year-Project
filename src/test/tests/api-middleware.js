@@ -10,6 +10,7 @@ describe("API Middleware", function(){
     firstName: "Test",
     lastName: "User"
   };
+  let accessToken;
 
   it("registers new users", function(){
     return api.register(user1)
@@ -32,11 +33,50 @@ describe("API Middleware", function(){
     });
   });
 
-  it("allows users with correct credentials to log in", function(){
+  it("allows users with correct credentials to get api key (log in)", function(){
     return api.login({username: user1.username, password: user1.password})
     .then(function(data){
+      accessToken = data.accessToken;
       return assert.equal(data.status, 200);
     })
+  });
+
+  it("prevents unauthenticated users from changing their password", function(){
+    const data = {
+      accessToken:"faketoken",
+      oldPassword: "password",
+      newPassword: "new password"
+    };
+    return api.changePassword(data)
+    .then(function(data){
+      assert.equal(data.status, 400);
+    });
+  });
+
+  it("allows authenticated users to change their password", function(){
+    const data = {
+      accessToken: accessToken,
+      oldPassword: "password",
+      newPassword: "new password"
+    };
+    return api.changePassword(data)
+    .then(function(data){
+      accessToken = data.accessToken;
+      assert.equal(data.status, 200);
+    });
+  });
+
+  it("prevents authenticated users with invalid password from changing their password", function(){
+    const data = {
+      accessToken: accessToken,
+      oldPassword: "password",
+      newPassword: "new password"
+    };
+    return api.changePassword(data)
+    .then(function(data){
+      accessToken = data.accessToken;
+      assert.equal(data.status, 401);
+    });
   });
 
   it("returns matching users when searching", function(){

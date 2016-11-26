@@ -35,6 +35,22 @@ module.exports.login = function(data){
   });
 };
 
+/* USER PASSWORD CHANGE */
+module.exports.changePassword = function(data){
+  const formData = {
+    form: {
+      accessToken: data.accessToken,
+      oldPassword: data.oldPassword,
+      newPassword: data.newPassword
+    }
+  };
+
+  return request.patchProm(baseUri + "/user/auth", formData)
+  .then(function(data){
+    return JSON.parse(data.body);
+  });
+}
+
 /* USER SEARCH */
 module.exports.search = function(string){
   return request.getProm(baseUri + "/user/search/" + string)
