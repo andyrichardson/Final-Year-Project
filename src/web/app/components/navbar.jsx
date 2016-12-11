@@ -73,6 +73,10 @@ class SearchBar extends React.Component{
   }
 
   render(){
+    if(!this.props.visible){
+      return null;
+    }
+
     return(
       <RB.Navbar.Form pullLeft={true}>
         <RB.FormGroup>
@@ -98,21 +102,12 @@ class Navbar extends React.Component {
     return UnauthNav;
   }
 
-  getSearchBar(){
-    if(this.props.auth){
-      return SearchBar;
-    }
-
-    return null;
-  }
-
   render(){
     const NavItems = this.getNavItems();
-    const SearchBar = this.getSearchBar();
 
     return(
       <RB.Navbar>
-        <SearchBar/>
+        <SearchBar visible={this.props.auth}/>
         <NavItems/>
       </RB.Navbar>
     );
