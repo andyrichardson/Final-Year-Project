@@ -14,9 +14,9 @@ before_install:
   - docker pull node:argon
   - ./dist/neo4j.sh -t
   - ./dist/auth.sh -t
-  - ./dist/web.sh -t
   - ./dist/api.sh -t
-  - sleep 1m
+  - ./dist/web.sh -t
+  - sleep 3m
 
 script:
   - cd src/test
