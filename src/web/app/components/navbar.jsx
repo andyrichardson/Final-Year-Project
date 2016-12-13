@@ -74,7 +74,7 @@ class SearchBar extends React.Component{
     return(
       <RB.Navbar.Form pullLeft={true}>
         <RB.FormGroup>
-          <Select multiple onInputChange={(e) => this.changeHandler(e)} options={this.state.searchResults} noResultsText=""/>
+          <Select multiple onInputChange={(e) => this.changeHandler(e)} options={this.state.searchResults} autosize={false} noResultsText=""/>
         </RB.FormGroup>
       </RB.Navbar.Form>
     );
