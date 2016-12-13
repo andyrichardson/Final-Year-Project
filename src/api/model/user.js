@@ -47,8 +47,8 @@ module.exports.init = function(db){
     model = Prom.promisifyAll(UserHandler.getModel(), {suffix: 'Prom'});
     model.setUniqueKey('username');
     model.on('validate', validate.all);
-    model.compose(model, "friends", "has_friend");
-    model.compose(model, "requests", "has_request");
+    model.compose(model, "friends", "has_friend", {many: true});
+    model.compose(model, "requests", "has_request", {many:true});
 };
 
 /* LOG IN */
@@ -158,7 +158,7 @@ module.exports.addUser = function(user, friend){
   if(user == friend){
     throw new Error("User cannot be friends with self");
   }
-  
+
   let userProm = model.whereProm({username: user}, {limit: 1});
   let friendProm = model.whereProm({username: friend}, {limit: 1});
 
@@ -166,6 +166,15 @@ module.exports.addUser = function(user, friend){
   .then(function(data){
     user = data[0][0];
     friend = data[1][0];
+
+    console.log("USER ====");
+    console.log(user.friends);
+
+    user.friends.forEach(function (fr) {
+      if(fr.username == friend.username){
+        throw new Error("Friendship already present");
+      }
+    })
 
     if(friend == undefined){
       throw new Error("Target friend does not exist");
