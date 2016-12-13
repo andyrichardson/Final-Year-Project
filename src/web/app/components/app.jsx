@@ -51,7 +51,10 @@ class App extends React.Component {
 
         case "SignUpForm":
           return React.cloneElement(child, {register: (state) => this.register(state)});
-      }
+
+        default:
+          return child;
+      };
     });
   }
 
