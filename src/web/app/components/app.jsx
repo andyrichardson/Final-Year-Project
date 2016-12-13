@@ -5,14 +5,12 @@ const Api = require('./../includes/api');
 
 /* COMPONENTS */
 const Navbar = require('./navbar.jsx');
-let AppInstance;
 
 /* APP COMPONENT */
 class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {accessToken: Cookie.get("accessToken")};
-    AppInstance = this;
   }
 
   login(state) {
@@ -22,14 +20,14 @@ class App extends React.Component {
         throw new Error(data.message);
       }
 
-      AppInstance.setState({accessToken: data.accessToken});
+      this.setState({accessToken: data.accessToken});
       Cookie.set("accessToken", data.accessToken);
     });
   }
 
   logout() {
     Cookie.delete('accessToken');
-    AppInstance.setState({accessToken: ""});
+    this.setState({accessToken: ""});
   }
 
   register(state){
@@ -49,10 +47,10 @@ class App extends React.Component {
     return React.Children.map(this.props.children, (child) => {
       switch (child.type.name) {
         case "SignInForm":
-          return React.cloneElement(child, {login: this.login});
+          return React.cloneElement(child, {login: (state) => this.login(state)});
 
         case "SignUpForm":
-          return React.cloneElement(child, {register: this.register});
+          return React.cloneElement(child, {register: (state) => this.register(state)});
       }
     });
   }
@@ -60,7 +58,7 @@ class App extends React.Component {
   render(){
     return(
       <div>
-        <Navbar auth={this.isAuthenticated()} logout={this.logout}/>
+        <Navbar auth={this.isAuthenticated()} logout={() => this.logout()}/>
         {this.renderChildren()}
       </div>
     );
