@@ -1,7 +1,6 @@
 const React = require('react');
 const Link = require('react-router').Link;
 const ReactDOM = require('react-dom');
-const Auth = require('../includes/auth');
 const Api = require('../includes/api');
 
 // Components

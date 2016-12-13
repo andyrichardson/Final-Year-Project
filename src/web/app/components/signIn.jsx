@@ -5,7 +5,6 @@ const Modal = require('react-modal');
 // Middleware
 const Validate = require('./../includes/validator');
 const Api = require('./../includes/api');
-const Auth = require('./../includes/auth');
 const Cookie = require('./../includes/cookie');
 
 // Components

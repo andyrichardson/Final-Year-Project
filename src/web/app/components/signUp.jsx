@@ -3,7 +3,6 @@ const ReactDOM = require('react-dom');
 const Modal = require('react-modal');
 const Validate = require('./../includes/validator');
 const Api = require('./../includes/api');
-const Auth = require('./../includes/auth');
 const FormInput = require('./formInput.jsx');
 
 class SignUpForm extends React.Component {
