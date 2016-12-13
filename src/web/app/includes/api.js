@@ -66,3 +66,17 @@ module.exports.getUser = function(username){
     return JSON.parse(data.body);
   });
 }
+
+/* ADD USER */
+module.exports.addUser = function(data){
+  const formData = {
+    form: {
+      accessToken: data.accessToken,
+    }
+  };
+
+  return request.postProm(baseUri + "/user/" + data.username, formData)
+  .then(function(data){
+    return JSON.parse(data.body);
+  });
+}
