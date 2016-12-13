@@ -7,6 +7,7 @@ const Route = ReactRouter.Route;
 const History = ReactRouter.browserHistory;
 
 const App = require('./app.jsx');
+const User = require('./user.jsx');
 const SignIn = require('./signIn.jsx');
 const SignUp = require('./signUp.jsx');
 const NotFound = require('./notFound.jsx');
@@ -18,6 +19,7 @@ class RouterComponent extends React.Component {
         <Route path="/" component={App}>
           <Route path="/login" component={SignIn}/>
           <Route path="/register" component={SignUp}/>
+          <Route path="/user/:username" component={User}/>
           <Route path="*" component={NotFound}/>
         </Route>
       </Router>

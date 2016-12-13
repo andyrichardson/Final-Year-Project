@@ -58,3 +58,11 @@ module.exports.search = function(string){
     return JSON.parse(data.body);
   });
 };
+
+/* GET USER */
+module.exports.getUser = function(username){
+  return request.getProm(baseUri + "/user/" + username)
+  .then(function(data){
+    return JSON.parse(data.body);
+  });
+}
