@@ -84,6 +84,23 @@ describe("API Middleware", function(){
     .then(function(data){
       assert.equal(data[0].value, user1.username);
       assert.equal(data[0].label, user1.firstName + " " + user1.lastName);
+    });
+  });
+
+  it("returns public user information", function(){
+    return api.getUser(user1.username)
+    .then(function(data){
+      assert.equal(user1.username, data.username);
+      assert.equal(user1.firstName, data.firstName);
+      assert.equal(user1.lastName, data.lastName);
+    });
+  });
+
+  it("doesn't leak user passwords or emails", function(){
+    return api.getUser(user1.username)
+    .then(function(data){
+      assert(data.password === undefined);
+      assert(data.email === undefined);
     })
-  })
+  });
 });
