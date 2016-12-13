@@ -14,11 +14,6 @@ const FormInput = require('./formInput.jsx');
 
 /* AUTHENTICATED USER NAVIGATION */
 class AuthNav extends React.Component{
-  logout(){
-    console.log('logging out');
-    Auth.logout();
-  }
-
   render(){
     return(
       <RB.Nav pullRight={true}>
@@ -26,7 +21,7 @@ class AuthNav extends React.Component{
           <Link to={"/"}>Home</Link>
         </li>
         <li>
-          <Link onClick={this.logout}>Logout</Link>
+          <Link onClick={this.props.logout}>Logout</Link>
         </li>
       </RB.Nav>
     );
@@ -96,19 +91,19 @@ class Navbar extends React.Component {
 
   getNavItems(){
     if(this.props.auth){
-      return AuthNav;
+      return (<AuthNav logout={this.props.logout}/>);
     }
 
-    return UnauthNav;
+    return (<UnauthNav/>);
   }
 
   render(){
-    const NavItems = this.getNavItems();
+    const navItems = this.getNavItems();
 
     return(
       <RB.Navbar>
         <SearchBar visible={this.props.auth}/>
-        <NavItems/>
+        {navItems}
       </RB.Navbar>
     );
   }

@@ -27,6 +27,11 @@ class App extends React.Component {
     });
   }
 
+  logout() {
+    Cookie.delete('accessToken');
+    AppInstance.setState({accessToken: ""});
+  }
+
   register(state){
     return Api.register(state)
     .then(function(data){
@@ -55,7 +60,7 @@ class App extends React.Component {
   render(){
     return(
       <div>
-        <Navbar auth={this.isAuthenticated()}/>
+        <Navbar auth={this.isAuthenticated()} logout={this.logout}/>
         {this.renderChildren()}
       </div>
     );
