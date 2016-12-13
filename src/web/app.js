@@ -19,12 +19,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 const apiProxy = require('./routes/api');
 app.use(apiProxy)
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  const err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
+// All routes other than API return web app
+app.get('*', function (req, res){
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+})
 
 // error handler
 app.use(function(err, req, res, next) {
