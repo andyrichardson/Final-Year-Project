@@ -10,6 +10,15 @@ describe("API Middleware", function(){
     firstName: "Test",
     lastName: "User"
   };
+
+  const user2 = {
+    username: "usertwo",
+    password: "pass1234",
+    email: "test@mydomain.com",
+    firstName: "Testy",
+    lastName: "McTest"
+  };
+
   let accessToken;
 
   it("registers new users", function(){
@@ -101,6 +110,34 @@ describe("API Middleware", function(){
     .then(function(data){
       assert(data.password === undefined);
       assert(data.email === undefined);
+    })
+  });
+
+  it("allows users to add other users", function(){
+    return api.register(user2)
+    .then(function(){
+      return api.login({username: user2.username, password: user2.password})
+    })
+    .then(function(data){
+      accessToken = data.accessToken;
+      return api.addUser({accessToken: data.accessToken, username: user1.username});
+    })
+    .then(function(data){
+      assert.equal(data.status, 200);
+    })
+  })
+
+  it("prevents users from adding themselves", function(){
+    return api.addUser({accessToken: accessToken, username: user2.username})
+    .then(function(data){
+      assert.equal(data.status, 403);
+    });
+  });
+
+  it("prevents users from adding existing friends", function(){
+    return api.addUser({accessToken: accessToken, username: user1.username})
+    .then(function(data){
+      assert.equal(data.status, 409);
     })
   });
 });

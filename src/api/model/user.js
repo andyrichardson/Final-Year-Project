@@ -156,7 +156,9 @@ module.exports.search = function(query){
 /* ADD FRIEND */
 module.exports.addUser = function(user, friend){
   if(user == friend){
-    throw new Error("User cannot be friends with self");
+    const error = new Error("User cannot be friends with self");
+    error.status = 403;
+    throw error;
   }
 
   let userProm = model.whereProm({username: user}, {limit: 1});
@@ -167,17 +169,21 @@ module.exports.addUser = function(user, friend){
     user = data[0][0];
     friend = data[1][0];
 
-    console.log("USER ====");
-    console.log(user.friends);
 
-    user.friends.forEach(function (fr) {
-      if(fr.username == friend.username){
-        throw new Error("Friendship already present");
-      }
-    })
+    if(user.friends != undefined){
+      user.friends.forEach(function (fr) {
+        if(fr.username == friend.username){
+          const error = new Error("Friendship already present");
+          error.status = 409;
+          throw error;
+        }
+      });
+    }
 
     if(friend == undefined){
-      throw new Error("Target friend does not exist");
+      const error = new Error("Target friend does not exist");
+      error.status = 403;
+      throw error;
     }
 
     if(user == undefined){
