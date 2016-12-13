@@ -169,6 +169,11 @@ module.exports.addUser = function(user, friend){
     user = data[0][0];
     friend = data[1][0];
 
+    if(friend == undefined){
+      const error = new Error("Target friend does not exist");
+      error.status = 403;
+      throw error;
+    }
 
     if(user.friends != undefined){
       user.friends.forEach(function (fr) {
@@ -178,12 +183,6 @@ module.exports.addUser = function(user, friend){
           throw error;
         }
       });
-    }
-
-    if(friend == undefined){
-      const error = new Error("Target friend does not exist");
-      error.status = 403;
-      throw error;
     }
 
     if(user == undefined){

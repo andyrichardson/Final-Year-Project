@@ -140,4 +140,11 @@ describe("API Middleware", function(){
       assert.equal(data.status, 409);
     })
   });
+
+  it("prevents users from adding non existant users", function(){
+    return api.addUser({accessToken: accessToken, username: "nosuchname"})
+    .then(function(data){
+      assert.equal(data.status, 403);
+    })
+  });
 });
