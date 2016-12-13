@@ -15,7 +15,7 @@ class SignInForm extends React.Component {
   handleSubmit(e) {
     e.preventDefault(e);
 
-    this.props.login(this.state.username, this.state.password)
+    this.props.login(this.state)
     .then(function(data){
       alert("Sign in successful");
     })

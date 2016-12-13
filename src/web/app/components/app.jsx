@@ -15,8 +15,8 @@ class App extends React.Component {
     AppInstance = this;
   }
 
-  login(username, password) {
-    return Api.login({username: username, password: password})
+  login(state) {
+    return Api.login(state)
     .then((data) => {
       if(data.status != 200){
         throw new Error(data.message);
@@ -27,14 +27,29 @@ class App extends React.Component {
     });
   }
 
+  register(state){
+    return Api.register(state)
+    .then(function(data){
+      if(data.status != 200){
+        throw new Error(data.message);
+      }
+    });
+  }
+
   isAuthenticated(){
     return this.state.accessToken != "";
   }
 
   renderChildren(){
     return React.Children.map(this.props.children, (child) => {
-      return React.cloneElement(child, {login: this.login});
-    })
+      switch (child.type.name) {
+        case "SignInForm":
+          return React.cloneElement(child, {login: this.login});
+
+        case "SignUpForm":
+          return React.cloneElement(child, {register: this.register});
+      }
+    });
   }
 
   render(){
