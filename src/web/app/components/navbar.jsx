@@ -1,5 +1,6 @@
 const React = require('react');
 const Link = require('react-router').Link;
+const History = require('react-router').browserHistory;
 const ReactDOM = require('react-dom');
 const Api = require('../includes/api');
 
@@ -66,6 +67,10 @@ class SearchBar extends React.Component{
     });
   }
 
+  clickHandler(obj){
+    History.push('/user/'+ obj.value)
+  }
+
   render(){
     if(!this.props.visible){
       return null;
@@ -74,7 +79,14 @@ class SearchBar extends React.Component{
     return(
       <RB.Navbar.Form pullLeft={true}>
         <RB.FormGroup>
-          <Select multiple onInputChange={(e) => this.changeHandler(e)} options={this.state.searchResults} autosize={false} noResultsText=""/>
+          <Select
+            multiple
+            onInputChange={(e) => this.changeHandler(e)}
+            onChange={(v) => this.clickHandler(v)}
+            options={this.state.searchResults}
+            autosize={false}
+            noResultsText=""
+            />
         </RB.FormGroup>
       </RB.Navbar.Form>
     );
