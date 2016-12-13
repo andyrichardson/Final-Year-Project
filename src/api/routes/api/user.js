@@ -36,4 +36,12 @@ router.get('/:username', function(req, res){
     });
 });
 
+router.post('/:username', Token.validate, function(req, res){
+  return User.addUser(req.auth.username, req.params.username)
+  .then(function(data){
+    res.status = 200;
+    res.end();
+  });
+});
+
 module.exports = router;

@@ -47,6 +47,8 @@ module.exports.init = function(db){
     model = Prom.promisifyAll(UserHandler.getModel(), {suffix: 'Prom'});
     model.setUniqueKey('username');
     model.on('validate', validate.all);
+    model.compose(model, "friends", "has_friend");
+    model.compose(model, "requests", "has_request");
 };
 
 /* LOG IN */
@@ -150,6 +152,33 @@ module.exports.search = function(query){
     return result;
   });
 };
+
+/* ADD FRIEND */
+module.exports.addUser = function(user, friend){
+  if(user == friend){
+    throw new Error("User cannot be friends with self");
+  }
+  
+  let userProm = model.whereProm({username: user}, {limit: 1});
+  let friendProm = model.whereProm({username: friend}, {limit: 1});
+
+  return Prom.all([userProm, friendProm])
+  .then(function(data){
+    user = data[0][0];
+    friend = data[1][0];
+
+    if(friend == undefined){
+      throw new Error("Target friend does not exist");
+    }
+
+    if(user == undefined){
+      throw new Error("Source user does not exist");
+    }
+
+    return model.pushProm(user.id, "friends", friend);
+  });
+}
+
 
 /* RETURN MODEL */
 module.exports.model = function(){
