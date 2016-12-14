@@ -49,11 +49,8 @@ class SearchBar extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      searchResults: [
-        { value: 'one', label: 'Option A' },
-        { value: 'two', label: 'Option B' }
-      ]
-    }
+      searchResults: []
+    };
   }
 
   changeHandler(value){
