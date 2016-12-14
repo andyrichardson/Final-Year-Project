@@ -39,6 +39,21 @@ class App extends React.Component {
     });
   }
 
+  addFriend(username){
+    const state = {
+      username: username,
+      accessToken: this.state.accessToken
+    };
+
+    return Api.addUser(state)
+    .then((data) => {
+      console.log(data);
+      if(data.status != 200){
+        throw new Error(data.message);
+      }
+    })
+  }
+
   isAuthenticated(){
     return this.state.accessToken != "";
   }
@@ -51,6 +66,9 @@ class App extends React.Component {
 
         case "SignUpForm":
           return React.cloneElement(child, {register: (state) => this.register(state)});
+
+        case "User":
+          return React.cloneElement(child, {addFriend: (state) => this.addFriend(state)});
 
         default:
           return child;

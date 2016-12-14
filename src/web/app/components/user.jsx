@@ -1,4 +1,6 @@
 const React = require("react");
+const RB = require('react-bootstrap');
+
 const Api = require("../includes/api");
 
 class User extends React.Component {
@@ -14,7 +16,19 @@ class User extends React.Component {
       this.setState({user: data});
     })
   }
+
+  addFriend() {
+    return this.props.addFriend(this.state.user.username)
+    .then(function(data){
+      alert("Friend added");
+    })
+    .catch(function(err){
+      alert(err);
+    })
+  }
+  
   render(){
+    console.log(this.props);
     if(this.state.user == null){
       return null;
     }
@@ -24,7 +38,10 @@ class User extends React.Component {
     }
 
     return (
-      <h1>{this.state.user.firstName} {this.state.user.lastName}</h1>
+      <div>
+        <h1>{this.state.user.firstName} {this.state.user.lastName}</h1>
+        <RB.Button onClick={() => this.addFriend()}>Add Friend</RB.Button>
+      </div>
     );
   }
 }
