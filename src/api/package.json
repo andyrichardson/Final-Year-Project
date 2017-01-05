@@ -17,7 +17,7 @@
     "request": "^2.74.0",
     "rest": "^2.0.0",
     "seraph": "^0.15.2",
-    "seraph-model": "^0.9.0"
+    "seraph-model": "https://github.com/andy-richardson/seraph-model.git"
   },
   "devDependencies": {}
 }
