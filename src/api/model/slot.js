@@ -16,6 +16,32 @@ const schema = {
   }
 }
 
+/* VALIDATION */
+const validator = {
+  validate: function(data, callback){
+    return validator.datesValid(data)
+    .then(validator.datesOrdered)
+    .then(callback)
+    .catch(callback);
+  },
+  datesValid: function(data){
+    return new Prom(function(resolve, reject){
+      if (isNaN(data.start) || isNaN(data.finish)){
+        reject(new Error("Validation failed. Date(s) are invalid."));
+      }
+      resolve(data);
+    });
+  },
+  datesOrdered: function(data){
+    return new Promise(function(resolve, reject) {
+      if(!(data.start < data.finish)){
+        reject(new Error("Validation failed. Start date must be before end date."));
+      }
+      resolve();
+    });
+  }
+}
+
 const SlotHandler = new ModelHandler("Slot", schema);
 let model;
 
@@ -23,6 +49,7 @@ let model;
 module.exports.init = function(db){
   SlotHandler.init(db);
   model = Prom.promisifyAll(SlotHandler.getModel(), {suffix: 'Prom'});
+  model.on("validate", validator.validate);
 }
 
 /* CREATE SLOT */

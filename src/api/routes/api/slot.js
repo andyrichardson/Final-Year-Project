@@ -6,10 +6,11 @@ const Slot = require('../../model/slot');
 router.post('/', Token.validate, function(req, res){
     const start = new Date(req.body.start);
     const finish = new Date(req.body.finish);
+
     return Slot.create(req.auth.username, start, finish)
     .then(function(data){
         res.status = 200;
-        res.end();
+        res.json({status:200, message:"Slot created."});
     });
 });
 

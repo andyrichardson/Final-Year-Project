@@ -80,3 +80,19 @@ module.exports.addUser = function(data){
     return JSON.parse(data.body);
   });
 }
+
+/* CREATE SLOT */
+module.exports.createSlot = function(data){
+  const formData = {
+    form: {
+      accessToken: data.accessToken,
+      start: data.start,
+      finish: data.finish
+    }
+  };
+
+  return request.postProm(baseUri + "/slot/", formData)
+  .then(function(data){
+    return JSON.parse(data.body);
+  })
+}
