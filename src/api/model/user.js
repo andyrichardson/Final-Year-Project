@@ -2,6 +2,7 @@
 const Prom = require('bluebird');
 const ModelHandler = require('./ModelHandler');
 const Token = require('./token');
+const Slot = require('./slot');
 
 /* SCHEMA */
 const schema = {
@@ -63,10 +64,14 @@ const hidePrivateData = function(user){
 module.exports.init = function(db){
   UserHandler.init(db);
   model = Prom.promisifyAll(UserHandler.getModel(), {suffix: 'Prom'});
+
+  Slot.init(db);
+
   model.setUniqueKey('username');
   model.on('validate', validate.all);
   model.compose(model, "friends", "has_friend", {many: true});
-  model.compose(model, "requests", "has_request", {many:true});
+  model.compose(model, "requests", "has_request", {many:true}); // change model to request type
+  model.compose(Slot.model(), "slots", "has_slot", {many: true});
 };
 
 /* LOG IN */
@@ -155,6 +160,14 @@ module.exports.getUser = function(username){
     return hidePrivateData(user)
   });
 };
+
+/* GET ID */
+module.exports.getId = function(username){
+  return model.whereProm({username: username}, {limit: 1})
+  .then(function(data){
+    return data[0].id;
+  });
+}
 
 /* SEARCH */
 module.exports.search = function(query){

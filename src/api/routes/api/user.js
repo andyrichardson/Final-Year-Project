@@ -31,11 +31,11 @@ router.patch('/', Token.validate, function(req, res){
 router.get('/:username', function(req, res){
     return User.getUser(req.params.username)
     .then(function(user){
-        console.log(user);
         res.json(user);
     });
 });
 
+/* ADD FRIEND */
 router.post('/:username', Token.validate, function(req, res){
   return User.addUser(req.auth.username, req.params.username)
   .then(function(data){
