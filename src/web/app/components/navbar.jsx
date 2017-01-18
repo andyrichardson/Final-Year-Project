@@ -18,7 +18,7 @@ class AuthNav extends React.Component{
     return(
       <RB.Nav pullRight={true}>
         <li>
-          <Link to={"/"}>Home</Link>
+          <Link to={"/home"}>Home</Link>
         </li>
         <li>
           <Link onClick={this.props.logout}>Logout</Link>

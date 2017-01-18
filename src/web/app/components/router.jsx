@@ -10,6 +10,7 @@ const App = require('./app.jsx');
 const User = require('./user.jsx');
 const SignIn = require('./signIn.jsx');
 const SignUp = require('./signUp.jsx');
+const Home = require('./home.jsx');
 const NotFound = require('./notFound.jsx');
 
 class RouterComponent extends React.Component {
@@ -19,6 +20,7 @@ class RouterComponent extends React.Component {
         <Route path="/" component={App}>
           <Route path="/login" component={SignIn}/>
           <Route path="/register" component={SignUp}/>
+          <Route path="/home" component={Home}/>
           <Route path="/user/:username" component={User}/>
           <Route path="*" component={NotFound}/>
         </Route>
