@@ -54,6 +54,21 @@ class App extends React.Component {
     })
   }
 
+  createSlot(state){
+    const data = {
+      start: state.start,
+      finish: state.finish,
+      accessToken: this.state.accessToken
+    }
+
+    return Api.createSlot(data)
+    .then(function(data){
+      if(data.status != 200){
+        throw new Error(data.message);
+      }
+    });
+  }
+
   isAuthenticated(){
     return this.state.accessToken != "";
   }
@@ -69,6 +84,9 @@ class App extends React.Component {
 
         case "User":
           return React.cloneElement(child, {addFriend: (state) => this.addFriend(state)});
+
+        case "Home":
+          return React.cloneElement(child, {createSlot: (state) => this.createSlot(state)});
 
         default:
           return child;
