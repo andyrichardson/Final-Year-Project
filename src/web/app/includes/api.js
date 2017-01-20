@@ -67,6 +67,14 @@ module.exports.getUser = function(username){
   });
 }
 
+/* GET USER AUTHENTICATED */
+module.exports.getUserAuthenticated = function(data){
+  return request.getProm(baseUri + "/user/" + data.username + "?accessToken=" + data.accessToken)
+  .then(function(data){
+    return JSON.parse(data.body);
+  });
+}
+
 /* ADD USER */
 module.exports.addUser = function(data){
   const formData = {

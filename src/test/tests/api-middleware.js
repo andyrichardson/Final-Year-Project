@@ -19,7 +19,7 @@ describe("API Middleware", function(){
     lastName: "McTest"
   };
 
-  let accessToken;
+  let user1AccessToken, user2AccessToken;
 
   describe("Registration and Authentication", function(){
     it("registers new users", function(){
@@ -46,7 +46,7 @@ describe("API Middleware", function(){
     it("allows users with correct credentials to get api key (log in)", function(){
       return api.login({username: user1.username, password: user1.password})
       .then(function(data){
-        accessToken = data.accessToken;
+        user1AccessToken = data.accessToken;
         return assert.equal(data.status, 200);
       })
     });
@@ -65,26 +65,25 @@ describe("API Middleware", function(){
 
     it("allows authenticated users to change their password", function(){
       const data = {
-        accessToken: accessToken,
+        accessToken: user1AccessToken,
         oldPassword: "password",
         newPassword: "new password"
       };
       return api.changePassword(data)
       .then(function(data){
-        accessToken = data.accessToken;
+        user1AccessToken = data.accessToken;
         assert.equal(data.status, 200);
       });
     });
 
     it("prevents authenticated users with invalid password from changing their password", function(){
       const data = {
-        accessToken: accessToken,
+        accessToken: user1AccessToken,
         oldPassword: "password",
         newPassword: "new password"
       };
       return api.changePassword(data)
       .then(function(data){
-        accessToken = data.accessToken;
         assert.equal(data.status, 401);
       });
     });
@@ -124,7 +123,7 @@ describe("API Middleware", function(){
         return api.login({username: user2.username, password: user2.password})
       })
       .then(function(data){
-        accessToken = data.accessToken;
+        user2AccessToken = data.accessToken;
         return api.addUser({accessToken: data.accessToken, username: user1.username});
       })
       .then(function(data){
@@ -133,21 +132,21 @@ describe("API Middleware", function(){
     })
 
     it("prevents users from adding themselves", function(){
-      return api.addUser({accessToken: accessToken, username: user2.username})
+      return api.addUser({accessToken: user2AccessToken, username: user2.username})
       .then(function(data){
         assert.equal(data.status, 403);
       });
     });
 
     it("prevents users from adding existing friends", function(){
-      return api.addUser({accessToken: accessToken, username: user1.username})
+      return api.addUser({accessToken: user2AccessToken, username: user1.username})
       .then(function(data){
         assert.equal(data.status, 409);
       })
     });
 
     it("prevents users from adding non existant users", function(){
-      return api.addUser({accessToken: accessToken, username: "nosuchname"})
+      return api.addUser({accessToken: user2AccessToken, username: "nosuchname"})
       .then(function(data){
         assert.equal(data.status, 403);
       })
@@ -157,7 +156,7 @@ describe("API Middleware", function(){
   describe("Slot Creation", function(){
     it("creates a slot", function(){
       const data = {
-        accessToken: accessToken,
+        accessToken: user2AccessToken,
         start: new Date(),
         finish: new Date(new Date().getTime() + 100)
       };
@@ -170,7 +169,7 @@ describe("API Middleware", function(){
 
     it("requires a start time", function(){
       const data = {
-        accessToken: accessToken,
+        accessToken: user2AccessToken,
         finish: new Date()
       };
 
@@ -182,7 +181,7 @@ describe("API Middleware", function(){
 
     it("requires a finish time", function(){
       const data = {
-        accessToken: accessToken,
+        accessToken: user2AccessToken,
         start: new Date()
       };
 
@@ -194,7 +193,7 @@ describe("API Middleware", function(){
 
     it("start date must be before end date", function(){
       const data = {
-        accessToken: accessToken,
+        accessToken: user2AccessToken,
         start: new Date(),
         finish: new Date(new Date().getTime() - 100)
       };
@@ -202,6 +201,39 @@ describe("API Middleware", function(){
       return api.createSlot(data)
       .then(function(data){
         assert.equal(data.status, 400);
+      })
+    });
+  });
+
+  describe("Advanced user retrieval", function(){
+    it("unauthenticated requests do not leak slot information", function(){
+      return api.getUser(user2.username)
+      .then(function(data){
+        assert.equal(data.slots, undefined);
+      });
+    });
+
+    it("self get requests show slot information", function(){
+      const data = {
+        username: user2.username,
+        accessToken: user2AccessToken
+      };
+
+      return api.getUserAuthenticated(data)
+      .then(function(data){
+        assert.notEqual(data.message.slots, undefined);
+      })
+    });
+
+    it("friend get requests show slot information", function(){
+      const data = {
+        username: user2.username,
+        accessToken: user1AccessToken
+      };
+
+      return api.getUserAuthenticated(data)
+      .then(function(data){
+        assert.notEqual(data.message.slots, undefined);
       })
     });
   });
