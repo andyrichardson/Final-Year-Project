@@ -42,14 +42,14 @@ const validate = {
 const UserHandler = new ModelHandler('User', schema);
 let model;
 
-const hidePrivateData = function(user){
-  console.log('call');
+/* HIDE EMAIL AND PASSWORD */
+const hideSensitiveData = function(user){
   return new Prom(function(fulfill, reject){
     if(user.friends != undefined){
       user.friends.forEach(function(el){
         el.password = undefined;
         el.email = undefined;
-        return hidePrivateData(el);
+        return hideSensitiveData(el);
       })
     }
 
@@ -58,6 +58,14 @@ const hidePrivateData = function(user){
     fulfill(user);
   })
 
+}
+
+/* HIDE PRIVATE DATA */
+const hidePrivateData = function(user){
+  return new Prom(function(resolve, reject) {
+    user.slots = undefined;
+    return resolve(user);
+  });
 }
 
 /* INITIALIZE */
@@ -138,7 +146,7 @@ module.exports.changePassword = function(username, oldPassword, newPassword){
   });
 };
 
-/* GET */
+/* GET USER */
 module.exports.getUser = function(username){
   let node;
 
@@ -157,9 +165,56 @@ module.exports.getUser = function(username){
     user.password = undefined;
     user.email = undefined;
 
-    return hidePrivateData(user)
+    return hidePrivateData(user);
+  })
+  .then(function(user){
+    return hideSensitiveData(user);
   });
 };
+
+/* GET USER AUTHENTICATED */
+module.exports.getUserAuthenticated = function(self, username){
+  let node;
+
+  return model.whereProm({username: username}, {limit: 1})
+  .then(function(data){
+    node = data;
+    if(node[0] === undefined){
+      throw new Error("No such user");
+    }
+
+    return model.queryProm("MATCH (x:User {username: {username}})-[:has_friend]-(node:User)", {username: username})
+  })
+  .then(function(data){
+    const user = node[0];
+    user.friends = data;
+    user.password = undefined;
+    user.email = undefined;
+
+    let valid, isSelf = false;
+
+    // Determine if friends
+    user.friends.forEach(function (fr) {
+      if(fr.username == self){
+        valid = true;
+      }
+    });
+
+    // Determine if self
+    if(user.username == self){
+      isSelf = true;
+    }
+
+    if(!valid && !isSelf){
+      return hidePrivateData(user);
+    }
+
+    return user;
+  })
+  .then(function(user){
+    return hideSensitiveData(user);
+  })
+}
 
 /* GET ID */
 module.exports.getId = function(username){
