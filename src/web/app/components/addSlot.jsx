@@ -4,6 +4,7 @@ const ReactDOM = require('react-dom');
 const DatePicker = require('react-datepicker');
 const TimePicker = require('rc-time-picker');
 const Moment = require('moment');
+const Api = require('../includes/api');
 
 class AddSlot extends React.Component{
   /* CONSTRUCTOR */
@@ -61,17 +62,18 @@ class AddSlot extends React.Component{
   onSubmit(){
     const data = {
       start: this.state.start.toDate(),
-      finish: this.state.finish.toDate()
+      finish: this.state.finish.toDate(),
+      accessToken: this.props.accessToken
     };
 
-    return this.props.createSlot(data)
+    return Api.createSlot(data)
     .then(function(data){
+      if(data.status != 200){
+        return alert(data.message);
+      }
+
       alert("Slot succesfully created");
-    })
-    .catch(function(err){
-      console.log(err);
-      alert("Unable to create slot: " + err.message);
-    })
+    });
   }
 
   /* RENDER */

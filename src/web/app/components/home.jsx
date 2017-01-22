@@ -7,7 +7,7 @@ class Home extends React.Component{
   render(){
     return(
       <RB.Col md={8} mdOffset={2}>
-        <AddSlot createSlot={this.props.createSlot}/>
+        <AddSlot accessToken={this.props.accessToken}/>
       </RB.Col>
     );
   }
