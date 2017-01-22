@@ -24,6 +24,7 @@ class App extends React.Component {
 
       this.setState({accessToken: data.accessToken});
       Cookie.set("accessToken", data.accessToken);
+      window.location.href = "/home";
     });
   }
 
@@ -31,6 +32,7 @@ class App extends React.Component {
   logout() {
     Cookie.delete('accessToken');
     this.setState({accessToken: ""});
+    window.location.href = "/";
   }
 
   /* USER HAS ACCESS TOKEN */
