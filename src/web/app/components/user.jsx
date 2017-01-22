@@ -1,16 +1,19 @@
 const React = require("react");
 const Link = require('react-router').Link;
 const RB = require('react-bootstrap');
+const Moment = require('moment');
 
 const Api = require("../includes/api");
 
 class User extends React.Component {
+  /* CONSTRUCTOR */
   constructor(props) {
     super(props);
     this.state = {user: null};
     this.getInfo();
   }
 
+  /* ON LOAD */
   componentWillReceiveProps(props){
     return this.getInfo(props.params.username)
     .then((data) => {
@@ -24,10 +27,15 @@ class User extends React.Component {
       username = this.props.params.username;
     }
 
-    return Api.getUser(username)
+    const data = {
+      username: username,
+      accessToken: this.props.accessToken
+    };
+
+    return Api.getUserAuthenticated(data)
     .then((data) => {
-      this.setState({user: data});
-    })
+      this.setState({user: data.message});
+    });
   }
 
   /* ADD FRIEND BUTTON CLICK */
@@ -49,11 +57,11 @@ class User extends React.Component {
 
   /* GET FRIENDS DIV */
   getFriends() {
-    var friends = this.state.user.friends.map(function(el){
+    let friends = this.state.user.friends.map(function(el){
       return (
-        <Link to={"/user/" + el.username}>{el.firstName + " " + el.lastName}</Link>
+        <Link to={"/user/" + el.username} key={el.username}>{el.firstName + " " + el.lastName}</Link>
       );
-    })
+    });
 
     return(
       <div>
@@ -63,6 +71,38 @@ class User extends React.Component {
     )
   }
 
+  /* GET SLOTS DIV */
+  getSlots() {
+    if(this.state.user.slots === undefined){
+      return <div></div>;
+    }
+
+
+
+    const slots = this.state.user.slots.map(function(el, index){
+      const start = Moment(el.start);
+      const finish = Moment(el.finish);
+
+      return(
+        <div style={{border: "solid 1px black"}} key={index}>
+          <label>Start:</label>
+          {start.format("ddd Do MMM")} @ {start.format("hh:mm")}
+          <br/>
+          <label>Finish:</label>
+          {finish.format("ddd Do MMM")} @ {finish.format("hh:mm")}
+        </div>
+      );
+    });
+
+    return(
+      <div>
+        <h1>Slots</h1>
+        {slots}
+      </div>
+    )
+  }
+
+  /* RENDER */
   render(){
     if(this.state.user == null){
       return null;
@@ -77,6 +117,7 @@ class User extends React.Component {
         <h1>{this.state.user.firstName} {this.state.user.lastName}</h1>
         <RB.Button onClick={() => this.addFriend()}>Add Friend</RB.Button>
         {this.getFriends()}
+        {this.getSlots()}
       </div>
     );
   }

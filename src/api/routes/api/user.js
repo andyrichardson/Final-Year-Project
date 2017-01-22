@@ -43,7 +43,7 @@ router.get('/:username', function(req, res, next){
   // No private info shared
   return User.getUser(req.params.username)
   .then(function(user){
-    res.json(user);
+    res.json({status: 200, message: user});
   });
 });
 
