@@ -39,21 +39,6 @@ class App extends React.Component {
     });
   }
 
-  addFriend(username){
-    const state = {
-      username: username,
-      accessToken: this.state.accessToken
-    };
-
-    return Api.addUser(state)
-    .then((data) => {
-      console.log(data);
-      if(data.status != 200){
-        throw new Error(data.message);
-      }
-    })
-  }
-
   createSlot(state){
     const data = {
       start: state.start,
@@ -83,7 +68,7 @@ class App extends React.Component {
           return React.cloneElement(child, {register: (state) => this.register(state)});
 
         case "User":
-          return React.cloneElement(child, {addFriend: (state) => this.addFriend(state)});
+          return React.cloneElement(child, {accessToken: this.state.accessToken});
 
         case "Home":
           return React.cloneElement(child, {createSlot: (state) => this.createSlot(state)});

@@ -18,6 +18,7 @@ class User extends React.Component {
     })
   }
 
+  /* FETCH USER INFO */
   getInfo(username) {
     if(username === undefined){
       username = this.props.params.username;
@@ -25,21 +26,28 @@ class User extends React.Component {
 
     return Api.getUser(username)
     .then((data) => {
-      console.log(data);
       this.setState({user: data});
     })
   }
 
+  /* ADD FRIEND BUTTON CLICK */
   addFriend() {
-    return this.props.addFriend(this.state.user.username)
-    .then(function(data){
-      alert("Friend added");
-    })
-    .catch(function(err){
-      alert(err);
-    })
+    const data = {
+      username: this.state.user.username,
+      accessToken: this.props.accessToken
+    };
+
+    return Api.addUser(data)
+    .then((data) => {
+      if(data.status != 200){
+        return alert(data.message);
+      }
+
+      alert("Friend added")
+    });
   }
 
+  /* GET FRIENDS DIV */
   getFriends() {
     var friends = this.state.user.friends.map(function(el){
       return (
