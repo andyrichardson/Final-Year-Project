@@ -101,9 +101,9 @@ describe("API Middleware", function(){
     it("returns public user information", function(){
       return api.getUser(user1.username)
       .then(function(data){
-        assert.equal(user1.username, data.username);
-        assert.equal(user1.firstName, data.firstName);
-        assert.equal(user1.lastName, data.lastName);
+        assert.equal(user1.username, data.message.username);
+        assert.equal(user1.firstName, data.message.firstName);
+        assert.equal(user1.lastName, data.message.lastName);
       });
     });
 
