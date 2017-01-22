@@ -8,11 +8,13 @@ const Navbar = require('./navbar.jsx');
 
 /* APP COMPONENT */
 class App extends React.Component {
+  /* CONSTRUCTOR */
   constructor(props){
     super(props);
     this.state = {accessToken: Cookie.get("accessToken")};
   }
 
+  /* LOGIN */
   login(state) {
     return Api.login(state)
     .then((data) => {
@@ -25,32 +27,23 @@ class App extends React.Component {
     });
   }
 
+  /* LOGOUT */
   logout() {
     Cookie.delete('accessToken');
     this.setState({accessToken: ""});
   }
 
-  register(state){
-    return Api.register(state)
-    .then(function(data){
-      if(data.status != 200){
-        throw new Error(data.message);
-      }
-    });
-  }
-
+  /* USER HAS ACCESS TOKEN */
   isAuthenticated(){
     return this.state.accessToken != "";
   }
 
+  /* PASSING PROPS TO CHILDREN */
   renderChildren(){
     return React.Children.map(this.props.children, (child) => {
       switch (child.type.name) {
         case "SignInForm":
           return React.cloneElement(child, {login: (state) => this.login(state)});
-
-        case "SignUpForm":
-          return React.cloneElement(child, {register: (state) => this.register(state)});
 
         case "User":
           return React.cloneElement(child, {accessToken: this.state.accessToken});
@@ -64,6 +57,7 @@ class App extends React.Component {
     });
   }
 
+  /* RENDER */
   render(){
     return(
       <div>

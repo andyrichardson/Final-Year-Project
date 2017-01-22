@@ -13,14 +13,14 @@ class SignUpForm extends React.Component {
   handleSubmit(e){
     e.preventDefault(e);
 
-    return this.props.register(this.state)
-    .then(function(status){
-      alert("Registration successful");
-    })
-    .catch(function(err){
-      console.log(err);
-      alert("Unable to register: " + err.message);
-    })
+    return Api.register(this.state)
+    .then(function(data){
+      if(data.status != 200){
+        return alert("Unable to register: " + data.message);
+      }
+
+      alert("Registration successful.")
+    });
   }
 
   render(){
