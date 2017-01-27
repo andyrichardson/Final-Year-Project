@@ -4,16 +4,23 @@ const watchify = require('watchify');
 const fs = require('fs');
 const path = require('path');
 const colors = require('colors');
+const sass_compiler = require('node-sass');
+const sasswatcher = require('node-sass-watcher');
+
+// Input files
+const entry_js = 'app/main.js';
+const entry_sass = 'app/main.scss';
+
+// Output files
+const bundle_js = path.join(__dirname, '../public/res/js/bundle.js');
+const bundle_css = path.join(__dirname, '../public/res/css/bundle.css');
 
 // Browserify config
 const js_compiler = browserify({
-  entries: ['app/main.js'],
+  entries: [entry_js],
   transform: reactify,
   plugin: [watchify]
 });
-
-// Output file
-const bundle_js = path.join(__dirname, '../public/res/js/bundle.js');
 
 // Bundling function
 const bundle = function(){
@@ -22,32 +29,37 @@ const bundle = function(){
   // Compile Javascript
   js_compiler.bundle(function(err){
     if(err){
-      return console.log(err);
+      return console.log(err.red);
     }
     console.log('Javascript compilation complete'.green);
   }).pipe(fs.createWriteStream(bundle_js));
 }
 
+const bundle_sass = function(){
+  console.log('Starting SASS compilation'.red);
+
+  // Compile SASS
+  sass_compiler.render({
+    file: entry_sass
+  }, function(err, result){
+    if(err){
+      return console.log(err.red);
+    }
+    fs.writeFile(bundle_css, result.css, function(err){
+      if(err){
+        return console.log(err.red);
+      }
+        console.log('SASS compilation complete'.green);
+    })
+  })
+}
+
 // Watchify
 js_compiler.on('update', bundle);
 
-module.exports = bundle;
+const watcher = new sasswatcher(entry_sass);
+watcher.on('init', bundle_sass);
+watcher.on('update', bundle_sass);
+watcher.run();
 
-//
-// var fs = require('fs');
-// var browserify = require('browserify');
-// var watchify = require('watchify');
-//
-// var b = browserify({
-//   entries: ['path/to/entry.js'],
-//   cache: {},
-//   packageCache: {},
-//   plugin: [watchify]
-// });
-//
-// b.on('update', bundle);
-// bundle();
-//
-// function bundle() {
-//   b.bundle().pipe(fs.createWriteStream('output.js'));
-// }
+module.exports = bundle;
