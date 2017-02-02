@@ -80,6 +80,7 @@ module.exports.init = function(database){
   model.on('validate', validate.all);
   model.compose(model, "friends", "has_friend", {many: true});
   model.compose(model, "requests", "has_request", {many:true}); // change model to request type
+  model.compose(model, "slotRequests", "requests_slot", {many: true});
   model.compose(Slot.model(), "slots", "has_slot", {many: true});
 };
 
@@ -276,7 +277,7 @@ module.exports.addUser = function(user, friend){
       });
     }
 
-    return db.relateProm(user.id, "has_friend", friend.id)
+    return db.relateProm(user.id, "has_friend", friend.id);
   });
 }
 

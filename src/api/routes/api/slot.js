@@ -2,7 +2,7 @@ const router = require('express-promise-router')();
 const Token = require('../../model/token');
 const Slot = require('../../model/slot');
 
-/* CREATE USER */
+/* CREATE SLOT */
 router.post('/', Token.validate, function(req, res){
     const start = new Date(req.body.start);
     const finish = new Date(req.body.finish);
@@ -13,5 +13,14 @@ router.post('/', Token.validate, function(req, res){
         res.json({status:200, message:"Slot created."});
     });
 });
+
+/* RESPOND TO SLOT */
+router.post('/respond', /* token validate */ function(req, res){
+  return Slot.respond('kevin', 15)
+  .then(function(){
+    res.status = 200;
+    res.json({status: 200, message: "Slot response successfully submitted."});
+  });
+})
 
 module.exports = router;

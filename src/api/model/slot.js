@@ -63,6 +63,45 @@ module.exports.create = function(username, start, finish){
   });
 }
 
+/* GET SLOT OWNER */
+module.exports.getOwner = function(slotId){
+  let query = `match (u:User)-[:has_slot]->(s:Slot) WHERE ID(s) = ${slotId} return u`;
+  return db.queryProm(query)
+  .then(function(data){
+    return data[0];
+  })
+}
+
+/* RESPOND TO SLOT */
+module.exports.respond = function(username, slotId){
+  return module.exports.getOwner(slotId)
+  .then(function(owner){
+    return User.hasFriend(username, owner.username)
+  })
+  .then(function(friends){
+    if(!friends){
+      const error = new Error("Slot does not exist or you do not have permission to respond to this slot.");
+      error.status = 400;
+      throw error;
+    }
+
+    return User.getUserAuthenticated(username, username);
+  })
+  .then(function(user){
+    if(user.slotRequests !== undefined){
+      user.slotRequests.forEach(function(el) {
+        if(el.id == slotId){
+          const error = new Error("Slot request already exists.");
+          error.status = 401;
+          throw error;
+        }
+      });
+    }
+
+    return db.relateProm(user.id, "requests_slot", slotId);
+  });
+}
+
 module.exports.model = function(){
   return model;
 }
