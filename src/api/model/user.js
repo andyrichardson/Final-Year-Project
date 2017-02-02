@@ -40,7 +40,7 @@ const validate = {
 
 /* CREATE INSTANCE OF MODEL HANDLER */
 const UserHandler = new ModelHandler('User', schema);
-let model;
+let model, db;
 
 /* HIDE EMAIL AND PASSWORD */
 const hideSensitiveData = function(user){
@@ -69,11 +69,12 @@ const hidePrivateData = function(user){
 }
 
 /* INITIALIZE */
-module.exports.init = function(db){
-  UserHandler.init(db);
+module.exports.init = function(database){
+  UserHandler.init(database);
   model = Prom.promisifyAll(UserHandler.getModel(), {suffix: 'Prom'});
+  db = Prom.promisifyAll(database, {suffix: 'Prom'});
 
-  Slot.init(db);
+  Slot.init(database);
 
   model.setUniqueKey('username');
   model.on('validate', validate.all);
@@ -255,13 +256,13 @@ module.exports.addUser = function(user, friend){
     throw error;
   }
 
-  let userProm = model.whereProm({username: user}, {limit: 1});
-  let friendProm = model.whereProm({username: friend}, {limit: 1});
+  let userProm = module.exports.getUser(user);
+  let friendProm = module.exports.getUser(friend);
 
   return Prom.all([userProm, friendProm])
   .then(function(data){
-    user = data[0][0];
-    friend = data[1][0];
+    user = data[0];
+    friend = data[1];
 
     if(friend == undefined){
       const error = new Error("Target friend does not exist");
@@ -283,7 +284,7 @@ module.exports.addUser = function(user, friend){
       throw new Error("Source user does not exist");
     }
 
-    return model.pushProm(user.id, "friends", friend);
+    return db.relateProm(user.id, "has_friend", friend.id)
   });
 }
 

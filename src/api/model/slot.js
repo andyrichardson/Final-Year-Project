@@ -43,13 +43,16 @@ const validator = {
 }
 
 const SlotHandler = new ModelHandler("Slot", schema);
-let model;
+let model, db;
 
 /* INITIALIZE */
-module.exports.init = function(db){
-  SlotHandler.init(db);
+module.exports.init = function(database){
+  SlotHandler.init(database);
+
   model = Prom.promisifyAll(SlotHandler.getModel(), {suffix: 'Prom'});
   model.on("validate", validator.validate);
+
+  db = Prom.promisifyAll(database, {suffix: 'Prom'});
 }
 
 /* CREATE SLOT */
