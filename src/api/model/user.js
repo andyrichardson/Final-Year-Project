@@ -155,7 +155,9 @@ module.exports.getUser = function(username){
   .then(function(data){
     node = data;
     if(node[0] === undefined){
-      throw new Error("No such user");
+      const error = new Error("No such user");
+      error.status = 403;
+      throw error;
     }
 
     return model.queryProm("MATCH (x:User {username: {username}})-[:has_friend]-(node:User)", {username: username})
@@ -264,12 +266,6 @@ module.exports.addUser = function(user, friend){
     user = data[0];
     friend = data[1];
 
-    if(friend == undefined){
-      const error = new Error("Target friend does not exist");
-      error.status = 403;
-      throw error;
-    }
-
     if(user.friends != undefined){
       user.friends.forEach(function (fr) {
         if(fr.username == friend.username){
@@ -280,11 +276,16 @@ module.exports.addUser = function(user, friend){
       });
     }
 
-    if(user == undefined){
-      throw new Error("Source user does not exist");
-    }
-
     return db.relateProm(user.id, "has_friend", friend.id)
+  });
+}
+
+/* HAS FRIEND */
+module.exports.hasFriend = function(username1, username2){
+  const query = `match (a:User {username: "${username1}"})-[r:has_friend]-(b:User {username: "${username2}"}) return r`
+  return db.queryProm(query)
+  .then(function(data){
+    return data[0] !== undefined;
   });
 }
 
