@@ -59,7 +59,9 @@ class User extends React.Component {
   getFriends() {
     let friends = this.state.user.friends.map(function(el){
       return (
-        <Link to={"/user/" + el.username} key={el.username}>{el.firstName + " " + el.lastName}</Link>
+        <div>
+          <Link to={"/user/" + el.username} key={el.username}>{el.firstName + " " + el.lastName}</Link>
+        </div>
       );
     });
 
