@@ -265,6 +265,18 @@ describe("API Middleware", function(){
       });
     });
 
+    it("shows slot requests made to user", function(){
+      const data = {
+        accessToken: user2AccessToken,
+        username: user2.username
+      };
+
+      return api.getUserAuthenticated(data)
+      .then(function(data){
+        assert.equal(data.message.slots[0].requests.length, 1);
+        assert.equal(data.message.slots[0].requests[0], user1.username);
+      })
+    });
   });
 
   describe("Advanced user retrieval", function(){
@@ -296,6 +308,18 @@ describe("API Middleware", function(){
       return api.getUserAuthenticated(data)
       .then(function(data){
         assert.notEqual(data.message.slots, undefined);
+      });
+    });
+
+    it("friend requests do not show slot requests of friends", function(){
+      const data = {
+        username: user2.username,
+        accessToken: user1AccessToken
+      };
+
+      return api.getUserAuthenticated(data)
+      .then(function(data){
+        assert.equal(data.message.slots[0].requests, undefined);
       })
     });
   });
