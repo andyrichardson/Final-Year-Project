@@ -205,6 +205,68 @@ describe("API Middleware", function(){
     });
   });
 
+  describe("Slot Responses", function(){
+    it("allows response to friends slot", function(){
+      const data = {
+        accessToken: user1AccessToken,
+        username: user2.username
+      };
+
+      return api.getUserAuthenticated(data)
+      .then(function(user){
+        const data = {
+          accessToken: user1AccessToken,
+          slotId: user.message.slots[0].id
+        };
+
+        return api.respondSlot(data);
+      })
+      .then(function(data){
+        assert.equal(data.status, 200);
+        assert.equal(data.message, 'Slot response successfully submitted.');
+      });
+    });
+
+    it("prevents slot responses to nonexistent slotId", function(){
+      const data = {
+        accessToken: user1AccessToken,
+        slotId: 300
+      };
+
+      return api.respondSlot(data)
+      .then(function(data){
+        assert.equal(data.status, 422);
+        assert.equal(data.message, 'Slot with declared ID does not exist.');
+      });
+    });
+
+    it("returns error for invalid slotId data type", function(){
+      const data = {
+        accessToken: user1AccessToken,
+        slotId: "hi112"
+      };
+
+      return api.respondSlot(data)
+      .then(function(data){
+        assert.equal(data.status, 400);
+        assert.equal(data.message, 'No/invalid slot ID declared.');
+      });
+    });
+
+    it("returns error for missing slot id", function(){
+      const data = {
+        accessToken: user1AccessToken
+      };
+
+      return api.respondSlot(data)
+      .then(function(data){
+        assert.equal(data.status, 400);
+        assert.equal(data.message, 'No/invalid slot ID declared.');
+      });
+    });
+
+  });
+
   describe("Advanced user retrieval", function(){
     it("unauthenticated requests do not leak slot information", function(){
       return api.getUser(user2.username)

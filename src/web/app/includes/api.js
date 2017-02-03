@@ -104,3 +104,18 @@ module.exports.createSlot = function(data){
     return JSON.parse(data.body);
   })
 }
+
+/* RESPOND TO SLOT */
+module.exports.respondSlot = function(data){
+  const formData = {
+    form: {
+      accessToken: data.accessToken,
+      slotId: data.slotId
+    }
+  };
+
+  return request.postProm(baseUri + "/slot/respond", formData)
+  .then(function(data){
+    return JSON.parse(data.body);
+  })
+}

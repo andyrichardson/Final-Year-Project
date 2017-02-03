@@ -15,8 +15,8 @@ router.post('/', Token.validate, function(req, res){
 });
 
 /* RESPOND TO SLOT */
-router.post('/respond', /* token validate */ function(req, res){
-  return Slot.respond('kevin', 15)
+router.post('/respond', Token.validate, function(req, res){
+  return Slot.respond(req.auth.username, req.body.slotId)
   .then(function(){
     res.status = 200;
     res.json({status: 200, message: "Slot response successfully submitted."});

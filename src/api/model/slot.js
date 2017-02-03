@@ -68,19 +68,30 @@ module.exports.getOwner = function(slotId){
   let query = `match (u:User)-[:has_slot]->(s:Slot) WHERE ID(s) = ${slotId} return u`;
   return db.queryProm(query)
   .then(function(data){
+    if(data[0] === undefined){
+      const error = new Error("Slot with declared ID does not exist.");
+      error.status = 422;
+      throw error;
+    }
     return data[0];
   })
 }
 
 /* RESPOND TO SLOT */
 module.exports.respond = function(username, slotId){
+  if(isNaN(slotId)){
+    const error = new Error("No/invalid slot ID declared.")
+    error.status = 400;
+    throw error;
+  }
+
   return module.exports.getOwner(slotId)
   .then(function(owner){
     return User.hasFriend(username, owner.username)
   })
   .then(function(friends){
     if(!friends){
-      const error = new Error("Slot does not exist or you do not have permission to respond to this slot.");
+      const error = new Error("You do not have permission to respond to this slot.");
       error.status = 400;
       throw error;
     }
