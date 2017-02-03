@@ -77,9 +77,7 @@ class User extends React.Component {
       return <div></div>;
     }
 
-
-
-    const slots = this.state.user.slots.map(function(el, index){
+    const slots = this.state.user.slots.map((el, index) => {
       const start = Moment(el.start);
       const finish = Moment(el.finish);
 
@@ -90,6 +88,7 @@ class User extends React.Component {
           <br/>
           <label>Finish:</label>
           {finish.format("ddd Do MMM")} @ {finish.format("hh:mm")}
+          <RB.Button onClick={() => this.respondToSlot(el.id)}>Respond</RB.Button>
         </div>
       );
     });
@@ -100,6 +99,23 @@ class User extends React.Component {
         {slots}
       </div>
     )
+  }
+
+  /* SLOT RESPONSE CLICK */
+  respondToSlot(id) {
+    const data = {
+      slotId: id,
+      accessToken: this.props.accessToken
+    };
+
+    return Api.respondSlot(data)
+    .then(function(data){
+      if(data.status != 200){
+        return alert(data.message);
+      }
+
+      return alert("Slot response sent.");
+    })
   }
 
   /* RENDER */
