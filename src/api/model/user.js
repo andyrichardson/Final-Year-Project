@@ -68,6 +68,35 @@ const hidePrivateData = function(user){
   });
 }
 
+/* GET SLOT REQUESTS FOR REQUESTING USER */
+const getRequests = function(user){
+  return new Promise(function(resolve, reject) {
+    if(user.slots === undefined){
+      return resolve(user);
+    }
+
+    const query = `match (u:User {username: "${user.username}"})-[:has_slot]->(s:Slot)<-[:requests_slot]-(f:User) return f, s`;
+    return db.queryProm(query)
+    .then(function(result){
+      if(result[0] !== undefined){
+        user.slots.forEach(function (slot) {
+          result.forEach(function(pair){
+            if(pair.s.id == slot.id){
+              if(slot.requests === undefined){
+                return slot.requests = [pair.f.username];
+              }
+
+              slot.requests.push(pair.f.username);
+            }
+          })
+        });
+      }
+
+      resolve(user);
+    })
+  });
+}
+
 /* INITIALIZE */
 module.exports.init = function(database){
   UserHandler.init(database);
@@ -211,6 +240,10 @@ module.exports.getUserAuthenticated = function(self, username){
 
     if(!valid && !isSelf){
       return hidePrivateData(user);
+    }
+
+    if(isSelf){
+      return getRequests(user);
     }
 
     return user;
