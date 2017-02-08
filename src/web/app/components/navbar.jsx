@@ -21,6 +21,9 @@ class AuthNav extends React.Component{
           <Link to={"/home"}>Home</Link>
         </li>
         <li>
+          <Link to={"/notifications"}>Notifications</Link>
+        </li>
+        <li>
           <Link onClick={this.props.logout}>Logout</Link>
         </li>
       </RB.Nav>
