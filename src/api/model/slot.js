@@ -3,6 +3,7 @@ const Prom = require('bluebird');
 const ModelHandler = require('./ModelHandler');
 const Token = require('./token');
 const User = require('./user');
+const Notification = require('./notification');
 
 /* SCHEMA */
 const schema = {
@@ -85,8 +86,11 @@ module.exports.respond = function(username, slotId){
     throw error;
   }
 
+  let ownerUsername;
+
   return module.exports.getOwner(slotId)
   .then(function(owner){
+    ownerUsername = owner.username;
     return User.hasFriend(username, owner.username)
   })
   .then(function(friends){
@@ -109,10 +113,20 @@ module.exports.respond = function(username, slotId){
       });
     }
 
-    return db.relateProm(user.id, "requests_slot", slotId);
+    return db.relateProm(user.id, "requests_slot", slotId)
+  })
+  .then(function(){
+    const data = {
+      type: 'slot response',
+      username: username,
+      slotId: slotId
+    };
+
+    return Notification.create(ownerUsername, data);
   });
 }
 
+/* MODEL */
 module.exports.model = function(){
   return model;
 }

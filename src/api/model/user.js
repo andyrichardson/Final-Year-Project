@@ -3,6 +3,7 @@ const Prom = require('bluebird');
 const ModelHandler = require('./ModelHandler');
 const Token = require('./token');
 const Slot = require('./slot');
+const Notification = require('./notification');
 
 /* SCHEMA */
 const schema = {
@@ -42,29 +43,48 @@ const validate = {
 const UserHandler = new ModelHandler('User', schema);
 let model, db;
 
-/* HIDE EMAIL AND PASSWORD */
-const hideSensitiveData = function(user){
+/* SENSOR DATA FOR SELF SCOPE */
+const sensorSelf = function(user){
   return new Prom(function(fulfill, reject){
     if(user.friends != undefined){
       user.friends.forEach(function(el){
         el.password = undefined;
         el.email = undefined;
-        return hideSensitiveData(el);
-      })
+        el.friends = undefined;
+        el.notifications = undefined;
+        el.slotRequests = undefined;
+      });
     }
 
     user.password = undefined;
-    user.email = undefined;
     fulfill(user);
-  })
-
+  });
 }
 
-/* HIDE PRIVATE DATA */
-const hidePrivateData = function(user){
-  return new Prom(function(resolve, reject) {
+/* SENSOR DATA FOR FRIEND SCOPE */
+const sensorFriend = function(user){
+  return sensorSelf(user)
+  .then(function(user){
+    if(user.friends != undefined){
+      user.friends.forEach(function(el){
+        el.slots = undefined;
+      });
+    }
+    user.notifications = undefined;
+    user.slotRequests = undefined;
+    return user;
+  });
+}
+
+/* SENSOR DATA FOR PUBLIC SCOPE */
+const sensorPublic = function(user){
+  return sensorSelf(user)
+  .then(function(user){
+    return sensorFriend(user);
+  })
+  .then(function(user){
     user.slots = undefined;
-    return resolve(user);
+    return user;
   });
 }
 
@@ -104,6 +124,7 @@ module.exports.init = function(database){
   db = Prom.promisifyAll(database, {suffix: 'Prom'});
 
   Slot.init(database);
+  Notification.init(database);
 
   model.setUniqueKey('username');
   model.on('validate', validate.all);
@@ -111,6 +132,7 @@ module.exports.init = function(database){
   model.compose(model, "requests", "has_request", {many:true}); // change model to request type
   model.compose(model, "slotRequests", "requests_slot", {many: true});
   model.compose(Slot.model(), "slots", "has_slot", {many: true});
+  model.compose(Notification.model(), "notifications", "has_notification", {many: true});
 };
 
 /* LOG IN */
@@ -198,10 +220,10 @@ module.exports.getUser = function(username){
     user.password = undefined;
     user.email = undefined;
 
-    return hidePrivateData(user);
+    return sensorPublic(user);
   })
   .then(function(user){
-    return hideSensitiveData(user);
+    return sensorSelf(user);
   });
 };
 
@@ -209,6 +231,48 @@ module.exports.getUser = function(username){
 module.exports.getUserAuthenticated = function(self, username){
   let node;
 
+  // Get user
+  return model.whereProm({username: username}, {limit: 1})
+  .then(function(data){
+    node = data;
+    if(node[0] === undefined){
+      throw new Error("No such user");
+    }
+
+    // Get users friends
+    return model.queryProm("MATCH (x:User {username: {username}})-[:has_friend]-(node:User)", {username: username})
+  })
+  .then(function(data){
+    const user = node[0];
+    user.friends = data;
+
+    let friend = false;
+
+    // Determine if friends
+    user.friends.forEach(function (fr) {
+      if(fr.username == self){
+        friend = true;
+      }
+    });
+
+    // If self
+    if(user.username == self){
+      return getRequests(user)
+      .then(function(user){
+        return sensorSelf(user);
+      });
+    }
+
+    if(friend){
+      return sensorFriend(user);
+    }
+
+    return sensorPublic(user);
+  });
+}
+
+/* GET SELF */
+module.exports.getSelf = function(username){
   return model.whereProm({username: username}, {limit: 1})
   .then(function(data){
     node = data;
@@ -223,33 +287,6 @@ module.exports.getUserAuthenticated = function(self, username){
     user.friends = data;
     user.password = undefined;
     user.email = undefined;
-
-    let valid, isSelf = false;
-
-    // Determine if friends
-    user.friends.forEach(function (fr) {
-      if(fr.username == self){
-        valid = true;
-      }
-    });
-
-    // Determine if self
-    if(user.username == self){
-      isSelf = true;
-    }
-
-    if(!valid && !isSelf){
-      return hidePrivateData(user);
-    }
-
-    if(isSelf){
-      return getRequests(user);
-    }
-
-    return user;
-  })
-  .then(function(user){
-    return hideSensitiveData(user);
   })
 }
 
