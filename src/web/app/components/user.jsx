@@ -79,9 +79,18 @@ class User extends React.Component {
       return <div></div>;
     }
 
+    // For each slot
     const slots = this.state.user.slots.map((el, index) => {
       const start = Moment(el.start);
       const finish = Moment(el.finish);
+      let button = <RB.Button onClick={() => this.respondToSlot(el.id)}>Respond</RB.Button>;
+
+      // If already responded
+      this.props.user.slotRequests.forEach(function(sl){
+        if(sl.id == el.id){
+          button = <RB.Button>Responded</RB.Button>;
+        }
+      })
 
       return(
         <div style={{border: "solid 1px black"}} key={index}>
@@ -90,7 +99,7 @@ class User extends React.Component {
           <br/>
           <label>Finish:</label>
           {finish.format("ddd Do MMM")} @ {finish.format("hh:mm")}
-          <RB.Button onClick={() => this.respondToSlot(el.id)}>Respond</RB.Button>
+          {button}
         </div>
       );
     });
