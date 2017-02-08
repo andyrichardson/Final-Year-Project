@@ -11,7 +11,18 @@ class App extends React.Component {
   /* CONSTRUCTOR */
   constructor(props){
     super(props);
-    this.state = {accessToken: Cookie.get("accessToken")};
+    this.state = {
+      accessToken: Cookie.get("accessToken")
+    };
+  }
+
+  componentDidMount(){
+    if(this.state.accessToken !== ""){
+      this.updateSelf();
+      setInterval(() => {
+        this.updateSelf();
+      }, 3000)
+    }
   }
 
   /* LOGIN */
@@ -35,6 +46,14 @@ class App extends React.Component {
     window.location.href = "/";
   }
 
+  /* UPDATE SELF */
+  updateSelf() {
+    Api.getUserAuthenticated({accessToken: this.state.accessToken})
+    .then((data) => {
+      this.setState({user: data.message});
+    });
+  }
+
   /* USER HAS ACCESS TOKEN */
   isAuthenticated(){
     return this.state.accessToken != "";
@@ -48,10 +67,13 @@ class App extends React.Component {
           return React.cloneElement(child, {login: (state) => this.login(state)});
 
         case "User":
-          return React.cloneElement(child, {accessToken: this.state.accessToken});
+          return React.cloneElement(child, {accessToken: this.state.accessToken, user: this.state.user});
 
         case "Home":
           return React.cloneElement(child, {accessToken: this.state.accessToken});
+
+        case "Notifications":
+          return React.cloneElement(child, {user: this.state.user});
 
         default:
           return child;

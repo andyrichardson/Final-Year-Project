@@ -47,6 +47,20 @@ router.get('/:username', function(req, res, next){
   });
 });
 
+/* GET SELF */
+router.get('/', function(req, res, next){
+  if(req.query.accessToken === undefined){
+    return next();
+  }
+
+  return Token.validate(req, res, function(){
+    return User.getUserAuthenticated(req.auth.username, req.auth.username)
+    .then(function(data){
+      res.json({status: 200, message: data});
+    });
+  });
+});
+
 /* ADD FRIEND */
 router.post('/:username', Token.validate, function(req, res){
   return User.addUser(req.auth.username, req.params.username)
