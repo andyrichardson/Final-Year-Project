@@ -179,9 +179,21 @@ module.exports.create = function(obj){
     email: obj.email
   };
 
-  return model.saveProm(user)
+  return module.exports.getUser(obj.username)
   .then(function(){
-    return Token.register(user.username, user.password);
+    const error = new Error("User already exists");
+    error.status = 409;
+    throw error;
+  })
+  .catch(function(err){
+    if(err.message == "User already exists"){
+      throw err
+    }
+
+    return model.saveProm(user)
+    .then(function(){
+      return Token.register(user.username, user.password);
+    });
   });
 };
 
