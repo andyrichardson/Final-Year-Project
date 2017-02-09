@@ -47,7 +47,7 @@ let model, db;
 /* SENSOR DATA FOR SELF SCOPE */
 const sensorSelf = function(user){
   return new Prom(function(fulfill, reject){
-    if(user.friends != undefined){
+    if(user.friends !== undefined){
       user.friends.forEach(function(el){
         el.password = undefined;
         el.email = undefined;
@@ -118,6 +118,27 @@ const getRequests = function(user){
   });
 }
 
+/* GET SCHEDULED MEETINGS FOR REQUESTING USER */
+const getMeetings = function(user){
+  const query = `MATCH (u:User {username: "${user.username}"})-[:has_meeting]->(m:Meeting),
+  (f:User)-[:has_meeting]->(m)
+  RETURN m, f`;
+
+  return db.queryProm(query)
+  .then(function(data){
+    if(data[0] === undefined){
+      return user;
+    }
+    user.meetings = data.map(function(el) {
+      const data = el.m;
+      data.username = el.f.username;
+      return data;
+    });
+
+    return user;
+  })
+}
+
 /* INITIALIZE */
 module.exports.init = function(database){
   UserHandler.init(database);
@@ -134,7 +155,7 @@ module.exports.init = function(database){
   model.compose(model, "requests", "has_request", {many:true}); // change model to request type
   model.compose(model, "slotRequests", "requests_slot", {many: true});
   model.compose(Slot.model(), "slots", "has_slot", {many: true});
-  model.compose(Meeting.model(), "meetings", "has_meeting", {many: true});
+  // model.compose(Meeting.model(), "meetings", "has_meeting", {many: true});
   model.compose(Notification.model(), "notifications", "has_notification", {many: true});
 };
 
@@ -262,8 +283,11 @@ module.exports.getUserAuthenticated = function(self, username){
     if(user.username == self){
       return getRequests(user)
       .then(function(user){
+        return getMeetings(user)
+      })
+      .then(function(user){
         return sensorSelf(user);
-      });
+      })
     }
 
     if(friend){
