@@ -267,36 +267,170 @@ describe("API Middleware", function(){
 
     it("shows slot requests made to user", function(){
       const data = {
-        accessToken: user2AccessToken,
-        username: user2.username
+        accessToken: user2AccessToken
       };
 
       return api.getUserAuthenticated(data)
       .then(function(data){
         assert.equal(data.message.slots[0].requests.length, 1);
         assert.equal(data.message.slots[0].requests[0], user1.username);
-      })
-    });
-  });
-
-  describe("Advanced user retrieval", function(){
-    it("unauthenticated requests do not leak slot information", function(){
-      return api.getUser(user2.username)
-      .then(function(data){
-        assert.equal(data.slots, undefined);
       });
     });
 
-    it("self get requests show slot information", function(){
+    it("gives user notification of slot request", function(){
       const data = {
-        username: user2.username,
         accessToken: user2AccessToken
       };
 
       return api.getUserAuthenticated(data)
       .then(function(data){
+        assert.equal(data.message.notifications[0].type, 'slot response');
+        assert.equal(data.message.notifications[0].username, user1.username);
+      });
+    });
+  });
+
+  describe("Slot confirmations", function(){
+    it("prevents confirming meeting for no such slot", function(){
+      const data = {
+        accessToken: user1AccessToken,
+        username: user2.username,
+        slotId: 30000
+      };
+
+      return api.confirmMeeting(data)
+      .then(function(data){
+        assert.equal(data.status, 400);
+      });
+    });
+
+    it("prevents confirming meeting for no such user with valid slotId", function(){
+      const data = {
+        accessToken: user2AccessToken
+      };
+
+      return api.getUserAuthenticated(data)
+      .then(function(response){
+        const data = {
+          accessToken: user2AccessToken,
+          slotId: response.message.notifications[0].slotId,
+          username: "12345"
+        };
+
+        return api.confirmMeeting(data)
+        .then(function(data){
+          assert.equal(data.status, 400);
+        })
+      })
+    });
+
+    it("notifies of error when arguments not specified", function(){
+      const data = {
+        accessToken: user1AccessToken
+      };
+
+      return api.confirmMeeting(data)
+      .then(function(data){
+        assert.equal(data.status, 400);
+        assert.equal(data.message, "One or more arguments missing.");
+      });
+    });
+
+    it("creates new meeting when slot confirmed", function(){
+      const data = {
+        accessToken: user2AccessToken
+      };
+
+      return api.getUserAuthenticated(data)
+      .then(function(response){
+        const data = {
+          accessToken: user2AccessToken,
+          slotId: response.message.notifications[0].slotId,
+          username: response.message.notifications[0].username
+        };
+
+        return api.confirmMeeting(data)
+        .then(function(data){
+          assert.equal(data.status, 200);
+          assert.equal(data.message, "Meeting successfully created.");
+        })
+      })
+    });
+
+    it("removes slot following meeting creation", function(){
+      const data = {
+        accessToken: user2AccessToken
+      };
+
+      return api.getUserAuthenticated(data)
+      .then(function(data){
+        assert(data.message.slots === undefined);
+      })
+    });
+
+    it("shows meeting in confirmers account", function(){
+      const data = {
+        accessToken: user2AccessToken
+      };
+
+      return api.getUserAuthenticated(data)
+      .then(function(data){
+        assert.equal(data.message.meetings[0].username, user1.username);
+      });
+    });
+
+    it("shows meeting in requesters account", function(){
+      const data = {
+        accessToken: user1AccessToken
+      };
+
+      return api.getUserAuthenticated(data)
+      .then(function(data){
+        assert.equal(data.message.meetings[0].username, user2.username);
+      });
+    });
+  });
+
+  describe("Advanced user retrieval", function(){
+    it("self get requests show slot information", function(){
+      const data = {
+        accessToken: user2AccessToken,
+        start: new Date(),
+        finish: new Date(new Date().getTime() + 100)
+      };
+
+      return api.createSlot(data)
+      .then(function(){
+        const formData = {
+          accessToken: user2AccessToken
+        };
+
+        return api.getUserAuthenticated(formData)
+      })
+      .then(function(data){
         assert.notEqual(data.message.slots, undefined);
       })
+    });
+
+    it("unauthenticated requests do not leak slot information", function(){
+      return api.getUser(user2.username)
+      .then(function(data){
+        assert.equal(data.message.slots, undefined);
+      });
+    });
+
+    it("unathenticated requests do not leak notification information", function(){
+      return api.getUserAuthenticated(user2.username)
+      .then(function(data){
+        assert.equal(data.message.notifications, undefined);
+      });
+    });
+
+    it("unathenticated requests do not leak meeting information", function(){
+      return api.getUserAuthenticated(user2.username)
+      .then(function(data){
+        assert.equal(data.message.meetings, undefined);
+      });
     });
 
     it("friend get requests show slot information", function(){
@@ -320,6 +454,30 @@ describe("API Middleware", function(){
       return api.getUserAuthenticated(data)
       .then(function(data){
         assert.equal(data.message.slots[0].requests, undefined);
+      })
+    });
+
+    it("friend requests do not show notifications of friends", function(){
+      const data = {
+        username: user2.username,
+        accessToken: user1AccessToken
+      };
+
+      return api.getUserAuthenticated(data)
+      .then(function(data){
+        assert.equal(data.message.slots[0].notifications, undefined);
+      })
+    });
+
+    it("friend requests do not show meetings of friends", function(){
+      const data = {
+        username: user2.username,
+        accessToken: user1AccessToken
+      };
+
+      return api.getUserAuthenticated(data)
+      .then(function(data){
+        assert.equal(data.message.slots[0].meetings, undefined);
       })
     });
   });
