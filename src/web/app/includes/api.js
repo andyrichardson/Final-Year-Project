@@ -119,3 +119,19 @@ module.exports.respondSlot = function(data){
     return JSON.parse(data.body);
   })
 }
+
+/* CONFIRM SLOT MEETING */
+module.exports.confirmMeeting = function(data){
+  const formData = {
+    form: {
+      accessToken: data.accessToken,
+      username: data.username,
+      slotId: data.slotId
+    }
+  };
+
+  return request.postProm(baseUri + "/slot/confirm", formData)
+  .then(function(data){
+    return JSON.parse(data.body);
+  })
+}

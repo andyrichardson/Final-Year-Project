@@ -29,7 +29,7 @@ const bundle = function(){
   // Compile Javascript
   js_compiler.bundle(function(err){
     if(err){
-      return console.log(err.red);
+      return console.log(err);
     }
     console.log('Javascript compilation complete'.green);
   }).pipe(fs.createWriteStream(bundle_js));

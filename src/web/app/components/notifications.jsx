@@ -3,6 +3,8 @@ const Link = require('react-router').Link;
 const RB = require('react-bootstrap');
 const Moment = require('moment');
 
+const SlotResponse = require('./notifications/slotResponse.jsx');
+
 const Api = require("../includes/api");
 
 class Notifications extends React.Component {
@@ -18,20 +20,26 @@ class Notifications extends React.Component {
       }
     });
 
-    // Get slot
-    this.props.user.slots.forEach((nslot) => {
-      if(nslot.id == notification.slotId){
-        slot = nslot
-      }
-    });
+    if(this.props.user.slots !== undefined){
+      this.props.user.slots.forEach((nslot) => {
+        if(nslot.id == notification.slotId){
+          slot = nslot
+        }
+      });
+    }
 
-    return(
-      <div>
-        You have a meeting request from {' '}
-        <Link to={`/user/${requester.username}`}>{`${requester.firstName} ${requester.lastName}`}</Link>
-        {' '} for your slot on {Moment(slot.start).format("MMM Do [at] HH:mm")}
-      </div>
-    )
+    if(slot !== undefined){
+      return(
+        <div key={notification.id}>
+          You have a meeting request from {' '}
+          <Link to={`/user/${requester.username}`}>{`${requester.firstName} ${requester.lastName}`}</Link>
+          {' '} for your slot on {Moment(slot.start).format("MMM Do [at] HH:mm")}
+          <RB.Button>Confirm</RB.Button> <RB.Button>Reject</RB.Button>
+        </div>
+      )
+    }
+
+    return (<div key={notification.id}></div>);
   }
 
   /* GENERATE NOTIFICATIONS */
@@ -43,7 +51,7 @@ class Notifications extends React.Component {
     const data = this.props.user.notifications.map((not) =>{
       switch (not.type) {
         case "slot response":
-          return this.slotResponse(not);
+          return (<SlotResponse key={not.id} user={this.props.user} notification={not} accessToken={this.props.accessToken}/>);
           break;
         default:
           return (<div>noooope</div>)

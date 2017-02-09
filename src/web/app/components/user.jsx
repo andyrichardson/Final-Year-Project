@@ -86,11 +86,13 @@ class User extends React.Component {
       let button = <RB.Button onClick={() => this.respondToSlot(el.id)}>Respond</RB.Button>;
 
       // If already responded
-      this.props.user.slotRequests.forEach(function(sl){
-        if(sl.id == el.id){
-          button = <RB.Button>Responded</RB.Button>;
-        }
-      })
+      if (this.props.user.slotRequests != undefined) {
+        this.props.user.slotRequests.forEach(function(sl){
+          if(sl.id == el.id){
+            button = <RB.Button>Responded</RB.Button>;
+          }
+        })
+      }
 
       return(
         <div style={{border: "solid 1px black"}} key={index}>

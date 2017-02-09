@@ -127,7 +127,7 @@ module.exports.respond = function(username, slotId){
   });
 }
 
-/* CONFIRM SLOT */
+/* CONFIRM SLOT MEETING REQUEST */
 module.exports.confirm = function(self, friend, slotId){
   const query = `MATCH (:User {username: "${self}"})-[:has_slot]->(s),
   (:User {username: "${friend}"})-[:requests_slot]->(s)
@@ -144,14 +144,10 @@ module.exports.confirm = function(self, friend, slotId){
     }
 
     return Meeting.create(slot[0], self, friend);
-
-    // const query = `MATCH (s:Slot) WHERE ID(s) = ${slotId} DETACH DELETE s`;
-    // return db.queryProm(query)
-    // .then(function(data){
-    //   console.log(data);
-    // })
   })
 }
+
+/* DECLINE SLOT MEETING REQUEST */
 
 /* MODEL */
 module.exports.model = function(){

@@ -73,7 +73,7 @@ class App extends React.Component {
           return React.cloneElement(child, {accessToken: this.state.accessToken});
 
         case "Notifications":
-          return React.cloneElement(child, {user: this.state.user});
+          return React.cloneElement(child, {user: this.state.user, accessToken: this.state.accessToken});
 
         default:
           return child;
