@@ -65,14 +65,12 @@ module.exports.create = function(slot, user1, user2){
 
   return model.saveProm(meeting)
   .then(function(meeting){
-    const query = `MATCH (a:User {username: "${user1}"}),
-    (b:User {username: "${user2}"}),
-    (m:Meeting),
-    (s:Slot)
-    WHERE ID(m) = ${meeting.id}
+    const query = `MATCH (a:User),(b:User),(m:Meeting),(s:Slot)
+    WHERE a.username = "${user1}"
+    AND b.username = "${user2}"
+    AND ID(m) = ${meeting.id}
     AND ID(s) = ${slot.id}
-    CREATE (a)-[:has_meeting]->(m),
-    (b)-[:has_meeting]->(m)
+    CREATE (a)-[:has_meeting]->(m), (b)-[:has_meeting]->(m)
     DETACH DELETE s`
 
     return db.queryProm(query);

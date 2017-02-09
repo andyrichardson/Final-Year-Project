@@ -129,6 +129,12 @@ module.exports.respond = function(username, slotId){
 
 /* CONFIRM SLOT MEETING REQUEST */
 module.exports.confirm = function(self, friend, slotId){
+  if(self === undefined || friend === undefined || slotId === undefined){
+    const error = new Error("One or more arguments missing.");
+    error.status = 400;
+    throw error;
+  }
+  
   const query = `MATCH (:User {username: "${self}"})-[:has_slot]->(s),
   (:User {username: "${friend}"})-[:requests_slot]->(s)
   WHERE ID(s) = ${slotId}
