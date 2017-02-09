@@ -23,4 +23,13 @@ router.post('/respond', Token.validate, function(req, res){
   });
 })
 
+/* CONFIRM SLOT */
+router.post('/confirm', Token.validate, function(req, res){
+  return Slot.confirm(req.auth.username, req.body.username, req.body.slotId)
+  .then(function(data){
+    res.status = 200;
+    res.json({status: 200, message: "Meeting successfully created."});
+  });
+});
+
 module.exports = router;

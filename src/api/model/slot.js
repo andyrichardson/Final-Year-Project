@@ -4,6 +4,7 @@ const ModelHandler = require('./ModelHandler');
 const Token = require('./token');
 const User = require('./user');
 const Notification = require('./notification');
+const Meeting = require('./meeting');
 
 /* SCHEMA */
 const schema = {
@@ -66,7 +67,7 @@ module.exports.create = function(username, start, finish){
 
 /* GET SLOT OWNER */
 module.exports.getOwner = function(slotId){
-  let query = `match (u:User)-[:has_slot]->(s:Slot) WHERE ID(s) = ${slotId} return u`;
+  let query = `MATCH (u:User)-[:has_slot]->(s:Slot) WHERE ID(s) = ${slotId} return u`;
   return db.queryProm(query)
   .then(function(data){
     if(data[0] === undefined){
@@ -124,6 +125,32 @@ module.exports.respond = function(username, slotId){
 
     return Notification.create(ownerUsername, data);
   });
+}
+
+/* CONFIRM SLOT */
+module.exports.confirm = function(self, friend, slotId){
+  const query = `MATCH (:User {username: "${self}"})-[:has_slot]->(s),
+  (:User {username: "${friend}"})-[:requests_slot]->(s)
+  WHERE ID(s) = ${slotId}
+  RETURN s`;
+
+  return db.queryProm(query)
+  .then(function(slot){
+    // No matches
+    if(slot[0] === undefined){
+      const error = new Error("Invalid request, slot could not be confirmed.");
+      error.status = 400;
+      throw error;
+    }
+
+    return Meeting.create(slot[0], self, friend);
+
+    // const query = `MATCH (s:Slot) WHERE ID(s) = ${slotId} DETACH DELETE s`;
+    // return db.queryProm(query)
+    // .then(function(data){
+    //   console.log(data);
+    // })
+  })
 }
 
 /* MODEL */
