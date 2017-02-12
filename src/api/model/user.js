@@ -176,7 +176,7 @@ module.exports.init = function(database){
   model.compose(model, "slotRequests", "requests_slot", {many: true});
   model.compose(Slot.model(), "slots", "has_slot", {many: true});
   // model.compose(Meeting.model(), "meetings", "has_meeting", {many: true});
-  model.compose(Notification.model(), "notifications", "has_notification", {many: true});
+  model.compose(Notification.model(), "notifications", "has_notification", {many: true, orderBy: {property: 'created', desc: 'false'}});
 };
 
 /* LOG IN */
