@@ -94,13 +94,17 @@ class User extends React.Component {
         })
       }
 
+      // If viewing own profile
+      if (this.props.user.username == this.props.params.username){
+        button = <div></div>;
+      }
+
       return(
         <div style={{border: "solid 1px black"}} key={index}>
-          <label>Start:</label>
-          {start.format("ddd Do MMM")} @ {start.format("hh:mm")}
+          <label>Start:</label> {start.calendar()}
+
           <br/>
-          <label>Finish:</label>
-          {finish.format("ddd Do MMM")} @ {finish.format("hh:mm")}
+          <label>Finish:</label> {finish.calendar()}
           {button}
         </div>
       );
