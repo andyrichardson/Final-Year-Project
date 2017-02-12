@@ -133,5 +133,21 @@ module.exports.confirmMeeting = function(data){
   return request.postProm(baseUri + "/slot/confirm", formData)
   .then(function(data){
     return JSON.parse(data.body);
-  })
+  });
+}
+
+/* DECLINE SLOT MEETING */
+module.exports.declineMeeting = function(data){
+  const formData = {
+    form: {
+      accessToken: data.accessToken,
+      username: data.username,
+      slotId: data.slotId
+    }
+  };
+
+  return request.postProm(baseUri + "/slot/decline", formData)
+  .then(function(data){
+    return JSON.parse(data.body);
+  });
 }

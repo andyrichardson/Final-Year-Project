@@ -20,6 +20,20 @@ class SlotResponse extends React.Component {
     });
   }
 
+  /* DECLINE MEETING */
+  declineMeeting(){
+    const data = {
+      accessToken: this.props.accessToken,
+      username: this.props.notification.username,
+      slotId: this.props.notification.slotId
+    };
+
+    return Api.declineMeeting(data)
+    .then(function(data){
+      alert(data.message);
+    });
+  }
+
   /* RENDER */
   render(){
     let requester, slot;
@@ -47,7 +61,7 @@ class SlotResponse extends React.Component {
           {' '} for your slot on {Moment(slot.start).format("MMM Do [at] HH:mm")}
 
           <RB.Button onClick={()=>this.confirmMeeting()}>Confirm</RB.Button>
-          <RB.Button>Reject</RB.Button>
+          <RB.Button onClick={()=>this.declineMeeting()}>Decline</RB.Button>
         </div>
       )
     }
