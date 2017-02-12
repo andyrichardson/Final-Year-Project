@@ -3,6 +3,7 @@ const Prom = require('bluebird');
 const ModelHandler = require('./ModelHandler');
 const Token = require('./token');
 const User = require('./user');
+const Slot = require('./slot');
 const Notification = require('./notification');
 
 /* SCHEMA */
@@ -65,15 +66,16 @@ module.exports.create = function(slot, user1, user2){
 
   return model.saveProm(meeting)
   .then(function(meeting){
-    const query = `MATCH (a:User),(b:User),(m:Meeting),(s:Slot)
+    const query = `MATCH (a:User),(b:User),(m:Meeting)
     WHERE a.username = "${user1}"
     AND b.username = "${user2}"
     AND ID(m) = ${meeting.id}
-    AND ID(s) = ${slot.id}
-    CREATE (a)-[:has_meeting]->(m), (b)-[:has_meeting]->(m)
-    DETACH DELETE s`
+    CREATE (a)-[:has_meeting]->(m), (b)-[:has_meeting]->(m)`;
 
     return db.queryProm(query);
+  })
+  .then(function(){
+    return Slot.delete(slot.id);
   });
 }
 

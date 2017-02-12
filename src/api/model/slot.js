@@ -65,6 +65,15 @@ module.exports.create = function(username, start, finish){
   });
 }
 
+/* DELETE SLOT */
+module.exports.delete = function(slotId){
+    const query = `MATCH (s:Slot), (n:Notification {slotId:"${slotId}"})
+    WHERE ID(s) = ${slotId}
+    DETACH DELETE s, n`;
+
+    return db.queryProm(query);
+}
+
 /* GET SLOT OWNER */
 module.exports.getOwner = function(slotId){
   let query = `MATCH (u:User)-[:has_slot]->(s:Slot) WHERE ID(s) = ${slotId} return u`;
@@ -134,7 +143,7 @@ module.exports.confirm = function(self, friend, slotId){
     error.status = 400;
     throw error;
   }
-  
+
   const query = `MATCH (:User {username: "${self}"})-[:has_slot]->(s),
   (:User {username: "${friend}"})-[:requests_slot]->(s)
   WHERE ID(s) = ${slotId}
