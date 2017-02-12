@@ -172,7 +172,7 @@ module.exports.logout = function(token){
 /* REGISTER/CREATE */
 module.exports.create = function(obj){
   const user = {
-    username: obj.username,
+    username: obj.username.toLowerCase(),
     password: obj.password,
     firstName: obj.firstName,
     lastName: obj.lastName,
