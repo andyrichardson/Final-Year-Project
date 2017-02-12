@@ -139,6 +139,15 @@ const getMeetings = function(user){
   })
 }
 
+/* GET FRIENDS */
+const getFriends = function(user){
+  return model.queryProm("MATCH (x:User {username: {username}})-[:has_friend]-(node:User)", {username: user.username})
+  .then(function(friends){
+    user.friends = friends;
+    return user;
+  })
+}
+
 /* INITIALIZE */
 module.exports.init = function(database){
   UserHandler.init(database);
@@ -237,25 +246,18 @@ module.exports.changePassword = function(username, oldPassword, newPassword){
 
 /* GET USER */
 module.exports.getUser = function(username){
-  let node;
 
   return model.whereProm({username: username}, {limit: 1})
-  .then(function(data){
-    node = data;
+  .then(function(node){
     if(node[0] === undefined){
       const error = new Error("No such user");
       error.status = 403;
       throw error;
     }
 
-    return model.queryProm("MATCH (x:User {username: {username}})-[:has_friend]-(node:User)", {username: username})
+    return getFriends(node[0])
   })
-  .then(function(data){
-    const user = node[0];
-    user.friends = data;
-    user.password = undefined;
-    user.email = undefined;
-
+  .then(function(user){
     return sensorPublic(user);
   })
   .then(function(user){
@@ -265,23 +267,16 @@ module.exports.getUser = function(username){
 
 /* GET USER AUTHENTICATED */
 module.exports.getUserAuthenticated = function(self, username){
-  let node;
-
   // Get user
   return model.whereProm({username: username}, {limit: 1})
-  .then(function(data){
-    node = data;
+  .then(function(node){
     if(node[0] === undefined){
       throw new Error("No such user");
     }
 
-    // Get users friends
-    return model.queryProm("MATCH (x:User {username: {username}})-[:has_friend]-(node:User)", {username: username})
+    return getFriends(node[0])
   })
-  .then(function(data){
-    const user = node[0];
-    user.friends = data;
-
+  .then(function(user){
     let friend = false;
 
     // Determine if friends
