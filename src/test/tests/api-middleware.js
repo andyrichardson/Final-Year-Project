@@ -164,7 +164,7 @@ describe("API Middleware", function(){
       return api.createSlot(data)
       .then(function(data){
         assert.equal(data.status, 200);
-      })
+      });
     });
 
     it("requires a start time", function(){
@@ -290,7 +290,7 @@ describe("API Middleware", function(){
     });
   });
 
-  describe("Slot confirmations", function(){
+  describe("Slot Response Confirmations", function(){
     it("prevents confirming meeting for no such slot", function(){
       const data = {
         accessToken: user1AccessToken,
@@ -324,7 +324,7 @@ describe("API Middleware", function(){
       })
     });
 
-    it("notifies of error when arguments not specified", function(){
+    it("prevents declining meeting with no arguments", function(){
       const data = {
         accessToken: user1AccessToken
       };
@@ -368,6 +368,17 @@ describe("API Middleware", function(){
       })
     });
 
+    it("removes slot request notification", function(){
+      const data = {
+        accessToken: user2AccessToken
+      };
+
+      return api.getUserAuthenticated(data)
+      .then(function(data){
+        assert(data.message.notifications === undefined);
+      });
+    });
+
     it("shows meeting in confirmers account", function(){
       const data = {
         accessToken: user2AccessToken
@@ -391,7 +402,95 @@ describe("API Middleware", function(){
     });
   });
 
-  describe("Advanced user retrieval", function(){
+  describe("Slot Response Rejections", function(){
+    it("prevents declining meeting for no such slot", function(){
+      return api.declineMeeting({
+        accessToken: user1AccessToken,
+        username: user2.username,
+        slotId: 10000
+      })
+      .then(function(data){
+        assert.equal(data.status, 400);
+      });
+    });
+
+    it("prevents declining meeting for no such user", function(){
+      // Create slot with user 2
+      return api.createSlot({
+        accessToken: user2AccessToken,
+        start: new Date(),
+        finish: new Date(new Date().getTime() + 100)
+      })
+      .then(function(data){
+          return api.getUserAuthenticated({accessToken: user2AccessToken});
+      })
+      .then(function(data){
+        return api.declineMeeting({
+          accessToken: user1AccessToken,
+          username: "nosuchname",
+          slotId: data.message.slots[0].id
+        })
+      })
+      .then(function(data){
+        assert.equal(data.status, 400);
+      })
+    });
+
+    it("prevents declining meeting with no arguments", function(){
+      return api.declineMeeting({
+        accessToken: user1AccessToken
+      })
+      .then(function(data){
+        assert.equal(data.status, 400);
+        assert.equal(data.message, 'One or more arguments missing.');
+      });
+    });
+
+    it("allows slot Rejections", function(){
+      const data = {
+        accessToken: user1AccessToken,
+        username: user2.username
+      };
+
+      return api.getUserAuthenticated(data)
+      .then(function(user){
+        const data = {
+          accessToken: user1AccessToken,
+          slotId: user.message.slots[0].id
+        };
+
+        // Respond to slot with user 1
+        return api.respondSlot(data);
+      })
+      .then(function(data){
+        return api.getUserAuthenticated({accessToken: user2AccessToken})
+      })
+      .then(function(data){
+        return api.declineMeeting({
+          accessToken: user2AccessToken,
+          username: data.message.notifications[0].username,
+          slotId: data.message.notifications[0].slotId
+        });
+      })
+      .then(function(data){
+        assert.equal(data.status, 200);
+        assert.equal(data.message, "Slot request successfully declined.");
+      })
+    });
+
+    it("removes slot request notification", function(){
+      const data = {
+        accessToken: user2AccessToken
+      };
+
+      return api.getUserAuthenticated(data)
+      .then(function(data){
+        assert(data.message.notifications === undefined);
+      });
+    });
+  });
+
+  describe("Advanced User Retrieval", function(){
     it("self get requests show slot information", function(){
       const data = {
         accessToken: user2AccessToken,
