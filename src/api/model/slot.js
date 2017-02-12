@@ -163,6 +163,30 @@ module.exports.confirm = function(self, friend, slotId){
 }
 
 /* DECLINE SLOT MEETING REQUEST */
+module.exports.decline = function(self, friend, slotId){
+  if(self === undefined || friend === undefined || slotId === undefined){
+    const error = new Error("One or more arguments missing.");
+    error.status = 400;
+    throw error;
+  }
+
+  // Delete request and notification
+  const query = `MATCH (a:User {username: "${self}"})-[:has_slot]->(s:Slot),
+  (:User {username: "${friend}"})-[r:requests_slot]->(s:Slot),
+  (a)-[:has_notification]->(n:Notification {slotId: "${slotId}", username: "${friend}"})
+  WHERE ID(s) = ${slotId}
+  DETACH DELETE r, n
+  RETURN a`;
+
+  return db.queryProm(query)
+  .then(function(data){
+    if(data[0] === undefined){
+      const error = new Error("Unable to decline request.")
+      error.status = 400;
+      throw error;
+    }
+  })
+}
 
 /* MODEL */
 module.exports.model = function(){

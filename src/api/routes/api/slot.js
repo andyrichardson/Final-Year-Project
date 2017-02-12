@@ -32,4 +32,13 @@ router.post('/confirm', Token.validate, function(req, res){
   });
 });
 
+/* DECLINE SLOT */
+router.post('/decline', Token.validate, function(req, res){
+  return Slot.decline(req.auth.username, req.body.username, req.body.slotId)
+  .then(function(data){
+    res.status = 200;
+    res.json({status: 200, message: "Slot request successfully declined."});
+  });
+});
+
 module.exports = router;
