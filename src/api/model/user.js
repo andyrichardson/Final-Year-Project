@@ -143,9 +143,12 @@ const getMeetings = function(user){
 const getFriends = function(user){
   return model.queryProm("MATCH (x:User {username: {username}})-[:has_friend]-(node:User)", {username: user.username})
   .then(function(friends){
-    user.friends = friends;
+    user.friends = friends.sort(function(user1, user2){
+      return user1.username.localeCompare(user2.username);
+    });
+
     return user;
-  })
+  });
 }
 
 /* INITIALIZE */
@@ -246,7 +249,6 @@ module.exports.changePassword = function(username, oldPassword, newPassword){
 
 /* GET USER */
 module.exports.getUser = function(username){
-
   return model.whereProm({username: username}, {limit: 1})
   .then(function(node){
     if(node[0] === undefined){
@@ -267,7 +269,6 @@ module.exports.getUser = function(username){
 
 /* GET USER AUTHENTICATED */
 module.exports.getUserAuthenticated = function(self, username){
-  // Get user
   return model.whereProm({username: username}, {limit: 1})
   .then(function(node){
     if(node[0] === undefined){
