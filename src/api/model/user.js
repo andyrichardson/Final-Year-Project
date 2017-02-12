@@ -126,13 +126,21 @@ const getMeetings = function(user){
 
   return db.queryProm(query)
   .then(function(data){
+    // No meetings
     if(data[0] === undefined){
       return user;
     }
+
+    // Create meeting objects
     user.meetings = data.map(function(el) {
       const data = el.m;
       data.username = el.f.username;
       return data;
+    });
+
+    // Sort meeting objects
+    user.meetings = user.meetings.sort(function(meeting1, meeting2){
+      return meeting1.start - meeting2.start;
     });
 
     return user;
