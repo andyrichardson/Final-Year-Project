@@ -4,7 +4,7 @@ const ReactDOM = require('react-dom');
 const DatePicker = require('react-datepicker');
 const TimePicker = require('rc-time-picker');
 const Moment = require('moment');
-const Api = require('../includes/api');
+const Api = require('../../includes/api');
 
 class AddSlot extends React.Component{
   /* CONSTRUCTOR */
