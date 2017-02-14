@@ -14,6 +14,15 @@ router.post('/', Token.validate, function(req, res){
     });
 });
 
+/* GET SLOT FEED */
+router.get('/', Token.validate, function(req, res){
+  Slot.getFeed(req.auth.username)
+  .then(function(data){
+    res.status = 200;
+    res.json({status: 200, message: data});
+  })
+})
+
 /* RESPOND TO SLOT */
 router.post('/respond', Token.validate, function(req, res){
   return Slot.respond(req.auth.username, req.body.slotId)
