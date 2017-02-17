@@ -2,6 +2,7 @@ FROM node:argon
 MAINTAINER Andy Richardson
 
 ENV NODE_ENV development
+ENV HOSTNAME localhost
 
 EXPOSE 80
 

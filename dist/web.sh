@@ -31,7 +31,7 @@ run_dev(){
 # Run test container
 run_test(){
 	# Build container
-	docker build -t fyp-web:test -f $CWD/release/web/Dockerfile $CWD
+	docker build -t fyp-web:test -f $CWD/test/web/Dockerfile $CWD
 
 	# Kill any previous containers
 	docker kill fyp-web 2> /dev/null
@@ -47,10 +47,20 @@ run_test(){
 
 # Run release container
 run_release(){
-	echo "release is not configured"
+	# Build container
+	docker build -t fyp-web:release -f $CWD/release/web/Dockerfile $CWD
+
+	# Kill any previous containers
+	docker kill fyp-web 2> /dev/null
+	docker rm fyp-web 2> /dev/null
+
+	# Run container
+	docker run -d -p 80:80 \
+	-v $CWD/../src/web:/var/www/web \
+	--name=fyp-web \
+	--net=fyp-network \
+	fyp-web:release
 }
-
-
 
 case $1 in
 	-h | --help)

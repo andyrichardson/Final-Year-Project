@@ -8,7 +8,7 @@ print_help(){
 
 	echo "ARGUMENTS"
 	echo "	-d, --dev: Run container in development mode."
-	echo "  -s, --standalone: Run container in standalone mode (port 80)"
+	echo "	-t, --test: Run container in test mode."
 	echo "	-h, --help: Print this help prompt."
 }
 
@@ -32,7 +32,7 @@ run_dev(){
 # Run test container
 run_test(){
 	# Build container
-	docker build -t fyp-auth:test -f $CWD/release/auth/Dockerfile $CWD
+	docker build -t fyp-auth:test -f $CWD/test/auth/Dockerfile $CWD
 
 	# Kill any previous containers
 	docker kill fyp-auth 2> /dev/null
@@ -47,10 +47,19 @@ run_test(){
 
 # Run release container
 run_release(){
-	echo "release is not configured"
+	# Build container
+	docker build -t fyp-auth:test -f $CWD/release/auth/Dockerfile $CWD
+
+	# Kill any previous containers
+	docker kill fyp-auth 2> /dev/null
+	docker rm fyp-auth 2> /dev/null
+
+	docker run -d \
+	-v $CWD/../src/auth:/var/www/auth \
+	--name=fyp-auth \
+	--net=fyp-network \
+	fyp-auth:release
 }
-
-
 
 case $1 in
 	-h | --help)
@@ -70,7 +79,6 @@ case $1 in
 		;;
 
 	*)
-
 		echo "Command not found, please check flags"
 		;;
 esac
