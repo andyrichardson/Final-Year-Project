@@ -14,7 +14,11 @@ before_install:
   - ./dist/web.sh -t
   - ./dist/auth.sh -t
   - ./dist/api.sh -t
-  - sleep 6m
+  - sleep 10m
+  - docker logs fyp-neo4j
+  - docker logs fyp-web
+  - docker logs fyp-auth
+  - docker logs fyp-api
 
 script:
   - cd spec
