@@ -4,7 +4,7 @@ const React = require('react');
 const TestUtils = require('react-addons-test-utils');
 const Enzyme = require("enzyme");
 
-const componentDir = "../../web/app/components";
+const componentDir = "../../src/web/app/components";
 
 describe("React Components", function(){
   jsdom({ skipWindowCheck: true });

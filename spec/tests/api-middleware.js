@@ -2,7 +2,7 @@ const assert = require("assert");
 const request = require("request");
 
 describe("API Middleware", function(){
-  const api = require('../../web/app/includes/api');
+  const api = require('../../src/web/app/includes/api');
   const user1 = {
     username: "testuser",
     password: "password",
