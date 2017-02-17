@@ -11,10 +11,10 @@ before_install:
   - cp spec/config/auth/config.js src/auth/private/config.js
   - docker network create fyp-network
   - ./dist/neo4j.sh -t
+  - ./dist/web.sh -t
   - ./dist/auth.sh -t
   - ./dist/api.sh -t
-  - ./dist/web.sh -t
-  - sleep 4m
+  - sleep 6m
 
 script:
   - cd spec
