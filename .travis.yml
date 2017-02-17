@@ -17,6 +17,6 @@ before_install:
   - sleep 3m
 
 script:
-  - cd src/test
+  - cd spec
   - npm install
   - npm test
