@@ -1,6 +1,14 @@
 const Prom = require('bluebird');
 const request = Prom.promisifyAll(require('request'), {suffix: "Prom"});
-const baseUri = `http://${window.location.hostname}:3000/api`;
+let baseUri;
+
+if(typeof window == "undefined"){
+  // For testing purposes only
+  baseUri = "http://localhost:3000/api";
+}
+else{
+  baseUri = `http://${window.location.hostname}:3000/api`;
+}
 
 /* USER REGISTRATION */
 module.exports.register = function(data){
