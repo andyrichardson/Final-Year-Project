@@ -67,6 +67,14 @@ module.exports.getUser = function(username){
   });
 }
 
+/* GET FEED */
+module.exports.getFeed = function(accessToken){
+  return request.getProm(baseUri + "/slot/" + "?accessToken=" + accessToken)
+  .then(function(data){
+    return JSON.parse(data.body);
+  });
+}
+
 /* GET USER AUTHENTICATED */
 module.exports.getUserAuthenticated = function(data){
   return request.getProm(baseUri + "/user/" + (data.username || "") + "?accessToken=" + data.accessToken)

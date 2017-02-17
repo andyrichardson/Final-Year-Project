@@ -53,6 +53,7 @@ module.exports.init = function(database){
 
   model = Prom.promisifyAll(SlotHandler.getModel(), {suffix: 'Prom'});
   model.on("validate", validator.validate);
+  model.useTimestamps(['created']);
 
   db = Prom.promisifyAll(database, {suffix: 'Prom'});
 }
@@ -185,6 +186,23 @@ module.exports.decline = function(self, friend, slotId){
       error.status = 400;
       throw error;
     }
+  })
+}
+
+/* GET SLOT FEED */
+module.exports.getFeed = function(username){
+  const query = `MATCH (u:User)-[:has_friend]-(f:User),
+  (f)-[:has_slot]->(s:Slot)
+  WHERE u.username = "${username}"
+  RETURN s, f.username
+  ORDER BY s.created DESC`;
+
+  return db.queryProm(query)
+  .then(function(data){
+    return data.map(function(el){
+      el.s.username = el['f.username'];
+      return el.s
+    });
   })
 }
 

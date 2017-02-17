@@ -174,7 +174,7 @@ module.exports.init = function(database){
   model.compose(model, "friends", "has_friend", {many: true});
   model.compose(model, "requests", "has_request", {many:true}); // change model to request type
   model.compose(model, "slotRequests", "requests_slot", {many: true});
-  model.compose(Slot.model(), "slots", "has_slot", {many: true});
+  model.compose(Slot.model(), "slots", "has_slot", {many: true, orderBy: {property: 'created', desc: 'false'}});
   model.compose(Notification.model(), "notifications", "has_notification", {many: true, orderBy: {property: 'created', desc: 'false'}});
 };
 
@@ -343,7 +343,7 @@ module.exports.getId = function(username){
 /* SEARCH */
 module.exports.search = function(string){
   string = string.toLowerCase();
-  
+
   const query = `MATCH (u:User)
   WHERE u.username contains "${string}"
   OR (lower(u.firstName) + " " +  lower(u.lastName))
