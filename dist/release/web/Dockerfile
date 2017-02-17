@@ -2,6 +2,7 @@ FROM node:argon
 MAINTAINER Andy Richardson
 
 ENV NODE_ENV release
+ENV HOSTNAME slottify.com
 
 EXPOSE 80
 

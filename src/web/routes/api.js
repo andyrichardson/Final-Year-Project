@@ -9,7 +9,7 @@ const apiProxy = function(req, res, next){
   }
 
   console.log('redirect');
-  return res.redirect(307, "http://localhost:3000" + req.url)
+  return res.redirect(307, `http://${process.env.HOSTNAME}:3000` + req.url)
 }
 
 module.exports = apiProxy;
