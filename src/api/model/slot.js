@@ -38,9 +38,6 @@ const validator = {
   datesOrdered: function(data){
     return new Promise(function(resolve, reject) {
       if(!(data.start < data.finish)){
-        console.log("++++++++");
-        console.log(data.start);
-        console.log(data.finish);
         reject(new Error("Validation failed. Start date must be before end date."));
       }
       resolve();

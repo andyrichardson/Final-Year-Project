@@ -58,7 +58,7 @@ class SlotResponse extends React.Component {
         <div>
           You have a meeting request from {' '}
           <Link to={`/user/${requester.username}`}>{`${requester.firstName} ${requester.lastName}`}</Link>
-          {' '} for your slot on {Moment(slot.start).calendar()}
+          {' '} for your slot on {Moment.unix(slot.start).calendar()}
 
           <RB.Button onClick={()=>this.confirmMeeting()}>Confirm</RB.Button>
           <RB.Button onClick={()=>this.declineMeeting()}>Decline</RB.Button>

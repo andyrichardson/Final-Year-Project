@@ -28,8 +28,8 @@ class Meetings extends React.Component {
     const data = this.props.user.meetings.map((meeting) =>{
       return(
         <div key={meeting.id}>
-          Start: {Moment(meeting.start).calendar()}<br/>
-          Finish: {Moment(meeting.finish).calendar()}<br/>
+          Start: {Moment.unix(meeting.start).calendar()}<br/>
+        Finish: {Moment.unix(meeting.finish).calendar()}<br/>
         With: {this.usernameLink(meeting.username)}
         </div>
       );

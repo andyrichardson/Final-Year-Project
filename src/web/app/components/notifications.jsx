@@ -33,7 +33,7 @@ class Notifications extends React.Component {
         <div key={notification.id}>
           You have a meeting request from {' '}
           <Link to={`/user/${requester.username}`}>{`${requester.firstName} ${requester.lastName}`}</Link>
-          {' '} for your slot on {Moment(slot.start).format("MMM Do [at] HH:mm")}
+          {' '} for your slot on {slot.start} {Moment.unix(slot.start).calendar()}
           <RB.Button>Confirm</RB.Button> <RB.Button>Reject</RB.Button>
         </div>
       )

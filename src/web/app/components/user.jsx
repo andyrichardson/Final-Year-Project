@@ -81,8 +81,8 @@ class User extends React.Component {
 
     // For each slot
     const slots = this.state.user.slots.map((el, index) => {
-      const start = Moment(el.start);
-      const finish = Moment(el.finish);
+      const start = Moment.unix(el.start);
+      const finish = Moment.unix(el.finish);
       let button = <RB.Button onClick={() => this.respondToSlot(el.id)}>Respond</RB.Button>;
 
       // If already responded

@@ -61,8 +61,8 @@ class AddSlot extends React.Component{
   /* SUBMIT HANDLER */
   onSubmit(){
     const data = {
-      start: this.state.start.toDate(),
-      finish: this.state.finish.toDate(),
+      start: this.state.start.unix(),
+      finish: this.state.finish.unix(),
       accessToken: this.props.accessToken
     };
 

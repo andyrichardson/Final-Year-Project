@@ -70,8 +70,8 @@ class AddSlot extends React.Component{
 
     return(
       <div>
-        Start: {Moment(this.props.start).calendar()}
-        Finish: {Moment(this.props.finish).calendar()}
+        Start: {Moment.unix(this.props.start).calendar()}
+        Finish: {Moment.unix(this.props.finish).calendar()}
         User: {this.getUser()}
         {this.getButtons()}
       </div>
