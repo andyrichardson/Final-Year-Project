@@ -76,8 +76,14 @@ module.exports.getUser = function(username){
 }
 
 /* GET FEED */
-module.exports.getFeed = function(accessToken){
-  return request.getProm(baseUri + "/slot/" + "?accessToken=" + accessToken)
+module.exports.getFeed = function(data){
+  let url = baseUri + "/slot/" + "?accessToken=" + data.accessToken
+
+  if(data.start !== undefined && data.finish !== undefined){
+    url += `&start=${data.start}&finish=${data.finish}`
+  }
+  
+  return request.getProm(url)
   .then(function(data){
     return JSON.parse(data.body);
   });

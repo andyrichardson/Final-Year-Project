@@ -493,7 +493,7 @@ describe("API Middleware", function(){
 
   describe("Slot Feed Retrieval", function(){
     it("returns feed of friend slots", function(){
-      return api.getFeed(user1AccessToken)
+      return api.getFeed({accessToken: user1AccessToken})
       .then(function(data){
         assert.equal(data.status, 200);
         assert.equal(data.message[0].username, user2.username);
@@ -518,7 +518,7 @@ describe("API Middleware", function(){
         return api.createSlot(data2);
       })
       .then(function(){
-        return api.getFeed(user1AccessToken);
+        return api.getFeed({accessToken: user1AccessToken});
       })
       .then(function(data){
         assert(data.message[0].created > data.message[1].created);
@@ -527,7 +527,7 @@ describe("API Middleware", function(){
     });
 
     it("doesnt show own slots", function(){
-      return api.getFeed(user2AccessToken)
+      return api.getFeed({accessToken: user2AccessToken})
       .then(function(data){
         assert.equal(data.message[0], undefined);
       });
@@ -554,11 +554,45 @@ describe("API Middleware", function(){
         });
       })
       .then(function(){
-        return api.getFeed(user1AccessToken);
+        return api.getFeed({accessToken: user1AccessToken});
       })
       .then(function(data){
         assert.notEqual(data.message[0].username, user3.username);
       });
+    });
+
+    it("shows matches for filters", function(){
+      const start = 200000000;
+      const finish = 200000100;
+
+      return api.createSlot({
+        accessToken: user1AccessToken,
+        start: start,
+        finish: finish
+      })
+      .then(function(data){
+        return api.getFeed({
+          accessToken: user2AccessToken,
+          start: start,
+          finish: finish
+        });
+      })
+      .then(function(data){
+        assert.equal(data.message[0].username, user1.username);
+        assert.equal(data.message.length, 1);
+      });
+    });
+
+    it("returns empty array for non matches", function(){
+      return api.getFeed({
+        accessToken: user1AccessToken,
+        start: 0,
+        finish: 100
+      })
+      .then(function(data){
+        assert.equal(data.status, 200);
+        assert.equal(data.message.length, 0);
+      })
     });
   });
 

@@ -192,10 +192,16 @@ module.exports.decline = function(self, friend, slotId){
 
 /* GET SLOT FEED */
 module.exports.getFeed = function(username, start, finish){
-  const query = `MATCH (u:User)-[:has_friend]-(f:User),
+  let query = `MATCH (u:User)-[:has_friend]-(f:User),
   (f)-[:has_slot]->(s:Slot)
-  WHERE u.username = "${username}"
-  RETURN s, f.username
+  WHERE u.username = "${username}" `
+
+  if(start !== undefined && finish !== undefined){
+    query += `AND ((toInt(s.start) >= ${start} AND toInt(s.start) <= ${finish})
+    OR (toInt(s.finish) >= ${start} AND toInt(s.finish) <= ${finish})) `;
+  }
+
+  query += `RETURN s, f.username
   ORDER BY s.created DESC`;
 
   return db.queryProm(query)

@@ -16,7 +16,7 @@ router.post('/', Token.validate, function(req, res){
 
 /* GET SLOT FEED */
 router.get('/', Token.validate, function(req, res){
-  Slot.getFeed(req.auth.username, req.query.date, req.query.start, req.query.finish)
+  Slot.getFeed(req.auth.username, req.query.start, req.query.finish)
   .then(function(data){
     res.status = 200;
     res.json({status: 200, message: data});
