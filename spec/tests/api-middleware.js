@@ -490,6 +490,77 @@ describe("API Middleware", function(){
     });
   });
 
+  describe("Slot Feed Retrieval", function(){
+    it("returns feed of friend slots", function(){
+      return api.getFeed(user1AccessToken)
+      .then(function(data){
+        assert.equal(data.status, 200);
+        assert.equal(data.message[0].username, user2.username);
+      })
+    });
+
+    it("shows slots in order of time created", function(){
+      const data = {
+        accessToken: user2AccessToken,
+        start: new Date(),
+        finish: new Date(new Date().getTime() + 100)
+      };
+
+      return api.createSlot(data)
+      .then(function(){
+        const data2 = {
+          accessToken: user2AccessToken,
+          start: new Date() + 10000,
+          finish: new Date(new Date().getTime() + 10100)
+        };
+
+        return api.createSlot(data2);
+      })
+      .then(function(){
+        return api.getFeed(user1AccessToken);
+      })
+      .then(function(data){
+        assert(data.message[0].created > data.message[1].created);
+        assert(data.message[1].created > data.message[2].created);
+      })
+    });
+
+    it("doesnt show own slots", function(){
+      return api.getFeed(user2AccessToken)
+      .then(function(data){
+        assert.equal(data.message[0], undefined);
+      });
+    });
+
+    it("doesn't show slots of non-friends", function(){
+      const user3 = {
+        username: "userthree",
+        password: "pass1234",
+        email: "three@mydomain.com",
+        firstName: "userthree",
+        lastName: "Testy"
+      };
+
+      return api.register(user3)
+      .then(function(){
+        return api.login({username: user3.username, password: user3.password});
+      })
+      .then(function(token){
+        return api.createSlot({
+          accessToken: token,
+          start: new Date(),
+          finish: new Date(new Date().getTime() + 100)
+        });
+      })
+      .then(function(){
+        return api.getFeed(user1AccessToken);
+      })
+      .then(function(data){
+        assert.notEqual(data.message[0].username, user3.username);
+      });
+    });
+  });
+
   describe("Advanced User Retrieval", function(){
     it("self get requests show slot information", function(){
       const data = {
