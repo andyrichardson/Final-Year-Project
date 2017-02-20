@@ -1,5 +1,6 @@
 const assert = require("assert");
 const request = require("request");
+const Moment = require("moment");
 
 describe("API Middleware", function(){
   const api = require('../../src/web/app/includes/api');
@@ -157,8 +158,8 @@ describe("API Middleware", function(){
     it("creates a slot", function(){
       const data = {
         accessToken: user2AccessToken,
-        start: new Date(),
-        finish: new Date(new Date().getTime() + 100)
+        start: Moment().unix(),
+        finish: Moment().add(1, "hours").unix()
       };
 
       return api.createSlot(data)
@@ -170,19 +171,19 @@ describe("API Middleware", function(){
     it("requires a start time", function(){
       const data = {
         accessToken: user2AccessToken,
-        finish: new Date()
+        finish: Moment().unix()
       };
 
       return api.createSlot(data)
       .then(function(data){
         assert.equal(data.status, 400);
-      })
+      });
     });
 
     it("requires a finish time", function(){
       const data = {
         accessToken: user2AccessToken,
-        start: new Date()
+        start: Moment().unix()
       };
 
       return api.createSlot(data)
@@ -194,8 +195,8 @@ describe("API Middleware", function(){
     it("start date must be before end date", function(){
       const data = {
         accessToken: user2AccessToken,
-        start: new Date(),
-        finish: new Date(new Date().getTime() - 100)
+        start: Moment().unix(),
+        finish: Moment().add(-1, "hours").unix()
       };
 
       return api.createSlot(data)
@@ -418,8 +419,8 @@ describe("API Middleware", function(){
       // Create slot with user 2
       return api.createSlot({
         accessToken: user2AccessToken,
-        start: new Date(),
-        finish: new Date(new Date().getTime() + 100)
+        start: Moment().unix(),
+        finish: Moment().add(1, "hours").unix()
       })
       .then(function(data){
           return api.getUserAuthenticated({accessToken: user2AccessToken});
@@ -502,16 +503,16 @@ describe("API Middleware", function(){
     it("shows slots in order of time created", function(){
       const data = {
         accessToken: user2AccessToken,
-        start: new Date(),
-        finish: new Date(new Date().getTime() + 100)
+        start: Moment().unix(),
+        finish: Moment().add(1, "hours").unix()
       };
 
       return api.createSlot(data)
       .then(function(){
         const data2 = {
           accessToken: user2AccessToken,
-          start: new Date() + 10000,
-          finish: new Date(new Date().getTime() + 10100)
+          start: Moment().unix(),
+          finish: Moment().add(1, "hours").unix()
         };
 
         return api.createSlot(data2);
@@ -548,8 +549,8 @@ describe("API Middleware", function(){
       .then(function(token){
         return api.createSlot({
           accessToken: token,
-          start: new Date(),
-          finish: new Date(new Date().getTime() + 100)
+          start: Moment().unix(),
+          finish: Moment().add(1, "hours").unix()
         });
       })
       .then(function(){
@@ -565,8 +566,8 @@ describe("API Middleware", function(){
     it("self get requests show slot information", function(){
       const data = {
         accessToken: user2AccessToken,
-        start: new Date(),
-        finish: new Date(new Date().getTime() + 100)
+        start: Moment().unix(),
+        finish: Moment().add(1, "hours").unix()
       };
 
       return api.createSlot(data)

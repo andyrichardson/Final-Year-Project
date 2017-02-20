@@ -5,15 +5,16 @@ const Token = require('./token');
 const User = require('./user');
 const Slot = require('./slot');
 const Notification = require('./notification');
+const Moment = require("moment");
 
 /* SCHEMA */
 const schema = {
   start: {
-    type: Date,
+    type: Number,
     required: true
   },
   finish: {
-    type: Date,
+    type: Number,
     required: true
   }
 }

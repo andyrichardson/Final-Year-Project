@@ -5,15 +5,16 @@ const Token = require('./token');
 const User = require('./user');
 const Notification = require('./notification');
 const Meeting = require('./meeting');
+const Moment = require("moment");
 
 /* SCHEMA */
 const schema = {
   start: {
-    type: Date,
+    type: Number,
     required: true
   },
   finish: {
-    type: Date,
+    type: Number,
     required: true
   }
 }
@@ -37,6 +38,9 @@ const validator = {
   datesOrdered: function(data){
     return new Promise(function(resolve, reject) {
       if(!(data.start < data.finish)){
+        console.log("++++++++");
+        console.log(data.start);
+        console.log(data.finish);
         reject(new Error("Validation failed. Start date must be before end date."));
       }
       resolve();
@@ -190,7 +194,7 @@ module.exports.decline = function(self, friend, slotId){
 }
 
 /* GET SLOT FEED */
-module.exports.getFeed = function(username){
+module.exports.getFeed = function(username, start, finish){
   const query = `MATCH (u:User)-[:has_friend]-(f:User),
   (f)-[:has_slot]->(s:Slot)
   WHERE u.username = "${username}"

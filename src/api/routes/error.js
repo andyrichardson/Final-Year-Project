@@ -9,7 +9,7 @@ const errorHandler = function(err, req, res, next){
     };
 
     // Validation errors
-    if(err.message && error.message.includes('Validation')){
+    if(err.message && error.message.toUpperCase().includes('VALIDATION')){
         error.status = 400;
     }
 
