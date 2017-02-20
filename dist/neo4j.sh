@@ -18,15 +18,16 @@ run_dev(){
   docker build -t fyp-neo4j:dev -f $CWD/dev/neo4j/Dockerfile $CWD
 
   # Kill any previous containers
-  docker rm neo4j-dev 1>& 2> /dev/null
+  docker kill fyp-neo4j 1>& 2> /dev/null
+  docker rm fyp-neo4j 1>& 2> /dev/null
 
   # Create neo4j folder
   mkdir $CWD/../neo4j/data -p
 
   # Run container
-  docker run -p 7474:7474 \
+  docker run -p 7474:7474 -p 7687:7687\
   -v $CWD/../neo4j/data:/data \
-  --name=neo4j-dev \
+  --name=fyp-neo4j \
   --net=fyp-network \
   fyp-neo4j:dev
 }
@@ -61,7 +62,7 @@ run_release(){
   docker rm fyp-neo4j 2> /dev/null
 
   # Run container
-  docker run -d -p 7474:7474 \
+  docker run -d -p 7474:7474 -p 7687:7687\
   -v $HOME/neo4j/data:/data \
   -v $HOME/logs:/logs \
   --name=fyp-neo4j \
