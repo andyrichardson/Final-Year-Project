@@ -197,8 +197,8 @@ module.exports.getFeed = function(username, start, finish){
   WHERE u.username = "${username}" `
 
   if(start !== undefined && finish !== undefined){
-    query += `AND ((toInt(s.start) >= ${start} AND toInt(s.start) <= ${finish})
-    OR (toInt(s.finish) >= ${start} AND toInt(s.finish) <= ${finish})) `;
+    query += `AND  NOT ((toInt(s.start) >= ${finish})
+    OR (toInt(s.finish) <= ${start}))`;
   }
 
   query += `RETURN s, f.username
