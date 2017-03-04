@@ -45,7 +45,7 @@ run_test(){
   docker rm fyp-neo4j 2> /dev/null
 
   # Run container
-  docker run -d -p 7474:7474 \
+  docker run -d -p 7474:7474 -p 7687:7687 \
   -v /tmp/neo4j-test:/data \
   --name=fyp-neo4j \
   --net=fyp-network \
