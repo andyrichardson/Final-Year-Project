@@ -40,11 +40,11 @@ class Home extends React.Component{
   }
 
   applyFilter(start, finish){
-    this.setState({start: start, finish: finish});
+    this.setState({start: start, finish: finish}, () => this.getFeed());
   }
 
   clearFilter(){
-    this.setState({start: undefined, finish: undefined});
+    this.setState({start: undefined, finish: undefined}, () => this.getFeed());
   }
 
   showFeed(){
