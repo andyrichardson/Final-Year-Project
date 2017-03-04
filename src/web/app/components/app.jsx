@@ -66,20 +66,8 @@ class App extends React.Component {
         case "SignInForm":
           return React.cloneElement(child, {login: (state) => this.login(state)});
 
-        case "User":
-          return React.cloneElement(child, {user: this.state.user, accessToken: this.state.accessToken});
-
-        case "Home":
-          return React.cloneElement(child, {user: this.state.user, accessToken: this.state.accessToken});
-
-        case "Notifications":
-          return React.cloneElement(child, {user: this.state.user, accessToken: this.state.accessToken});
-
-        case "Meetings":
-          return React.cloneElement(child, {user: this.state.user, accessToken: this.state.accessToken});
-
         default:
-          return child;
+          return React.cloneElement(child, {user: this.state.user, accessToken: this.state.accessToken});
       };
     });
   }
