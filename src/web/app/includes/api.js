@@ -80,9 +80,11 @@ module.exports.getFeed = function(data){
   let url = baseUri + "/slot/" + "?accessToken=" + data.accessToken
 
   if(data.start !== undefined && data.finish !== undefined){
-    url += `&start=${data.start}&finish=${data.finish}`
+    url += `&start=${data.start}&finish=${data.finish}`;
   }
-  
+
+  console.log(url);
+
   return request.getProm(url)
   .then(function(data){
     return JSON.parse(data.body);

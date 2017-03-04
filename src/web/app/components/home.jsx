@@ -5,6 +5,7 @@ const Api = require('../includes/api');
 
 const AddSlot = require('./home/addSlot.jsx');
 const SlotListing = require('./home/slotListing.jsx');
+const Filter = require('./home/filter.jsx');
 
 class Home extends React.Component{
   constructor(props){
@@ -25,10 +26,25 @@ class Home extends React.Component{
   }
 
   getFeed(){
-    Api.getFeed(this.props.accessToken)
+    let start, finish;
+
+    if(this.state.start !== undefined && this.state.finish !== undefined){
+      start = this.state.start.unix();
+      finish = this.state.finish.unix();
+    }
+
+    return Api.getFeed({accessToken: this.props.accessToken, start: start, finish: finish})
     .then((data) => {
       this.setState({feed: data.message});
     })
+  }
+
+  applyFilter(start, finish){
+    this.setState({start: start, finish: finish});
+  }
+
+  clearFilter(){
+    this.setState({start: undefined, finish: undefined});
   }
 
   showFeed(){
@@ -54,10 +70,23 @@ class Home extends React.Component{
 
   render(){
     return(
-      <RB.Col md={8} mdOffset={2}>
-        <AddSlot accessToken={this.props.accessToken}/>
-        {this.showFeed()}
-      </RB.Col>
+      <RB.Grid>
+        <RB.Row>
+          <RB.Col md={8} mdOffset={2}>
+            <AddSlot accessToken={this.props.accessToken}/>
+          </RB.Col>
+        </RB.Row>
+
+        <RB.Row>
+          <RB.Col md={4}>
+            <Filter applyFilter={(s, f)=>this.applyFilter(s, f)} clearFilter={()=>this.clearFilter()}/>
+          </RB.Col>
+
+          <RB.Col md={8}>
+            {this.showFeed()}
+          </RB.Col>
+        </RB.Row>
+      </RB.Grid>
     );
   }
 }
