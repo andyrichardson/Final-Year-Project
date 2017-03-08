@@ -25,6 +25,7 @@ class Home extends React.Component{
     clearTimeout(this.state.intervalHandle);
   }
 
+  /* GET FEED */
   getFeed(){
     let start, finish;
 
@@ -39,20 +40,22 @@ class Home extends React.Component{
     })
   }
 
+  /* APPLY FILTER */
   applyFilter(start, finish){
     this.setState({start: start, finish: finish}, () => this.getFeed());
   }
 
+  /* CLEAR FILTER */
   clearFilter(){
     this.setState({start: undefined, finish: undefined}, () => this.getFeed());
   }
 
   showFeed(){
     if(this.state.feed === undefined){
-      return <div>No feed</div>
+      return <div className="homeFeed">No feed</div>
     }
 
-    return this.state.feed.map((el) => {
+    const feed = this.state.feed.map((el) => {
       return (
         <div key={el.id}>
           <SlotListing
@@ -65,7 +68,13 @@ class Home extends React.Component{
             />
         </div>
       );
-    })
+    });
+
+    return (
+      <div className="homeFeed">
+        {feed}
+      </div>
+    );
   }
 
   render(){

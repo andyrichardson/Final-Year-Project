@@ -1,3 +1,40 @@
-.container{
-  background-color: blu;
+body{
+  background-color: #f8f8f8;
+}
+
+.row{
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.homeFeed{
+  .slotListing{
+    margin-top: 10px;
+  }
+}
+
+.slotListing{
+  background-color: #fff;
+  border: solid 1px #d2d2d2;
+
+  .row{
+    padding: 15px 0;
+  }
+
+  .slotListingToolbar{
+    border-top: solid 1px #d2d2d2;
+    padding: 8px 0;
+  }
+
+  h2{
+    margin-top: 0;
+  }
+
+  p{
+    margin-bottom: 0;
+  }
+
+  img{
+    border-radius: 4px;
+  }
 }
