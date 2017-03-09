@@ -1,0 +1,41 @@
+.homeFeed{
+  .slotListing{
+    margin-top: 10px;
+  }
+}
+
+.addSlot{
+  background-color: $card-background;
+  border: $card-border;
+  padding: 15px 0;
+
+  h1{
+    margin-top: 0;
+  }
+}
+
+.slotListing{
+  background-color: $card-background;
+  border: $card-border;
+
+  .row{
+    padding: 15px 0;
+  }
+
+  .slotListingToolbar{
+    border-top: solid 1px #d2d2d2;
+    padding: 8px 0;
+  }
+
+  h2{
+    margin-top: 0;
+  }
+
+  p{
+    margin-bottom: 0;
+  }
+
+  img{
+    border-radius: 4px;
+  }
+}

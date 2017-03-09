@@ -79,20 +79,22 @@ class AddSlot extends React.Component{
   /* RENDER */
   render(){
     return(
-      <div>
-        <h1>Add Slot</h1>
-        <div>
-          <RB.Col md={6}>
-            <DatePicker selected={this.state.start} onChange={(d)=>this.setStartDate(d)}/>
-            <TimePicker showSecond={false} onChange={(t)=>this.setStartTime(t)}/>
-          </RB.Col>
-          <RB.Col md={6}>
-            <DatePicker selected={this.state.finish} onChange={(d)=>this.setFinishDate(d)}/>
-            <TimePicker showSecond={false} onChange={(t)=>this.setFinishTime(t)}/>
-          </RB.Col>
-          <RB.Button bsClass="btn pull-right" onClick={()=>this.onSubmit()}>Add</RB.Button>
-        </div>
-      </div>
+      <RB.Row className={"addSlot"}>
+        <RB.Col xs={12}>
+          <h1>Add Slot</h1>
+          <div>
+            <RB.Col md={6}>
+              <DatePicker selected={this.state.start} onChange={(d)=>this.setStartDate(d)}/>
+              <TimePicker showSecond={false} onChange={(t)=>this.setStartTime(t)}/>
+            </RB.Col>
+            <RB.Col md={6}>
+              <DatePicker selected={this.state.finish} onChange={(d)=>this.setFinishDate(d)}/>
+              <TimePicker showSecond={false} onChange={(t)=>this.setFinishTime(t)}/>
+            </RB.Col>
+            <RB.Button bsClass="btn pull-right" onClick={()=>this.onSubmit()}>Add</RB.Button>
+          </div>
+        </RB.Col>
+      </RB.Row>
     );
   }
 }

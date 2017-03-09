@@ -80,21 +80,18 @@ class Home extends React.Component{
   render(){
     return(
       <RB.Grid>
-        <RB.Row>
-          <RB.Col md={8} mdOffset={2}>
-            <AddSlot accessToken={this.props.accessToken}/>
+          <RB.Col md={8}>
+            <RB.Row>
+              <AddSlot accessToken={this.props.accessToken}/>
+            </RB.Row>
+            <RB.Row>
+              {this.showFeed()}
+            </RB.Row>
           </RB.Col>
-        </RB.Row>
 
-        <RB.Row>
           <RB.Col md={4}>
             <Filter applyFilter={(s, f)=>this.applyFilter(s, f)} clearFilter={()=>this.clearFilter()}/>
           </RB.Col>
-
-          <RB.Col md={8}>
-            {this.showFeed()}
-          </RB.Col>
-        </RB.Row>
       </RB.Grid>
     );
   }

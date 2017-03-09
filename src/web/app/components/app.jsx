@@ -1,10 +1,12 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
+const RB = require('react-bootstrap');
 const Cookie = require('../includes/cookie');
 const Api = require('./../includes/api');
 
 /* COMPONENTS */
 const Navbar = require('./navbar.jsx');
+const SideNav = require('./sidenav.jsx');
 
 /* APP COMPONENT */
 class App extends React.Component {
@@ -77,7 +79,10 @@ class App extends React.Component {
     return(
       <div>
         <Navbar auth={this.isAuthenticated()} logout={() => this.logout()}/>
-        {this.renderChildren()}
+        <SideNav/>
+        <RB.Col id={"content"} xs={12} lg={10}>
+          {this.renderChildren()}
+        </RB.Col>
       </div>
     );
   }
