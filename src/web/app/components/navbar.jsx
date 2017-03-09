@@ -18,13 +18,7 @@ class AuthNav extends React.Component{
     return(
       <RB.Nav pullRight={true}>
         <li>
-          <Link to={"/home"}>Home</Link>
-        </li>
-        <li>
-          <Link to={"/notifications"}>Notifications</Link>
-        </li>
-        <li>
-          <Link to={"/meetings"}>Meetings</Link>
+          <Link to={"/user/" + this.props.user.username}>{this.props.user.firstName + " " + this.props.user.lastName}</Link>
         </li>
         <li>
           <Link onClick={this.props.logout}>Logout</Link>
@@ -100,12 +94,11 @@ class SearchBar extends React.Component{
 class Navbar extends React.Component {
   constructor(props){
     super(props);
-    console.log(this.props);
   }
 
   getNavItems(){
     if(this.props.auth){
-      return (<AuthNav logout={this.props.logout}/>);
+      return (<AuthNav user={this.props.user} logout={this.props.logout}/>);
     }
 
     return (<UnauthNav/>);

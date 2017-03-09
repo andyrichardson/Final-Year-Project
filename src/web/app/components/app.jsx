@@ -50,7 +50,7 @@ class App extends React.Component {
 
   /* UPDATE SELF */
   updateSelf() {
-    Api.getUserAuthenticated({accessToken: this.state.accessToken})
+    return Api.getUserAuthenticated({accessToken: this.state.accessToken})
     .then((data) => {
       this.setState({user: data.message});
     });
@@ -58,7 +58,7 @@ class App extends React.Component {
 
   /* USER HAS ACCESS TOKEN */
   isAuthenticated(){
-    return this.state.accessToken != "";
+    return this.state.user !== undefined;
   }
 
   /* PASSING PROPS TO CHILDREN */
@@ -78,7 +78,7 @@ class App extends React.Component {
   render(){
     return(
       <div>
-        <Navbar auth={this.isAuthenticated()} logout={() => this.logout()}/>
+        <Navbar auth={this.isAuthenticated()} user={this.state.user} logout={() => this.logout()}/>
         <SideNav/>
         <RB.Col id={"content"} xs={12} lg={10}>
           {this.renderChildren()}
