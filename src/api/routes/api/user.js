@@ -1,10 +1,13 @@
 const Prom = require('bluebird');
 const router = require('express-promise-router')();
+const base64Img = Prom.promisifyAll(require('base64-img'), {suffix: "Prom"});
+
 const Token = require('../../model/token');
 const User = require('../../model/user');
 
 const authRouter = require('./user/auth');
 const searchRouter = require('./user/search');
+
 
 /* ATHENTICATION */
 router.use('/auth', authRouter);
@@ -61,6 +64,15 @@ router.get('/', function(req, res, next){
   });
 });
 
+/* UPLOAD IMAGE */
+router.post('/image', Token.validate, function(req, res){
+  return User.setImage(req.auth.username, req.body.image)
+  .then(function(data){
+    res.status = 200;
+    res.json({status: 200, message: "Updated user image."});
+  })
+})
+
 /* ADD FRIEND */
 router.post('/:username', Token.validate, function(req, res){
   return User.addUser(req.auth.username, req.params.username)
@@ -69,5 +81,6 @@ router.post('/:username', Token.validate, function(req, res){
     res.json({status: 200, message: "Friendship created"});
   });
 });
+
 
 module.exports = router;

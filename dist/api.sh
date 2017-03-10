@@ -24,6 +24,7 @@ run_dev(){
 	# Run container
 	docker run -t -i -p 3000:80 \
 	-v $CWD/../src/api/:/var/www/api \
+	-v $CWD/../src/web/public/res/img/users:/var/www/img \
 	--name=fyp-api \
 	--net=fyp-network \
 	fyp-api:dev
@@ -41,6 +42,7 @@ run_test(){
 	# Run container
 	docker run -d -p 3000:80 \
 	-v $CWD/../src/api/:/var/www/api \
+	-v $CWD/../src/web/public/res/img/users:/var/www/img \
 	--name=fyp-api \
 	--net=fyp-network \
 	fyp-api:test
@@ -58,6 +60,7 @@ run_release(){
 	# Run container
 	docker run -d -p 3000:80 \
 	-v $CWD/../src/api/:/var/www/api \
+	-v $CWD/../src/web/public/res/img/users:/var/www/img \
 	--name=fyp-api \
 	--net=fyp-network \
 	fyp-api:release

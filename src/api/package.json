@@ -6,6 +6,8 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "base64-img": "^1.0.3",
+    "base64-to-jpg": "^1.0.1",
     "bluebird": "^3.4.1",
     "body-parser": "~1.15.1",
     "cookie-parser": "^1.4.3",

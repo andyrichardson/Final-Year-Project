@@ -1,5 +1,7 @@
 'use strict';
 const Prom = require('bluebird');
+const base64Img = Prom.promisifyAll(require('base64-img'), {suffix: "Prom"});
+const path = require('path');
 const ModelHandler = require('./ModelHandler');
 const Token = require('./token');
 const Slot = require('./slot');
@@ -409,6 +411,10 @@ module.exports.hasFriend = function(username1, username2){
     return data[0] !== undefined;
   });
 }
+
+module.exports.setImage = function(username, imageUri){
+  return base64Img.imgProm(imageUri, path.join("/var/www/img"), username);
+};
 
 /* RETURN MODEL */
 module.exports.model = function(){
