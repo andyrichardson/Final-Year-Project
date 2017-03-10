@@ -174,4 +174,19 @@ module.exports.declineMeeting = function(data){
   .then(function(data){
     return JSON.parse(data.body);
   });
+};
+
+/* CHANGE USER IMAGE */
+module.exports.changeImage = function(data){
+  const formData = {
+    form: {
+      accessToken: data.accessToken,
+      image: data.image
+    }
+  }
+
+  return request.postProm(baseUri + "/user/image", formData)
+  .then(function(data){
+    return JSON.parse(data.body);
+  });
 }

@@ -2,6 +2,7 @@ const React = require("react");
 const RB = require('react-bootstrap');
 const ReactCrop = require('react-image-crop');
 const Prom = require('bluebird');
+const Api = require('../../includes/api');
 
 class UploadPhotoModal extends React.Component{
   constructor(props) {
@@ -33,6 +34,7 @@ class UploadPhotoModal extends React.Component{
     this.setState({crop: crop})
   }
 
+  /* LOAD IMAGE */
   loadImage(src) {
     return new Prom(function(resolve, reject) {
       var image = new Image();
@@ -44,6 +46,7 @@ class UploadPhotoModal extends React.Component{
     });
   }
 
+  /* CROP IMAGE */
   cropImage(img){
     const crop = this.state.crop;
 
@@ -73,9 +76,17 @@ class UploadPhotoModal extends React.Component{
     .then((img)=>{
       return this.cropImage(img);
     })
-    .then(function(data){
-      console.log(data);
-    });
+    .then((image)=>{
+      return Api.changeImage({
+        accessToken: this.props.accessToken,
+        image: image
+      })
+    })
+    .then((data)=>{
+      alert(data.message)
+      this.props.close();
+      this.props.update();
+    })
   }
 
   render(){

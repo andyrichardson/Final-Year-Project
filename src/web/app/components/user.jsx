@@ -11,7 +11,11 @@ class User extends React.Component {
   /* CONSTRUCTOR */
   constructor(props) {
     super(props);
-    this.state = {user: null, modal: false};
+    this.state = {
+      user: null,
+      modal: false,
+      userImage: "/"
+    };
     this.getInfo();
   }
 
@@ -37,6 +41,7 @@ class User extends React.Component {
     return Api.getUserAuthenticated(data)
     .then((data) => {
       this.setState({user: data.message});
+      this.setState({userImage: `/res/img/users/${this.props.user.username}.jpg?${new Date().getTime()}`})
     });
   }
 
@@ -120,13 +125,13 @@ class User extends React.Component {
     )
   }
 
-  /* GET IMAGE */
+  /* GET USER IMAGE */
   getImage() {
     if(this.props.user.username == this.props.params.username){
       return (
         <div>
-          <img onClick={()=>this.showPhotoModal()} className="img-responsive userImage selfImage" src="https://scontent.flcy1-1.fna.fbcdn.net/v/t1.0-9/14089025_1217198911634007_3545650935448468708_n.jpg?oh=793665c7cf361f2407649ba95a145354&oe=596819BF"/>
-          <UploadPhotoModal visible={this.state.modal} close={()=>this.hidePhotoModal()}/>
+          <img onClick={()=>this.showPhotoModal()} className="img-responsive userImage selfImage" src={this.state.userImage} />
+          <UploadPhotoModal visible={this.state.modal} close={()=>this.hidePhotoModal()} accessToken={this.props.accessToken} update={()=>this.getInfo()}/>
         </div>
       );
     }
@@ -134,10 +139,26 @@ class User extends React.Component {
     return <div></div>
   }
 
+  /* GET BUTTONS */
+  getButtons() {
+    if(this.props.user.username == this.props.params.username){
+      return(
+        <RB.Button onClick={() => this.showPhotoModal()}>Change Photo</RB.Button>
+      );
+    }
+
+    return (
+      <RB.Button onClick={() => this.addFriend()}>Add Friend</RB.Button>
+    );
+
+  }
+
+  /* UPDATE PHOTO MODAL */
   showPhotoModal() {
     this.setState({modal: true});
   }
 
+  /* HIDE PHOTO MODAL */
   hidePhotoModal() {
     this.setState({modal: false});
   }
@@ -179,7 +200,7 @@ class User extends React.Component {
           <RB.Col xs={12} md={8}>
             <h1>{this.state.user.firstName} {this.state.user.lastName}</h1>
             <h2>{this.state.user.username}</h2>
-            <RB.Button onClick={() => this.addFriend()}>Add Friend</RB.Button>
+            {this.getButtons()}
           </RB.Col>
         </RB.Row>
 
