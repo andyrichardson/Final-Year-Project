@@ -78,7 +78,7 @@ class AddSlot extends React.Component{
   /* GET TOOLBAR */
   getToolbar(){
     let button = (
-      <div onClick={() => this.respondToSlot()}>
+      <div className={"clickable"} onClick={() => this.respondToSlot()}>
         <RB.Glyphicon glyph="glyphicon glyphicon-arrow-left"/> Respond
       </div>
     );

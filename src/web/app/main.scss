@@ -1,7 +1,9 @@
+@import "../node_modules/react-image-crop/lib/ReactCrop";
 @import "styles/variables.scss";
 @import "styles/navigation";
 @import "styles/content";
 @import "styles/home";
+@import "styles/user";
 
 html, body, #react-container, #react-container>div{
   height: 100%;
@@ -10,4 +12,8 @@ html, body, #react-container, #react-container>div{
 .row{
   margin-left: 0;
   margin-right: 0;
+}
+
+.clickable{
+  cursor: pointer;
 }

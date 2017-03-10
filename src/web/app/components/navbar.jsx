@@ -21,7 +21,7 @@ class AuthNav extends React.Component{
           <Link to={"/user/" + this.props.user.username}>{this.props.user.firstName + " " + this.props.user.lastName}</Link>
         </li>
         <li>
-          <Link onClick={this.props.logout}>Logout</Link>
+          <Link to={"#"} onClick={this.props.logout}>Logout</Link>
         </li>
       </RB.Nav>
     );

@@ -5,11 +5,13 @@ const Moment = require('moment');
 
 const Api = require("../includes/api");
 
+const UploadPhotoModal = require('./user/uploadPhoto.jsx');
+
 class User extends React.Component {
   /* CONSTRUCTOR */
   constructor(props) {
     super(props);
-    this.state = {user: null};
+    this.state = {user: null, modal: false};
     this.getInfo();
   }
 
@@ -118,6 +120,28 @@ class User extends React.Component {
     )
   }
 
+  /* GET IMAGE */
+  getImage() {
+    if(this.props.user.username == this.props.params.username){
+      return (
+        <div>
+          <img onClick={()=>this.showPhotoModal()} className="img-responsive userImage selfImage" src="https://scontent.flcy1-1.fna.fbcdn.net/v/t1.0-9/14089025_1217198911634007_3545650935448468708_n.jpg?oh=793665c7cf361f2407649ba95a145354&oe=596819BF"/>
+          <UploadPhotoModal visible={this.state.modal} close={()=>this.hidePhotoModal()}/>
+        </div>
+      );
+    }
+
+    return <div></div>
+  }
+
+  showPhotoModal() {
+    this.setState({modal: true});
+  }
+
+  hidePhotoModal() {
+    this.setState({modal: false});
+  }
+
   /* SLOT RESPONSE CLICK */
   respondToSlot(id) {
     const data = {
@@ -146,12 +170,29 @@ class User extends React.Component {
     }
 
     return (
-      <div>
-        <h1>{this.state.user.firstName} {this.state.user.lastName}</h1>
-        <RB.Button onClick={() => this.addFriend()}>Add Friend</RB.Button>
-        {this.getFriends()}
-        {this.getSlots()}
-      </div>
+      <RB.Row className={"userPage"}>
+        <RB.Row>
+          <RB.Col xs={12} md={2}>
+            {this.getImage()}
+          </RB.Col>
+
+          <RB.Col xs={12} md={8}>
+            <h1>{this.state.user.firstName} {this.state.user.lastName}</h1>
+            <h2>{this.state.user.username}</h2>
+            <RB.Button onClick={() => this.addFriend()}>Add Friend</RB.Button>
+          </RB.Col>
+        </RB.Row>
+
+        <RB.Row>
+          <RB.Col xs={12}>
+            {this.getFriends()}
+          </RB.Col>
+
+          <RB.Col xs={12}>
+            {this.getSlots()}
+          </RB.Col>
+        </RB.Row>
+      </RB.Row>
     );
   }
 }

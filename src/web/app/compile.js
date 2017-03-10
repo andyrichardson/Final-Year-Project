@@ -43,11 +43,11 @@ const bundle_sass = function(){
     file: entry_sass
   }, function(err, result){
     if(err){
-      return console.log(err.red);
+      return console.log(err);
     }
     fs.writeFile(bundle_css, result.css, function(err){
       if(err){
-        return console.log(err.red);
+        return console.log(err);
       }
         console.log('SASS compilation complete'.green);
     })
