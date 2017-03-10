@@ -41,7 +41,7 @@ class User extends React.Component {
     return Api.getUserAuthenticated(data)
     .then((data) => {
       this.setState({user: data.message});
-      this.setState({userImage: `/res/img/users/${this.props.user.username}.jpg?${new Date().getTime()}`})
+      this.setState({userImage: `/res/img/users/${this.props.params.username}.jpg?${new Date().getTime()}`})
     });
   }
 
@@ -136,7 +136,7 @@ class User extends React.Component {
       );
     }
 
-    return <div></div>
+    return <img className="img-responsive userImage selfImage" src={this.state.userImage} />
   }
 
   /* GET BUTTONS */
