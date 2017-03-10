@@ -3,6 +3,28 @@ const RB = require('react-bootstrap');
 const ReactCrop = require('react-image-crop');
 
 class UploadPhotoModal extends React.Component{
+  constructor(props) {
+    super(props)
+    this.state = {
+      file: undefined,
+      imagePreviewUrl: undefined
+    };
+  }
+
+  handleFileChange(event){
+    let reader = new FileReader();
+    let file = event.target.files[0];
+
+    reader.onloadend = () => {
+      this.setState({
+        file: file,
+        imagePreviewUrl: reader.result
+      });
+    }
+
+    reader.readAsDataURL(file);
+  }
+
   render(){
     return(
     <div>
@@ -11,9 +33,12 @@ class UploadPhotoModal extends React.Component{
         <RB.Modal.Header closeButton>
           <RB.Modal.Title>Change Photo</RB.Modal.Title>
         </RB.Modal.Header>
+
         <RB.Modal.Body>
-          <ReactCrop crop={{aspect:1}} src="https://scontent.flcy1-1.fna.fbcdn.net/v/t1.0-9/14089025_1217198911634007_3545650935448468708_n.jpg?oh=793665c7cf361f2407649ba95a145354&oe=596819BF"/>
+          <input type="file" onChange={(c) => this.handleFileChange(c)}/>
+          <ReactCrop crop={{aspect:1}} src={this.state.imagePreviewUrl}/>
         </RB.Modal.Body>
+
         <RB.Modal.Footer>
           <RB.Button onClick={this.props.close}>Close</RB.Button>
           <RB.Button onClick={this.save}>Save</RB.Button>
