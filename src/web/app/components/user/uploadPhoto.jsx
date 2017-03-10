@@ -99,7 +99,7 @@ class UploadPhotoModal extends React.Component{
         </RB.Modal.Header>
 
         <RB.Modal.Body>
-          <input type="file" onChange={(c) => this.handleFileChange(c)}/>
+          <input type="file" accept="image/*" onChange={(c) => this.handleFileChange(c)}/>
           <ReactCrop
             src={this.state.imagePreviewUrl}
             crop={this.state.crop}
