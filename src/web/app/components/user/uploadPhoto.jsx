@@ -1,16 +1,19 @@
 const React = require("react");
 const RB = require('react-bootstrap');
 const ReactCrop = require('react-image-crop');
+const Prom = require('bluebird');
 
 class UploadPhotoModal extends React.Component{
   constructor(props) {
     super(props)
     this.state = {
       file: undefined,
-      imagePreviewUrl: undefined
+      imagePreviewUrl: undefined,
+      crop: {aspect: 1}
     };
   }
 
+  /* UPLOAD OF NEW IMAGE */
   handleFileChange(event){
     let reader = new FileReader();
     let file = event.target.files[0];
@@ -25,6 +28,56 @@ class UploadPhotoModal extends React.Component{
     reader.readAsDataURL(file);
   }
 
+  /* FOLLOWING CROP */
+  cropComplete(crop, pixelCrop){
+    this.setState({crop: crop})
+  }
+
+  loadImage(src) {
+    return new Prom(function(resolve, reject) {
+      var image = new Image();
+      image.onload = function(e) {
+        return resolve(image);
+      };
+
+      image.src = src;
+    });
+  }
+
+  cropImage(img){
+    const crop = this.state.crop;
+
+    const width = img.width;
+    const height = img.height;
+
+    const xCrop = (crop.x / 100) * width;
+    const yCrop = (crop.y / 100) * height;
+
+    const newWidth = (crop.width / 100) * width;
+    const newHeight = (crop.height / 100) * height;
+
+    // Create canvas
+    const canvas = document.createElement('canvas');
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+    const ctx = canvas.getContext('2d');
+
+    ctx.drawImage(img, xCrop, yCrop, newWidth, newHeight, 0, 0, newWidth, newHeight);
+
+    return canvas.toDataURL('image/jpeg');
+  }
+
+  /* SAVE */
+  save(){
+    return this.loadImage(this.state.imagePreviewUrl)
+    .then((img)=>{
+      return this.cropImage(img);
+    })
+    .then(function(data){
+      console.log(data);
+    });
+  }
+
   render(){
     return(
     <div>
@@ -36,12 +89,16 @@ class UploadPhotoModal extends React.Component{
 
         <RB.Modal.Body>
           <input type="file" onChange={(c) => this.handleFileChange(c)}/>
-          <ReactCrop crop={{aspect:1}} src={this.state.imagePreviewUrl}/>
+          <ReactCrop
+            src={this.state.imagePreviewUrl}
+            crop={this.state.crop}
+            onComplete={(c)=>this.cropComplete(c)}
+          />
         </RB.Modal.Body>
 
         <RB.Modal.Footer>
           <RB.Button onClick={this.props.close}>Close</RB.Button>
-          <RB.Button onClick={this.save}>Save</RB.Button>
+          <RB.Button onClick={()=>this.save()}>Save</RB.Button>
         </RB.Modal.Footer>
       </RB.Modal>
     </div>
