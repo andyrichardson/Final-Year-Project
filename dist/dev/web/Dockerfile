@@ -15,4 +15,4 @@ npm install -g nodemon
 RUN mkdir -p /var/www/web
 WORKDIR /var/www/web
 
-CMD /usr/bin/fish
+CMD npm install && npm run dev-server

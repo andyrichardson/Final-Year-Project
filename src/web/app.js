@@ -5,8 +5,8 @@ const logger = require('morgan');
 const app = express();
 
 // Compile javascript/react
-const compile = require('./app/compile');
-compile();
+// const compile = require('./app/compile');
+// compile();
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
