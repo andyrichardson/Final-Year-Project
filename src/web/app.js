@@ -12,7 +12,7 @@ compile();
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 
-// All pages are static
+// Static data in public folder
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Api proxy

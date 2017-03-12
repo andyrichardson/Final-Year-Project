@@ -30,10 +30,12 @@ const allowCrossDomain = function(req, res, next){
 }
 app.use(allowCrossDomain);
 
+const dataLimit = "10mb";
+
 // Middleware
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({limit: dataLimit}));
+app.use(bodyParser.urlencoded({ extended: false, limit: dataLimit }));
 app.use(cookieParser());
 
 // Routing
