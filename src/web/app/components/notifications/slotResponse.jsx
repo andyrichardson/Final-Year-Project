@@ -34,6 +34,14 @@ class SlotResponse extends React.Component {
     });
   }
 
+  /* GET TIME OF NOTIFICATION */
+  getNotificationTime(){
+    const start = Moment.unix(this.props.notification.created);
+    const finish = Moment();
+
+    return Moment.duration(finish.diff(start)).humanize() + " ago";
+  }
+
   /* RENDER */
   render(){
     let requester, slot;
@@ -55,14 +63,32 @@ class SlotResponse extends React.Component {
 
     if(slot !== undefined){
       return(
-        <div>
-          You have a meeting request from {' '}
-          <Link to={`/user/${requester.username}`}>{`${requester.firstName} ${requester.lastName}`}</Link>
-          {' '} for your slot on {Moment.unix(slot.start).calendar()}
+        <RB.Row className="notification">
+          <RB.Col xs={2}>
+            <Link to={`/user/${requester.username}`}>
+              <img className="img-responsive userImage selfImage" src={`/res/img/users/${requester.username}.jpg`} />
+            </Link>
+          </RB.Col>
 
-          <RB.Button onClick={()=>this.confirmMeeting()}>Confirm</RB.Button>
-          <RB.Button onClick={()=>this.declineMeeting()}>Decline</RB.Button>
-        </div>
+          <RB.Col xs={10}>
+            <RB.Row>
+              <RB.Col xs={9}>
+                You have a meeting request from {' '}
+                <Link to={`/user/${requester.username}`}>{`${requester.firstName} ${requester.lastName}`}</Link>
+                {' '} for your slot on {Moment.unix(slot.start).calendar()}
+              </RB.Col>
+
+              <RB.Col xs={3}>
+                <span className="pull-right time-ago">{this.getNotificationTime()}</span>
+              </RB.Col>
+            </RB.Row>
+            <RB.Row>
+              <RB.Button className="pull-right" onClick={()=>this.confirmMeeting()}>Confirm</RB.Button>
+              <RB.Button className="pull-right" onClick={()=>this.declineMeeting()}>Decline</RB.Button>
+            </RB.Row>
+          </RB.Col>
+
+        </RB.Row>
       )
     }
 

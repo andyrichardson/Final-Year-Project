@@ -1,0 +1,10 @@
+.notification{
+  background-color: $card-background;
+  border: $card-border;
+  padding: $card-padding;
+  margin-top: $card-margin-top;
+
+  .time-ago{
+    color: #999
+  }
+}

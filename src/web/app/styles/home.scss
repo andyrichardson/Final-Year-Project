@@ -1,6 +1,6 @@
 .homeFeed{
   .slotListing{
-    margin-top: 10px;
+    margin-top: $card-margin-top;
   }
 }
 
@@ -19,7 +19,7 @@
   border: $card-border;
 
   .row{
-    padding: 15px 0;
+    padding: $card-padding;
   }
 
   .slotListingToolbar{

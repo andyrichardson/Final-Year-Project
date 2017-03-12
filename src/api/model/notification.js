@@ -19,12 +19,13 @@ let model, db;
 module.exports.init = function(database){
   NotificationHandler.init(database);
   model = Prom.promisifyAll(NotificationHandler.getModel(), {suffix: 'Prom'});
-  model.useTimestamps(['created']);
   db = Prom.promisifyAll(database, {suffix: 'Prom'});
 }
 
 /* ADD NOTIFICATION */
 module.exports.create = function(username, notification){
+  notification.created = Date.now() / 1000;
+  
   return User.getId(username)
   .then(function(id){
     return User.model().pushProm(id, 'notifications', notification);
