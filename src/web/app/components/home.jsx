@@ -79,7 +79,7 @@ class Home extends React.Component{
 
   render(){
     return(
-      <RB.Grid>
+      <RB.Grid fluid>
           <RB.Col md={8}>
             <RB.Row>
               <AddSlot accessToken={this.props.accessToken}/>

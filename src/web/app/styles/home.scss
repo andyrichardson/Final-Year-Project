@@ -31,6 +31,17 @@
     margin-top: 0;
   }
 
+  h3{
+    text-align: center;
+    font-size: 1em;
+
+    color: #444;
+
+    @media (min-width: $xl-width){
+      font-size: 1.4em;
+    }
+  }
+
   p{
     margin-bottom: 0;
   }

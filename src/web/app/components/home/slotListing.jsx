@@ -6,6 +6,22 @@ const Moment = require('moment');
 const Api = require('../../includes/api');
 
 class AddSlot extends React.Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      user: null
+    };
+  }
+
+  componentWillReceiveProps(){
+    // Get friend
+    this.props.user.friends.forEach((friend) => {
+      if(friend.username == this.props.username){
+        return this.setState({user: friend});
+      }
+    });
+  }
+
   /* GET USER */
   getUser(){
     let user;
@@ -106,7 +122,7 @@ class AddSlot extends React.Component{
 
   /* RENDER */
   render(){
-    if(this.props.user === undefined){
+    if(this.state.user === null){
       return null;
     }
 
@@ -114,7 +130,10 @@ class AddSlot extends React.Component{
       <RB.Row className="slotListing">
         <RB.Row>
           <RB.Col md={3} xs={2}>
-            <img className="img-responsive" src={`/res/img/users/${this.props.username}.jpg`}/>
+            <Link to={`/user/${this.state.user.username}`}>
+              <img className="img-responsive" src={`/res/img/users/${this.state.user.username}.jpg`}/>
+              <h3>{`${this.state.user.firstName} ${this.state.user.lastName}`}</h3>
+            </Link>
           </RB.Col>
           <RB.Col md={9} xs={10}>
             <h2>{this.getTitle()}</h2>
