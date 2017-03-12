@@ -18,6 +18,7 @@ class App extends React.Component {
     };
   }
 
+  /* UPDATE SELF TIMER */
   componentDidMount(){
     if(this.state.accessToken !== ""){
       this.updateSelf();
@@ -79,8 +80,8 @@ class App extends React.Component {
     return(
       <div>
         <Navbar auth={this.isAuthenticated()} user={this.state.user} logout={() => this.logout()}/>
-        <SideNav/>
-        <RB.Col id={"content"} xs={12} lg={10}>
+        <SideNav auth={this.isAuthenticated()}/>
+        <RB.Col id={"content"} xs={12} lg={(this.isAuthenticated()) ? 10 : 12}>
           {this.renderChildren()}
         </RB.Col>
       </div>

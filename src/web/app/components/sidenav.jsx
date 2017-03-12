@@ -11,12 +11,17 @@ class SideNav extends React.Component{
     super(props);
     this.state = {activeKey: "/home"};
   }
+
   handleSelect(selectedKey){
     this.setState({activeKey: selectedKey});
     History.push(selectedKey);
   }
 
   render(){
+    if(!this.props.auth){
+      return <div></div>;
+    }
+    
     return(
       <RB.Col id={"sideNav"} xsHidden mdHidden smHidden lg={2}>
         <RB.Nav bsStyle="pills" stacked activeKey={this.state.activeKey} onSelect={(k)=>this.handleSelect(k)}>
