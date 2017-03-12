@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "bundle": "node ./app/compile.js",
+    "sass-watch": "node ./app/compile.js --sass-watch",
     "web-server": "node ./bin/www",
     "dev-server": "webpack-dev-server  --content-base public --progress --colors"
   },

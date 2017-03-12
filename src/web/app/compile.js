@@ -54,15 +54,15 @@ const bundle_sass = function(){
   })
 }
 
-bundle();
-bundle_sass();
-
-// // Watchify
-// js_compiler.on('update', bundle);
-//
-// const watcher = new sasswatcher(entry_sass);
-// watcher.on('init', bundle_sass);
-// watcher.on('update', bundle_sass);
-// watcher.run();
+if(process.argv[2] == "--sass-watch"){
+  const watcher = new sasswatcher(entry_sass);
+  watcher.on('init', bundle_sass);
+  watcher.on('update', bundle_sass);
+  watcher.run();
+}
+else{
+  bundle();
+  bundle_sass();
+}
 
 module.exports = bundle;

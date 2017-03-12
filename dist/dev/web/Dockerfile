@@ -15,4 +15,4 @@ npm install -g nodemon
 RUN mkdir -p /var/www/web
 WORKDIR /var/www/web
 
-CMD npm install && npm run dev-server
+CMD npm run sass-watch & npm run dev-server
