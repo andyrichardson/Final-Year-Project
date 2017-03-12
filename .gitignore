@@ -3,3 +3,4 @@
 /src/web/public/res/img/users
 /neo4j
 node_modules
+yarn*

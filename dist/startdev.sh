@@ -1,7 +1,7 @@
 #!/bin/bash
 CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-$CWD/api.sh -t
-$CWD/auth.sh -t
-$CWD/neo4j.sh -t
-$CWD/web.sh -t
+sudo $CWD/api.sh -t
+sudo $CWD/auth.sh -t
+sudo $CWD/neo4j.sh -t
+sudo $CWD/web.sh -d
