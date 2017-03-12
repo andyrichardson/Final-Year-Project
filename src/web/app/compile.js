@@ -1,11 +1,9 @@
 const browserify = require('browserify');
 const reactify = require('reactify');
-const watchify = require('watchify');
 const fs = require('fs');
 const path = require('path');
 const colors = require('colors');
 const sass_compiler = require('node-sass');
-const sasswatcher = require('node-sass-watcher');
 
 // Input files
 const entry_js = 'app/main.js';
@@ -18,8 +16,7 @@ const bundle_css = path.join(__dirname, '../public/res/css/bundle.css');
 // Browserify config
 const js_compiler = browserify({
   entries: [entry_js],
-  transform: reactify,
-  plugin: [watchify]
+  transform: reactify
 });
 
 // Bundling function
@@ -55,6 +52,7 @@ const bundle_sass = function(){
 }
 
 if(process.argv[2] == "--sass-watch"){
+  const sasswatcher = require('node-sass-watcher');
   const watcher = new sasswatcher(entry_sass);
   watcher.on('init', bundle_sass);
   watcher.on('update', bundle_sass);
