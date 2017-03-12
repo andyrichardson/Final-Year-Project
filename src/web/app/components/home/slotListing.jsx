@@ -114,7 +114,7 @@ class AddSlot extends React.Component{
       <RB.Row className="slotListing">
         <RB.Row>
           <RB.Col md={3} xs={2}>
-            <img className="img-responsive" src="https://scontent.flcy1-1.fna.fbcdn.net/v/t1.0-9/14089025_1217198911634007_3545650935448468708_n.jpg?oh=793665c7cf361f2407649ba95a145354&oe=596819BF"/>
+            <img className="img-responsive" src={`/res/img/users/${this.props.username}.jpg`}/>
           </RB.Col>
           <RB.Col md={9} xs={10}>
             <h2>{this.getTitle()}</h2>

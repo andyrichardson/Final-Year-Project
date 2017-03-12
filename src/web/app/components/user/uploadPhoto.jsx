@@ -92,7 +92,6 @@ class UploadPhotoModal extends React.Component{
   render(){
     return(
     <div>
-      <h1>Hello</h1>
       <RB.Modal show={this.props.visible} onHide={this.props.close}>
         <RB.Modal.Header closeButton>
           <RB.Modal.Title>Change Photo</RB.Modal.Title>
