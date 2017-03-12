@@ -24,8 +24,8 @@ module.exports.init = function(database){
 
 /* ADD NOTIFICATION */
 module.exports.create = function(username, notification){
-  notification.created = Date.now() / 1000;
-  
+  notification.created = Math.round(Date.now() / 1000);
+
   return User.getId(username)
   .then(function(id){
     return User.model().pushProm(id, 'notifications', notification);
