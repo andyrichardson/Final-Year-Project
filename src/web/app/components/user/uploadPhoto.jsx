@@ -10,7 +10,12 @@ class UploadPhotoModal extends React.Component{
     this.state = {
       file: undefined,
       imagePreviewUrl: undefined,
-      crop: {aspect: 1}
+      crop: {
+        x: 10,
+        y: 10,
+        width: 80,
+        aspect: 1
+      }
     };
   }
 
@@ -102,7 +107,7 @@ class UploadPhotoModal extends React.Component{
           <ReactCrop
             src={this.state.imagePreviewUrl}
             crop={this.state.crop}
-            onComplete={(c)=>this.cropComplete(c)}
+            onChange={(c)=>this.cropComplete(c)}
           />
         </RB.Modal.Body>
 
