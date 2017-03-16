@@ -192,13 +192,16 @@ module.exports.logout = function(token){
 
 /* REGISTER/CREATE */
 module.exports.create = function(obj){
+  const password = obj.password;
+
   const user = {
     username: obj.username.toLowerCase(),
-    password: obj.password,
     firstName: obj.firstName,
     lastName: obj.lastName,
     email: obj.email
   };
+
+
 
   return module.exports.getUser(obj.username)
   .then(function(){
@@ -213,7 +216,7 @@ module.exports.create = function(obj){
 
     return model.saveProm(user)
     .then(function(){
-      return Token.register(user.username, user.password);
+      return Token.register(user.username, password);
     });
   });
 };
