@@ -11,60 +11,58 @@ class AddSlot extends React.Component{
   constructor(props){
     super(props)
     this.state = {
+      date: Moment(),
       start: Moment().seconds(0),
-      finish: Moment().add(1, 'd').seconds(0)
+      finish: Moment().seconds(0).add(1, 'h')
     };
   }
 
   /* SET START DATE */
   setStartDate(date){
     const start = this.state.start;
-
-    date.hour(start.hour());
-    date.minute(start.minute());
-
-    this.setState({start: date});
-  }
-
-  /* SET FINISH DATE */
-  setFinishDate(date){
-    const finish = this.state.finish;
-
-    date.hour(finish.hour());
-    date.minute(finish.minute());
-
-    this.setState({finish: date});
+    this.setState({date: date});
   }
 
   /* SET START TIME */
   setStartTime(time){
-    const start = this.state.start;
-
-    time.date(start.date());
-    time.month(start.month());
-    time.year(start.year());
-
     this.setState({start: time});
   }
 
   /* SET FINISH TIME */
   setFinishTime(time){
+    this.setState({finish: time});
+  }
+
+  /* PREPARE DATA */
+  prepareData(){
+    const date = this.state.date;
+    const start = this.state.start;
     const finish = this.state.finish;
 
-    time.date(finish.date());
-    time.month(finish.month());
-    time.year(finish.year());
+    // Set start
+    start.date(date.date());
+    start.month(date.month());
+    start.year(date.year());
 
-    this.setState({finish: time});
+    // Set finish
+    finish.date(date.date());
+    finish.month(date.month());
+    finish.year(date.year());
+
+    if(start.unix() > finish.unix()){
+      finish.date(finish.date() + 1);
+    }
+
+    return {
+      start: start.unix(),
+      finish: finish.unix(),
+      accessToken: this.props.accessToken
+    };
   }
 
   /* SUBMIT HANDLER */
   onSubmit(){
-    const data = {
-      start: this.state.start.unix(),
-      finish: this.state.finish.unix(),
-      accessToken: this.props.accessToken
-    };
+    const data = this.prepareData();
 
     return Api.createSlot(data)
     .then(function(data){
@@ -84,11 +82,10 @@ class AddSlot extends React.Component{
           <h1>Add Slot</h1>
           <div>
             <RB.Col md={6}>
-              <DatePicker selected={this.state.start} onChange={(d)=>this.setStartDate(d)}/>
+              <DatePicker selected={this.state.date} onChange={(d)=>this.setStartDate(d)}/>
               <TimePicker showSecond={false} onChange={(t)=>this.setStartTime(t)}/>
             </RB.Col>
             <RB.Col md={6}>
-              <DatePicker selected={this.state.finish} onChange={(d)=>this.setFinishDate(d)}/>
               <TimePicker showSecond={false} onChange={(t)=>this.setFinishTime(t)}/>
             </RB.Col>
             <RB.Button bsClass="btn pull-right" onClick={()=>this.onSubmit()}>Add</RB.Button>
