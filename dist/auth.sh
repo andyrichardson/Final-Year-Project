@@ -48,7 +48,7 @@ run_test(){
 # Run release container
 run_release(){
 	# Build container
-	docker build -t fyp-auth:test -f $CWD/release/auth/Dockerfile $CWD
+	docker build -t fyp-auth:release -f $CWD/release/auth/Dockerfile $CWD
 
 	# Kill any previous containers
 	docker kill fyp-auth 2> /dev/null

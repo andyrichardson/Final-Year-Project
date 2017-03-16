@@ -51,7 +51,7 @@ run_test(){
 # Run release container
 run_release(){
 	# Build container
-	docker build -t fyp-api:test -f $CWD/release/api/Dockerfile $CWD
+	docker build -t fyp-api:release -f $CWD/release/api/Dockerfile $CWD
 
 	# Kill any previous containers
 	docker kill fyp-api 2> /dev/null
