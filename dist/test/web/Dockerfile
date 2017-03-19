@@ -1,4 +1,4 @@
-FROM node:argon
+FROM node:latest
 MAINTAINER Andy Richardson
 
 ENV NODE_ENV test
