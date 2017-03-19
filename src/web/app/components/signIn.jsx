@@ -15,10 +15,10 @@ class SignInForm extends React.Component {
     e.preventDefault(e);
 
     this.props.login(this.state)
-    .then(function (data) {
+    .then(data => {
       alert('Sign in successful');
     })
-    .catch(function (err) {
+    .catch(err => {
         alert('Sign in error: ' + err.message);
       });
   }

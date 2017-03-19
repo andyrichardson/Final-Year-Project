@@ -14,7 +14,7 @@ class SignUpForm extends React.Component {
     e.preventDefault(e);
 
     return Api.register(this.state)
-    .then(function (data) {
+    .then(data => {
       if (data.status != 200) {
         return alert('Unable to register: ' + data.message);
       }

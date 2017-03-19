@@ -69,7 +69,7 @@ class AddSlot extends React.Component{
     };
 
     return Api.respondSlot(data)
-    .then(function (data) {
+    .then(data => {
       if (data.status != 200) {
         return alert(data.message);
       }

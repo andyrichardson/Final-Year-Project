@@ -10,7 +10,7 @@ if (typeof window == 'undefined') {
 }
 
 /* USER REGISTRATION */
-module.exports.register = function (data) {
+module.exports.register = data => {
   const formData = {
     form: {
       username: data.username,
@@ -22,13 +22,11 @@ module.exports.register = function (data) {
   };
 
   return request.postProm(baseUri + '/user', formData)
-  .then(function (data) {
-    return JSON.parse(data.body);
-  });
+  .then(data => JSON.parse(data.body));
 };
 
 /* USER LOGIN */
-module.exports.login = function (data) {
+module.exports.login = data => {
   const formData = {
     form: {
       username: data.username,
@@ -37,13 +35,11 @@ module.exports.login = function (data) {
   };
 
   return request.postProm(baseUri + '/user/auth', formData)
-  .then(function (data) {
-    return JSON.parse(data.body);
-  });
+  .then(data => JSON.parse(data.body));
 };
 
 /* USER PASSWORD CHANGE */
-module.exports.changePassword = function (data) {
+module.exports.changePassword = data => {
   const formData = {
     form: {
       accessToken: data.accessToken,
@@ -53,53 +49,35 @@ module.exports.changePassword = function (data) {
   };
 
   return request.patchProm(baseUri + '/user/auth', formData)
-  .then(function (data) {
-    return JSON.parse(data.body);
-  });
+  .then(data => JSON.parse(data.body));
 };
 
 /* USER SEARCH */
-module.exports.search = function (string) {
-  return request.getProm(baseUri + '/user/search/' + string)
-  .then(function (data) {
-    return JSON.parse(data.body);
-  });
-};
+module.exports.search = string => request.getProm(baseUri + '/user/search/' + string)
+.then(data => JSON.parse(data.body));
 
 /* GET USER */
-module.exports.getUser = function (username) {
-  return request.getProm(baseUri + '/user/' + username)
-  .then(function (data) {
-    return JSON.parse(data.body);
-  });
-};
+module.exports.getUser = username => request.getProm(baseUri + '/user/' + username)
+.then(data => JSON.parse(data.body));
 
 /* GET FEED */
-module.exports.getFeed = function (data) {
+module.exports.getFeed = data => {
   let url = baseUri + '/slot/' + '?accessToken=' + data.accessToken;
 
   if (data.start !== undefined && data.finish !== undefined) {
     url += `&start=${data.start}&finish=${data.finish}`;
   }
 
-  console.log(url);
-
   return request.getProm(url)
-  .then(function (data) {
-    return JSON.parse(data.body);
-  });
+  .then(data => JSON.parse(data.body));
 };
 
 /* GET USER AUTHENTICATED */
-module.exports.getUserAuthenticated = function (data) {
-  return request.getProm(`${baseUri}/user/${(data.username || '')}?accessToken=${data.accessToken}`)
-  .then(function (data) {
-    return JSON.parse(data.body);
-  });
-};
+module.exports.getUserAuthenticated = data => request.getProm(`${baseUri}/user/${(data.username || '')}?accessToken=${data.accessToken}`)
+.then(data => JSON.parse(data.body));
 
 /* ADD USER */
-module.exports.addUser = function (data) {
+module.exports.addUser = data => {
   const formData = {
     form: {
       accessToken: data.accessToken,
@@ -107,13 +85,11 @@ module.exports.addUser = function (data) {
   };
 
   return request.postProm(baseUri + '/user/' + data.username, formData)
-  .then(function (data) {
-    return JSON.parse(data.body);
-  });
+  .then(data => JSON.parse(data.body));
 };
 
 /* CREATE SLOT */
-module.exports.createSlot = function (data) {
+module.exports.createSlot = data => {
   const formData = {
     form: {
       accessToken: data.accessToken,
@@ -123,13 +99,11 @@ module.exports.createSlot = function (data) {
   };
 
   return request.postProm(baseUri + '/slot/', formData)
-  .then(function (data) {
-    return JSON.parse(data.body);
-  });
+  .then(data => JSON.parse(data.body));
 };
 
 /* RESPOND TO SLOT */
-module.exports.respondSlot = function (data) {
+module.exports.respondSlot = data => {
   const formData = {
     form: {
       accessToken: data.accessToken,
@@ -138,13 +112,11 @@ module.exports.respondSlot = function (data) {
   };
 
   return request.postProm(baseUri + '/slot/respond', formData)
-  .then(function (data) {
-    return JSON.parse(data.body);
-  });
+  .then(data => JSON.parse(data.body));
 };
 
 /* CONFIRM SLOT MEETING */
-module.exports.confirmMeeting = function (data) {
+module.exports.confirmMeeting = data => {
   const formData = {
     form: {
       accessToken: data.accessToken,
@@ -154,13 +126,11 @@ module.exports.confirmMeeting = function (data) {
   };
 
   return request.postProm(baseUri + '/slot/confirm', formData)
-  .then(function (data) {
-    return JSON.parse(data.body);
-  });
+  .then(data => JSON.parse(data.body));
 };
 
 /* DECLINE SLOT MEETING */
-module.exports.declineMeeting = function (data) {
+module.exports.declineMeeting = data => {
   const formData = {
     form: {
       accessToken: data.accessToken,
@@ -170,13 +140,11 @@ module.exports.declineMeeting = function (data) {
   };
 
   return request.postProm(baseUri + '/slot/decline', formData)
-  .then(function (data) {
-    return JSON.parse(data.body);
-  });
+  .then(data => JSON.parse(data.body));
 };
 
 /* CHANGE USER IMAGE */
-module.exports.changeImage = function (data) {
+module.exports.changeImage = data => {
   const formData = {
     form: {
       accessToken: data.accessToken,
@@ -185,7 +153,5 @@ module.exports.changeImage = function (data) {
   };
 
   return request.postProm(baseUri + '/user/image', formData)
-  .then(function (data) {
-    return JSON.parse(data.body);
-  });
+  .then(data => JSON.parse(data.body));
 };

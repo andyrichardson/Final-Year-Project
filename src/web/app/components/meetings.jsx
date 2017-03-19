@@ -10,7 +10,7 @@ class Meetings extends React.Component {
   usernameLink(username) {
     let name;
 
-    this.props.user.friends.forEach(function (el) {
+    this.props.user.friends.forEach(el => {
       if (el.username = username) {
         name = `${el.firstName} ${el.lastName}`;
       }

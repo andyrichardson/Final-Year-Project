@@ -41,11 +41,9 @@ class UploadPhotoModal extends React.Component{
 
   /* LOAD IMAGE */
   loadImage(src) {
-    return new Prom(function(resolve, reject) {
+    return new Prom((resolve, reject) => {
       var image = new Image();
-      image.onload = function(e) {
-        return resolve(image);
-      };
+      image.onload = e => resolve(image);
 
       image.src = src;
     });

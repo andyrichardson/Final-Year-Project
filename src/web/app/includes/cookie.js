@@ -1,4 +1,4 @@
-module.exports.get = function (name) {
+module.exports.get = name => {
   var name = name + '=';
   var ca = document.cookie.split(';');
   for (var i = 0; i < ca.length; i++) {
@@ -15,10 +15,10 @@ module.exports.get = function (name) {
   return '';
 };
 
-module.exports.set = function (name, value) {
+module.exports.set = (name, value) => {
   document.cookie = name + '=' + value + ';';
 };
 
-module.exports.delete = function (name) {
+module.exports.delete = name => {
   document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 };

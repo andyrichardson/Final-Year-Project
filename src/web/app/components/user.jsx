@@ -66,15 +66,11 @@ class User extends React.Component {
 
   /* GET FRIENDS DIV */
   getFriends() {
-    let friends = this.state.user.friends.map(function (el) {
-      return (
-        <div>
-          <Link to={'/user/' + el.username} key={el.username}>
-            {el.firstName + ' ' + el.lastName}
-          </Link>
-        </div>
-      );
-    });
+    let friends = this.state.user.friends.map(el => <div>
+      <Link to={'/user/' + el.username} key={el.username}>
+        {el.firstName + ' ' + el.lastName}
+      </Link>
+    </div>);
 
     return (
       <div>
@@ -98,7 +94,7 @@ class User extends React.Component {
 
       // If already responded
       if (this.props.user.slotRequests != undefined) {
-        this.props.user.slotRequests.forEach(function (sl) {
+        this.props.user.slotRequests.forEach(sl => {
           if (sl.id == el.id) {
             button = <RB.Button>Responded</RB.Button>;
           }
@@ -185,7 +181,7 @@ class User extends React.Component {
     };
 
     return Api.respondSlot(data)
-    .then(function (data) {
+    .then(data => {
       if (data.status != 200) {
         return alert(data.message);
       }

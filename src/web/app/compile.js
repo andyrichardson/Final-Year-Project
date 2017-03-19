@@ -20,11 +20,11 @@ const jsCompiler = browserify({
 });
 
 // Bundling function
-const bundle = function () {
+const bundle = () => {
   console.log('Starting Javascript compilation'.red);
 
   // Compile Javascript
-  jsCompiler.bundle(function (err) {
+  jsCompiler.bundle(err => {
     if (err) {
       return console.log(err);
     }
@@ -33,18 +33,18 @@ const bundle = function () {
   }).pipe(fs.createWriteStream(bundleJs));
 };
 
-const bundleSass = function () {
+const bundleSass = () => {
   console.log('Starting SASS compilation'.red);
 
   // Compile SASS
   sassCompiler.render({
     file: entrySass,
-  }, function (err, result) {
+  }, (err, result) => {
     if (err) {
       return console.log(err);
     }
 
-    fs.writeFile(bundleCss, result.css, function (err) {
+    fs.writeFile(bundleCss, result.css, err => {
       if (err) {
         return console.log(err);
       }

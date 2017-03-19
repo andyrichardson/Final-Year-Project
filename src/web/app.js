@@ -16,12 +16,12 @@ const apiProxy = require('./routes/api');
 app.use(apiProxy);
 
 // All routes other than API return web app
-app.get('*', function (req, res) {
+app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 });
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

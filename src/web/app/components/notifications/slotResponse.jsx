@@ -15,7 +15,7 @@ class SlotResponse extends React.Component {
     };
 
     return Api.confirmMeeting(data)
-    .then(function (data) {
+    .then(data => {
       alert(data.message);
     });
   }
@@ -29,7 +29,7 @@ class SlotResponse extends React.Component {
     };
 
     return Api.declineMeeting(data)
-    .then(function (data) {
+    .then(data => {
       alert(data.message);
     });
   }
