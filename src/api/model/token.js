@@ -5,29 +5,27 @@ const mime = require('rest/interceptor/mime');
 const request = Rest.wrap(mime, { mime: 'application/json' });
 
 /* HTTP ERROR CHECKER */
-const errorCheck = function (response) {
-  return new Prom(function (resolve, reject) {
-    if (response.status == undefined) {
-      const error = new Error('Unable to communicate with authentication server.');
-      error.status = 500;
-      return reject(error);
-    }
+const errorCheck = response => new Prom((resolve, reject) => {
+  if (response.status == undefined) {
+    const error = new Error('Unable to communicate with authentication server.');
+    error.status = 500;
+    return reject(error);
+  }
 
-    if (response.entity.message == 'jwt malformed') {
-      const error = new Error('Invalid/malformed authentication token');
-      error.status = 400;
-      return reject(error);
-    }
+  if (response.entity.message == 'jwt malformed') {
+    const error = new Error('Invalid/malformed authentication token');
+    error.status = 400;
+    return reject(error);
+  }
 
-    if (response.status.code != 200 && response.status.code != 201) {
-      const error = new Error(response.entity.message);
-      error.status = response.entity.status;
-      return reject(error);
-    }
+  if (response.status.code != 200 && response.status.code != 201) {
+    const error = new Error(response.entity.message);
+    error.status = response.entity.status;
+    return reject(error);
+  }
 
-    resolve(response);
-  });
-};
+  resolve(response);
+});
 
 class TokenMiddleware{
   /* SET AUTH SERVER URL */
@@ -47,9 +45,7 @@ class TokenMiddleware{
     })
     .catch(errorCheck)
     .then(errorCheck)
-    .then(function (response) {
-      return response;
-    });
+    .then(response => response);
   }
 
   /* CREATE TOKEN USING USER CREDENTIALS */
@@ -64,9 +60,7 @@ class TokenMiddleware{
     })
     .catch(errorCheck)
     .then(errorCheck)
-    .then(function (response) {
-      return response.entity.token;
-    });
+    .then(response => response.entity.token);
   }
 
   /* UPDATE PASSWORD */
@@ -94,9 +88,7 @@ class TokenMiddleware{
     })
     .catch(errorCheck)
     .then(errorCheck)
-    .then(function (response) {
-      return response.entity;
-    });
+    .then(response => response.entity);
   }
 
   /* VALIDATE USER TOKEN */
@@ -115,13 +107,11 @@ class TokenMiddleware{
       })
       .catch(errorCheck)
       .then(errorCheck)
-      .then(function (response) {
+      .then(response => {
         req.auth = response.entity;
         return next();
       })
-      .catch(function (err) {
-        return reject(err);
-      });
+      .catch(err => reject(err));
     });
   }
 }
@@ -129,31 +119,19 @@ class TokenMiddleware{
 let Token = new TokenMiddleware();
 
 /* SET AUTH SERVER URL */
-module.exports.init = function (url) {
-  Token.init(url);
-};
+module.exports.init = url => Token.init(url);
 
 /* REGISTER */
-module.exports.register = function (username, password) {
-  return Token.register(username, password);
-};
+module.exports.register = (username, password) => Token.register(username, password);
 
 /* CREATE TOKEN USING USER CREDENTIALS */
-module.exports.create = function (username, password) {
-  return Token.create(username, password);
-};
+module.exports.create = (username, password) => Token.create(username, password);
 
 /* CHANGE USER PASSWORD */
-module.exports.password = function (username, password) {
-  return Token.password(username, password);
-};
+module.exports.password = (username, password) => Token.password(username, password);
 
 /* DELETE TOKEN */
-module.exports.delete = function (token) {
-  return Token.delete(token);
-};
+module.exports.delete = token => Token.delete(token);
 
 /* VALIDATE USER TOKEN */
-module.exports.validate = function (req, res, next) {
-  return Token.validate(req, res, next);
-};
+module.exports.validate = (req, res, next) => Token.validate(req, res, next);

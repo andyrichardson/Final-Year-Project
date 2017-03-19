@@ -62,15 +62,13 @@ module.exports.init = (database) => {
 };
 
 /* CREATE SLOT */
-module.exports.create = function (username, start, finish) {
-  return User.getId(username)
-  .then(function (id) {
-    return User.model().pushProm(id, 'slots', { start: start, finish: finish });
-  });
-};
+module.exports.create = (username, start, finish) =>
+  User.getId(username)
+  .then((id) => User.model().pushProm(id, 'slots', { start: start, finish: finish })
+  ),
 
 /* DELETE SLOT */
-module.exports.delete = function (slotId) {
+module.exports.delete = slotId => {
     const query = `MATCH (s:Slot), (n:Notification {slotId:"${slotId}"})
     WHERE ID(s) = ${slotId}
     DETACH DELETE s, n`;
@@ -79,10 +77,11 @@ module.exports.delete = function (slotId) {
   };
 
 /* GET SLOT OWNER */
-module.exports.getOwner = function (slotId) {
-  let query = `MATCH (u:User)-[:has_slot]->(s:Slot) WHERE ID(s) = ${slotId} return u`;
+module.exports.getOwner = (slotId) => {
+  const query = `MATCH (u:User)-[:has_slot]->(s:Slot) WHERE ID(s) = ${slotId} return u`;
+
   return db.queryProm(query)
-  .then(function (data) {
+  .then((data) => {
     if (data[0] === undefined) {
       const error = new Error('Slot with declared ID does not exist.');
       error.status = 422;
@@ -94,7 +93,7 @@ module.exports.getOwner = function (slotId) {
 };
 
 /* RESPOND TO SLOT */
-module.exports.respond = function (username, slotId) {
+module.exports.respond = (username, slotId) => {
   if (isNaN(slotId)) {
     const error = new Error('No/invalid slot ID declared.');
     error.status = 400;
@@ -104,11 +103,11 @@ module.exports.respond = function (username, slotId) {
   let ownerUsername;
 
   return module.exports.getOwner(slotId)
-  .then(function (owner) {
+  .then((owner) => {
     ownerUsername = owner.username;
     return User.hasFriend(username, owner.username);
   })
-  .then(function (friends) {
+  .then((friends) => {
     if (!friends) {
       const error = new Error('You do not have permission to respond to this slot.');
       error.status = 400;
@@ -117,9 +116,9 @@ module.exports.respond = function (username, slotId) {
 
     return User.getUserAuthenticated(username, username);
   })
-  .then(function (user) {
+  .then((user) => {
     if (user.slotRequests !== undefined) {
-      user.slotRequests.forEach(function (el) {
+      user.slotRequests.forEach(el => {
         if (el.id == slotId) {
           const error = new Error('Slot request already exists.');
           error.status = 401;
@@ -130,7 +129,7 @@ module.exports.respond = function (username, slotId) {
 
     return db.relateProm(user.id, 'requests_slot', slotId);
   })
-  .then(function () {
+  .then(() => {
     const data = {
       type: 'slot response',
       username: username,
@@ -142,7 +141,7 @@ module.exports.respond = function (username, slotId) {
 };
 
 /* CONFIRM SLOT MEETING REQUEST */
-module.exports.confirm = function (self, friend, slotId) {
+module.exports.confirm = (self, friend, slotId) => {
   if (self === undefined || friend === undefined || slotId === undefined) {
     const error = new Error('One or more arguments missing.');
     error.status = 400;
@@ -155,7 +154,7 @@ module.exports.confirm = function (self, friend, slotId) {
   RETURN s`;
 
   return db.queryProm(query)
-  .then(function (slot) {
+  .then((slot) => {
     // No matches
     if (slot[0] === undefined) {
       const error = new Error('Invalid request, slot could not be confirmed.');
@@ -168,7 +167,7 @@ module.exports.confirm = function (self, friend, slotId) {
 };
 
 /* DECLINE SLOT MEETING REQUEST */
-module.exports.decline = function (self, friend, slotId) {
+module.exports.decline = (self, friend, slotId) => {
   if (self === undefined || friend === undefined || slotId === undefined) {
     const error = new Error('One or more arguments missing.');
     error.status = 400;
@@ -184,7 +183,7 @@ module.exports.decline = function (self, friend, slotId) {
   RETURN a`;
 
   return db.queryProm(query)
-  .then(function (data) {
+  .then((data) => {
     if (data[0] === undefined) {
       const error = new Error('Unable to decline request.');
       error.status = 400;
@@ -194,7 +193,7 @@ module.exports.decline = function (self, friend, slotId) {
 };
 
 /* GET SLOT FEED */
-module.exports.getFeed = function (username, start, finish) {
+module.exports.getFeed = (username, start, finish) => {
   let query = `MATCH (u:User)-[:has_friend]-(f:User),
   (f)-[:has_slot]->(s:Slot)
   WHERE u.username = "${username}" `;
@@ -208,15 +207,13 @@ module.exports.getFeed = function (username, start, finish) {
   ORDER BY s.created DESC`;
 
   return db.queryProm(query)
-  .then(function (data) {
-    return data.map(function (el) {
+  .then((data) =>
+    data.map((el) => {
       el.s.username = el['f.username'];
       return el.s;
-    });
-  });
+    })
+  );
 };
 
 /* MODEL */
-module.exports.model = function () {
-  return model;
-};
+module.exports.model = () => model;

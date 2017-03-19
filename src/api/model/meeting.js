@@ -63,7 +63,7 @@ module.exports.init = (database) => {
 /* CREATE MEETING */
 module.exports.create = ({ id, start, finish }, user1, user2) =>
   model.saveProm({ start, finish, })
-  .then(function (meeting) {
+  .then(meeting => {
     const query = `MATCH (a:User),(b:User),(m:Meeting)
     WHERE a.username = "${user1}"
     AND b.username = "${user2}"
