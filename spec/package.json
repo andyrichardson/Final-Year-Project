@@ -10,6 +10,7 @@
   "author": "Andy Richardson",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.5.0",
     "colors": "^1.1.2",
     "jsdom": "^9.8.3",
     "mocha": "^3.1.2",
