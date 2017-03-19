@@ -27,5 +27,3 @@ module.exports = (err, req, res, next) => {
   res.status(error.status);
   res.json(error);
 };
-
-module.exports = errorHandler;

@@ -21,39 +21,37 @@ const schema = {
 
 /* VALIDATION */
 const validator = {
-  validate: function (data, callback) {
-    return validator.datesValid(data)
+  validate: (data, callback) =>
+    validator.datesValid(data)
     .then(validator.datesOrdered)
     .then(callback)
-    .catch(callback);
-  },
+    .catch(callback),
 
-  datesValid: function (data) {
-    return new Prom(function (resolve, reject) {
+  datesValid: (data) =>
+    new Prom((resolve, reject) => {
       if (isNaN(data.start) || isNaN(data.finish)) {
         reject(new Error('Validation failed. Date(s) are invalid.'));
       }
 
       resolve(data);
-    });
-  },
+    }),
 
-  datesOrdered: function (data) {
-    return new Promise(function (resolve, reject) {
+  datesOrdered: (data) =>
+    new Promise((resolve, reject) => {
       if (!(data.start < data.finish)) {
         reject(new Error('Validation failed. Start date must be before end date.'));
       }
 
       resolve();
-    });
-  },
+    }),
 };
 
 const SlotHandler = new ModelHandler('Slot', schema);
-let model, db;
+let model;
+let db;
 
 /* INITIALIZE */
-module.exports.init = function (database) {
+module.exports.init = (database) => {
   SlotHandler.init(database);
 
   model = Prom.promisifyAll(SlotHandler.getModel(), { suffix: 'Prom' });

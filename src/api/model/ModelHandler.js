@@ -1,7 +1,7 @@
 'use strict';
 const model = require('seraph-model');
 
-export default class ModelHandler{
+module.exports = class ModelHandler{
   constructor(name, schema) {
     this.name = name;
     this.schema = schema;

@@ -11,14 +11,11 @@ class PostModel {
   }
 }
 
-var postModel = new PostModel();
+/* SINGLETON CLASS */
+const postModel = new PostModel();
 
-module.exports = {
-    init: function (db) {
-        return postModel.init(db);
-      },
+/* INITIALIZE CLASS */
+module.exports.init = (db) => postModel.init(db);
 
-    model: function () {
-        return postModel.getModel();
-      },
-  };
+/* RETURN MODEL */
+module.exports.model = () => postModel.getModel();

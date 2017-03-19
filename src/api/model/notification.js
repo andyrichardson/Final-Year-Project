@@ -17,23 +17,21 @@ let model;
 let db;
 
 /* INITIALIZE */
-module.exports.init = function (database) {
+module.exports.init = (database) => {
   NotificationHandler.init(database);
   model = Prom.promisifyAll(NotificationHandler.getModel(), { suffix: 'Prom' });
   db = Prom.promisifyAll(database, { suffix: 'Prom' });
 };
 
 /* ADD NOTIFICATION */
-module.exports.create = function (username, notification) {
+module.exports.create = (username, notification) => {
   notification.created = Math.round(Date.now() / 1000);
 
   return User.getId(username)
-  .then(function (id) {
-    return User.model().pushProm(id, 'notifications', notification);
-  });
+  .then((id) =>
+    User.model().pushProm(id, 'notifications', notification)
+  );
 };
 
 /* MODEL */
-module.exports.model = function () {
-  return model;
-};
+module.exports.model = () => model;
