@@ -6,55 +6,55 @@ const Moment = require('moment');
 const Api = require('../../includes/api');
 
 class AddSlot extends React.Component{
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      user: null
+      user: null,
     };
   }
 
-  componentWillReceiveProps(){
+  componentWillReceiveProps() {
     // Get friend
     this.props.user.friends.forEach((friend) => {
-      if(friend.username == this.props.username){
-        return this.setState({user: friend});
+      if (friend.username == this.props.username) {
+        return this.setState({ user: friend });
       }
     });
   }
 
   /* GET USER */
-  getUser(){
+  getUser() {
     let user;
 
     // Get friend
     this.props.user.friends.forEach((friend) => {
-      if(friend.username == this.props.username){
+      if (friend.username == this.props.username) {
         user = friend;
       }
     });
 
-    if(user === undefined){
-      return (<div></div>)
+    if (user === undefined) {
+      return (<div></div>);
     }
 
-    return <Link to={`/user/${this.props.username}`}>{`${user.firstName} ${user.lastName}`}</Link>
+    return <Link to={`/user/${this.props.username}`}>{`${user.firstName} ${user.lastName}`}</Link>;
   }
 
   /* GET BUTTONS */
-  getButtons(){
+  getButtons() {
     let button = <RB.Button onClick={() => this.respondToSlot()}>Respond</RB.Button>;
 
     // If already responded
     if (this.props.user.slotRequests != undefined) {
-      this.props.user.slotRequests.forEach((sl)=>{
-        if(sl.id == this.props.id){
+      this.props.user.slotRequests.forEach((sl)=> {
+        if (sl.id == this.props.id) {
           button = <RB.Button>Responded</RB.Button>;
         }
-      })
+      });
     }
 
     // If viewing own slot
-    if (this.props.user.username == this.props.username){
+    if (this.props.user.username == this.props.username) {
       button = <div></div>;
     }
 
@@ -65,26 +65,26 @@ class AddSlot extends React.Component{
   respondToSlot() {
     const data = {
       slotId: this.props.id,
-      accessToken: this.props.accessToken
+      accessToken: this.props.accessToken,
     };
 
     return Api.respondSlot(data)
-    .then(function(data){
-      if(data.status != 200){
+    .then(function (data) {
+      if (data.status != 200) {
         return alert(data.message);
       }
 
-      return alert("Slot response sent.");
-    })
+      return alert('Slot response sent.');
+    });
   }
 
   /* GET TITLE STRING */
-  getTitle(){
-    return Moment.unix(this.props.start).calendar(null, {sameElse: "DD/MM/YYYY hh:mm A"});
+  getTitle() {
+    return Moment.unix(this.props.start).calendar(null, { sameElse: 'DD/MM/YYYY hh:mm A' });
   }
 
   /* GET DURATION STRING */
-  getDuration(){
+  getDuration() {
     const start = Moment.unix(this.props.start);
     const finish = Moment.unix(this.props.finish);
 
@@ -92,17 +92,17 @@ class AddSlot extends React.Component{
   }
 
   /* GET TOOLBAR */
-  getToolbar(){
+  getToolbar() {
     let button = (
-      <div className={"clickable"} onClick={() => this.respondToSlot()}>
+      <div className={'clickable'} onClick={() => this.respondToSlot()}>
         <RB.Glyphicon glyph="glyphicon glyphicon-arrow-left"/> Respond
       </div>
     );
 
     // If already responded
     if (this.props.user.slotRequests != undefined) {
-      this.props.user.slotRequests.forEach((sl)=>{
-        if(sl.id == this.props.id){
+      this.props.user.slotRequests.forEach((sl)=> {
+        if (sl.id == this.props.id) {
           button = (
             <div>
               <RB.Glyphicon glyph="glyphicon glyphicon-ok-circle"/> Responded
@@ -113,7 +113,7 @@ class AddSlot extends React.Component{
     }
 
     // If viewing own slot
-    if (this.props.user.username == this.props.username){
+    if (this.props.user.username == this.props.username) {
       button = <div></div>;
     }
 
@@ -121,17 +121,20 @@ class AddSlot extends React.Component{
   }
 
   /* RENDER */
-  render(){
-    if(this.state.user === null){
+  render() {
+    if (this.state.user === null) {
       return null;
     }
 
-    return(
+    return (
       <RB.Row className="slotListing">
         <RB.Row>
           <RB.Col md={3} xs={2}>
             <Link to={`/user/${this.state.user.username}`}>
-              <img className="img-responsive" src={`/res/img/users/${this.state.user.username}.jpg`}/>
+              <img
+                className="img-responsive"
+                src={`/res/img/users/${this.state.user.username}.jpg`}
+              />
               <h3>{`${this.state.user.firstName} ${this.state.user.lastName}`}</h3>
             </Link>
           </RB.Col>

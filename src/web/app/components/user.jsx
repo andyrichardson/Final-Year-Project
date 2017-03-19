@@ -1,9 +1,9 @@
-const React = require("react");
+const React = require('react');
 const Link = require('react-router').Link;
 const RB = require('react-bootstrap');
 const Moment = require('moment');
 
-const Api = require("../includes/api");
+const Api = require('../includes/api');
 
 const UploadPhotoModal = require('./user/uploadPhoto.jsx');
 
@@ -14,34 +14,36 @@ class User extends React.Component {
     this.state = {
       user: null,
       modal: false,
-      userImage: "/"
+      userImage: '/',
     };
     this.getInfo();
   }
 
   /* ON LOAD */
-  componentWillReceiveProps(props){
+  componentWillReceiveProps(props) {
     return this.getInfo(props.params.username)
     .then((data) => {
       this.render();
-    })
+    });
   }
 
   /* FETCH USER INFO */
   getInfo(username) {
-    if(username === undefined){
+    if (username === undefined) {
       username = this.props.params.username;
     }
 
     const data = {
       username: username,
-      accessToken: this.props.accessToken
+      accessToken: this.props.accessToken,
     };
 
     return Api.getUserAuthenticated(data)
     .then((data) => {
-      this.setState({user: data.message});
-      this.setState({userImage: `/res/img/users/${this.props.params.username}.jpg?${new Date().getTime()}`})
+      this.setState({ user: data.message });
+      this.setState({
+        userImage: `/res/img/users/${this.props.params.username}.jpg?${new Date().getTime()}`,
+      });
     });
   }
 
@@ -49,40 +51,42 @@ class User extends React.Component {
   addFriend() {
     const data = {
       username: this.state.user.username,
-      accessToken: this.props.accessToken
+      accessToken: this.props.accessToken,
     };
 
     return Api.addUser(data)
     .then((data) => {
-      if(data.status != 200){
+      if (data.status != 200) {
         return alert(data.message);
       }
 
-      alert("Friend added")
+      alert('Friend added');
     });
   }
 
   /* GET FRIENDS DIV */
   getFriends() {
-    let friends = this.state.user.friends.map(function(el){
+    let friends = this.state.user.friends.map(function (el) {
       return (
         <div>
-          <Link to={"/user/" + el.username} key={el.username}>{el.firstName + " " + el.lastName}</Link>
+          <Link to={'/user/' + el.username} key={el.username}>
+            {el.firstName + ' ' + el.lastName}
+          </Link>
         </div>
       );
     });
 
-    return(
+    return (
       <div>
         <h1>Friends</h1>
         {friends}
       </div>
-    )
+    );
   }
 
   /* GET SLOTS DIV */
   getSlots() {
-    if(this.state.user.slots === undefined){
+    if (this.state.user.slots === undefined) {
       return <div></div>;
     }
 
@@ -94,20 +98,20 @@ class User extends React.Component {
 
       // If already responded
       if (this.props.user.slotRequests != undefined) {
-        this.props.user.slotRequests.forEach(function(sl){
-          if(sl.id == el.id){
+        this.props.user.slotRequests.forEach(function (sl) {
+          if (sl.id == el.id) {
             button = <RB.Button>Responded</RB.Button>;
           }
-        })
+        });
       }
 
       // If viewing own profile
-      if (this.props.user.username == this.props.params.username){
+      if (this.props.user.username == this.props.params.username) {
         button = <div></div>;
       }
 
-      return(
-        <div style={{border: "solid 1px black"}} key={index}>
+      return (
+        <div style={{ border: 'solid 1px black' }} key={index}>
           <label>Start:</label> {start.calendar()}
 
           <br/>
@@ -117,32 +121,42 @@ class User extends React.Component {
       );
     });
 
-    return(
+    return (
       <div>
         <h1>Slots</h1>
         {slots}
       </div>
-    )
+    );
   }
 
   /* GET USER IMAGE */
   getImage() {
-    if(this.props.user.username == this.props.params.username){
+    if (this.props.user.username == this.props.params.username) {
       return (
         <div>
-          <img onClick={()=>this.showPhotoModal()} className="img-responsive userImage selfImage" src={this.state.userImage} />
-          <UploadPhotoModal visible={this.state.modal} close={()=>this.hidePhotoModal()} accessToken={this.props.accessToken} update={()=>this.getInfo()}/>
+          <img
+            onClick={()=>this.showPhotoModal()}
+            className="img-responsive userImage selfImage"
+            src={this.state.userImage}
+          />
+
+          <UploadPhotoModal
+            visible={this.state.modal}
+            close={()=>this.hidePhotoModal()}
+            accessToken={this.props.accessToken}
+            update={()=>this.getInfo()}
+          />
         </div>
       );
     }
 
-    return <img className="img-responsive userImage selfImage" src={this.state.userImage} />
+    return <img className="img-responsive userImage selfImage" src={this.state.userImage} />;
   }
 
   /* GET BUTTONS */
   getButtons() {
-    if(this.props.user.username == this.props.params.username){
-      return(
+    if (this.props.user.username == this.props.params.username) {
+      return (
         <RB.Button onClick={() => this.showPhotoModal()}>Change Photo</RB.Button>
       );
     }
@@ -155,43 +169,43 @@ class User extends React.Component {
 
   /* UPDATE PHOTO MODAL */
   showPhotoModal() {
-    this.setState({modal: true});
+    this.setState({ modal: true });
   }
 
   /* HIDE PHOTO MODAL */
   hidePhotoModal() {
-    this.setState({modal: false});
+    this.setState({ modal: false });
   }
 
   /* SLOT RESPONSE CLICK */
   respondToSlot(id) {
     const data = {
       slotId: id,
-      accessToken: this.props.accessToken
+      accessToken: this.props.accessToken,
     };
 
     return Api.respondSlot(data)
-    .then(function(data){
-      if(data.status != 200){
+    .then(function (data) {
+      if (data.status != 200) {
         return alert(data.message);
       }
 
-      return alert("Slot response sent.");
-    })
+      return alert('Slot response sent.');
+    });
   }
 
   /* RENDER */
-  render(){
-    if(this.state.user == null){
+  render() {
+    if (this.state.user == null) {
       return null;
     }
 
-    if(this.state.user.status == 500){
+    if (this.state.user.status == 500) {
       return (<h1>{this.props.params.username} does not exist.</h1>);
     }
 
     return (
-      <RB.Row className={"userPage"}>
+      <RB.Row className={'userPage'}>
         <RB.Row>
           <RB.Col xs={12} md={2}>
             {this.getImage()}

@@ -1,19 +1,19 @@
-module.exports.username = function(string){
+module.exports.username = function (string) {
   return true;
 };
 
-module.exports.password = function(string){
+module.exports.password = function (string) {
   return true;
-}
+};
 
-module.exports.email = function(string){
+module.exports.email = function (string) {
   return true;
-}
+};
 
-module.exports.firstName = function(string){
+module.exports.firstName = function (string) {
   return true;
-}
+};
 
-module.exports.lastName = function(string){
+module.exports.lastName = function (string) {
   return true;
-}
+};

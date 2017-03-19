@@ -1,13 +1,13 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
+const React = require("react");
+const ReactDOM = require("react-dom");
 
 class FormInput extends React.Component{
   constructor(props) {
     super(props);
   }
 
-  validate(value){
-    if(this.props.value === undefined){
+  validate(value) {
+    if (this.props.value === undefined) {
       return true;
     }
 
@@ -25,10 +25,10 @@ class FormInput extends React.Component{
     this.props.parent.setState(state);
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <input type={this.props.type} onChange={(e) => this.handleChange(e)}></input>
-    )
+    );
   }
 }
 

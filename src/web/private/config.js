@@ -1,6 +1,6 @@
 module.exports = {
   api: {
-    host: "localhost",
-    port: 80
-  }
-}
+    host: 'localhost',
+    port: 80,
+  },
+};

@@ -3,13 +3,13 @@ const express = require('express');
 const proxy = require('http-proxy');
 const config = require('../private/config');
 
-const apiProxy = function(req, res, next){
-  if (req.url.substring(0, 4) != "/api"){
+const apiProxy = function (req, res, next) {
+  if (req.url.substring(0, 4) != '/api') {
     return next();
   }
 
   console.log('redirect');
-  return res.redirect(307, `http://${process.env.HOSTNAME}:3000` + req.url)
-}
+  return res.redirect(307, `http://${process.env.HOSTNAME}:3000` + req.url);
+};
 
 module.exports = apiProxy;

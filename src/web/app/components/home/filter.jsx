@@ -6,37 +6,37 @@ const TimePicker = require('rc-time-picker');
 const Moment = require('moment');
 
 class Filter extends React.Component{
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       day: Moment().startOf('day'),
       start: null,
-      finish: null
-    }
+      finish: null,
+    };
   }
 
   // Setting day
-  dateChange(d){
-    this.setState({day: d});
+  dateChange(d) {
+    this.setState({ day: d });
   }
 
   // Setting start time
-  startChange(time){
-    this.setState({start: time});
+  startChange(time) {
+    this.setState({ start: time });
   }
 
   // Setting end time
-  endChange(time){
-    this.setState({finish: time});
+  endChange(time) {
+    this.setState({ finish: time });
   }
 
   // Apply filter
-  applyFilter(){
+  applyFilter() {
     let start = this.state.start;
     let finish = this.state.finish;
     const day = this.state.day;
 
-    if(start === null || finish === null){
+    if (start === null || finish === null) {
       start = Moment().startOf('day');
       finish = Moment().endOf('day');
     }
@@ -53,16 +53,16 @@ class Filter extends React.Component{
   }
 
   // Clear filter
-  clearFilter(){
+  clearFilter() {
     this.props.clearFilter();
     this.setState({
       day: Moment().startOf('day'),
       start: null,
-      finish: null
-    })
+      finish: null,
+    });
   }
 
-  render(){
+  render() {
     return (
       <div>
         <h2>Filter</h2>
@@ -72,9 +72,17 @@ class Filter extends React.Component{
         </RB.Row>
 
         <RB.Row>
-          <TimePicker showSecond={false} value={this.state.start} onChange={(d) => this.startChange(d)} />
-          {" - "}
-          <TimePicker showSecond={false} value={this.state.finish} onChange={(d) => this.endChange(d)} />
+          <TimePicker
+            showSecond={false}
+            value={this.state.start}
+            onChange={(d) => this.startChange(d)}
+          />
+          {' - '}
+          <TimePicker
+            showSecond={false}
+            value={this.state.finish}
+            onChange={(d) => this.endChange(d)}
+          />
         </RB.Row>
 
         <RB.Row>

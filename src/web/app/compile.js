@@ -3,64 +3,66 @@ const reactify = require('reactify');
 const fs = require('fs');
 const path = require('path');
 const colors = require('colors');
-const sass_compiler = require('node-sass');
+const sassCompiler = require('node-sass');
 
 // Input files
-const entry_js = 'app/main.js';
-const entry_sass = 'app/main.scss';
+const entryJs = 'app/main.js';
+const entrySass = 'app/main.scss';
 
 // Output files
-const bundle_js = path.join(__dirname, '../public/res/js/bundle.js');
-const bundle_css = path.join(__dirname, '../public/res/css/bundle.css');
+const bundleJs = path.join(__dirname, '../public/res/js/bundle.js');
+const bundleCss = path.join(__dirname, '../public/res/css/bundle.css');
 
 // Browserify config
-const js_compiler = browserify({
-  entries: [entry_js],
-  transform: reactify
+const jsCompiler = browserify({
+  entries: [entryJs],
+  transform: reactify,
 });
 
 // Bundling function
-const bundle = function(){
+const bundle = function () {
   console.log('Starting Javascript compilation'.red);
 
   // Compile Javascript
-  js_compiler.bundle(function(err){
-    if(err){
+  jsCompiler.bundle(function (err) {
+    if (err) {
       return console.log(err);
     }
-    console.log('Javascript compilation complete'.green);
-  }).pipe(fs.createWriteStream(bundle_js));
-}
 
-const bundle_sass = function(){
+    console.log('Javascript compilation complete'.green);
+  }).pipe(fs.createWriteStream(bundleJs));
+};
+
+const bundleSass = function () {
   console.log('Starting SASS compilation'.red);
 
   // Compile SASS
-  sass_compiler.render({
-    file: entry_sass
-  }, function(err, result){
-    if(err){
+  sassCompiler.render({
+    file: entrySass,
+  }, function (err, result) {
+    if (err) {
       return console.log(err);
     }
-    fs.writeFile(bundle_css, result.css, function(err){
-      if(err){
+
+    fs.writeFile(bundleCss, result.css, function (err) {
+      if (err) {
         return console.log(err);
       }
-        console.log('SASS compilation complete'.green);
-    })
-  })
-}
 
-if(process.argv[2] == "--sass-watch"){
-  const sasswatcher = require('node-sass-watcher');
-  const watcher = new sasswatcher(entry_sass);
-  watcher.on('init', bundle_sass);
-  watcher.on('update', bundle_sass);
+      console.log('SASS compilation complete'.green);
+    });
+  });
+};
+
+if (process.argv[2] == '--sass-watch') {
+  const Sasswatcher = require('node-sass-watcher');
+  const watcher = new Sasswatcher(entrySass);
+  watcher.on('init', bundleSass);
+  watcher.on('update', bundleSass);
   watcher.run();
-}
-else{
+} else {
   bundle();
-  bundle_sass();
+  bundleSass();
 }
 
 module.exports = bundle;

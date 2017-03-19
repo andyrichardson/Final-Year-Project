@@ -11,20 +11,20 @@ const SideNav = require('./sidenav.jsx');
 /* APP COMPONENT */
 class App extends React.Component {
   /* CONSTRUCTOR */
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      accessToken: Cookie.get("accessToken")
+      accessToken: Cookie.get('accessToken'),
     };
   }
 
   /* UPDATE SELF TIMER */
-  componentDidMount(){
-    if(this.state.accessToken !== ""){
+  componentDidMount() {
+    if (this.state.accessToken !== '') {
       this.updateSelf();
       setInterval(() => {
         this.updateSelf();
-      }, 3000)
+      }, 3000);
     }
   }
 
@@ -32,56 +32,59 @@ class App extends React.Component {
   login(state) {
     return Api.login(state)
     .then((data) => {
-      if(data.status != 200){
+      if (data.status != 200) {
         throw new Error(data.message);
       }
 
-      this.setState({accessToken: data.accessToken});
-      Cookie.set("accessToken", data.accessToken);
-      window.location.href = "/home";
+      this.setState({ accessToken: data.accessToken });
+      Cookie.set('accessToken', data.accessToken);
+      window.location.href = '/home';
     });
   }
 
   /* LOGOUT */
   logout() {
     Cookie.delete('accessToken');
-    this.setState({accessToken: ""});
-    window.location.href = "/";
+    this.setState({ accessToken: '' });
+    window.location.href = '/';
   }
 
   /* UPDATE SELF */
   updateSelf() {
-    return Api.getUserAuthenticated({accessToken: this.state.accessToken})
+    return Api.getUserAuthenticated({ accessToken: this.state.accessToken })
     .then((data) => {
-      this.setState({user: data.message});
+      this.setState({ user: data.message });
     });
   }
 
   /* USER HAS ACCESS TOKEN */
-  isAuthenticated(){
+  isAuthenticated() {
     return this.state.user !== undefined;
   }
 
   /* PASSING PROPS TO CHILDREN */
-  renderChildren(){
+  renderChildren() {
     return React.Children.map(this.props.children, (child) => {
       switch (child.type.name) {
-        case "SignInForm":
-          return React.cloneElement(child, {login: (state) => this.login(state)});
+        case 'SignInForm':
+          return React.cloneElement(child, { login: (state) => this.login(state) });
 
         default:
-          return React.cloneElement(child, {user: this.state.user, accessToken: this.state.accessToken});
+          return React.cloneElement(child, {
+            user: this.state.user,
+            accessToken: this.state.accessToken,
+          });
       };
     });
   }
 
   /* RENDER */
-  render(){
-    return(
+  render() {
+    return (
       <div>
         <Navbar auth={this.isAuthenticated()} user={this.state.user} logout={() => this.logout()}/>
         <SideNav auth={this.isAuthenticated()}/>
-        <RB.Col id={"content"} xs={12} lg={(this.isAuthenticated()) ? 10 : 12}>
+        <RB.Col id={'content'} xs={12} lg={(this.isAuthenticated()) ? 10 : 12}>
           {this.renderChildren()}
         </RB.Col>
       </div>

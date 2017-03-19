@@ -15,16 +15,16 @@ class SignInForm extends React.Component {
     e.preventDefault(e);
 
     this.props.login(this.state)
-    .then(function(data){
-      alert("Sign in successful");
+    .then(function (data) {
+      alert('Sign in successful');
     })
-    .catch(function(err){
-        alert("Sign in error: " + err.message);
-    });
+    .catch(function (err) {
+        alert('Sign in error: ' + err.message);
+      });
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <div>
         <h1>Sign In</h1>
         <form onSubmit={(e) => this.handleSubmit(e)}>

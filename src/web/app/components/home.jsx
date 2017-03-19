@@ -8,55 +8,55 @@ const SlotListing = require('./home/slotListing.jsx');
 const Filter = require('./home/filter.jsx');
 
 class Home extends React.Component{
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {};
   }
 
-  componentWillReceiveProps(){
+  componentWillReceiveProps() {
     this.getFeed();
   }
 
-  componentDidMount(){
-    this.setState({intervalHandle: setInterval(()=>this.getFeed(), 2000)});
+  componentDidMount() {
+    this.setState({ intervalHandle: setInterval(()=>this.getFeed(), 2000) });
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     clearTimeout(this.state.intervalHandle);
   }
 
   /* GET FEED */
-  getFeed(){
-    let start, finish;
+  getFeed() {
+    let start;
+    let finish;
 
-    if(this.state.start !== undefined && this.state.finish !== undefined){
+    if (this.state.start !== undefined && this.state.finish !== undefined) {
       start = this.state.start.unix();
       finish = this.state.finish.unix();
     }
 
-    return Api.getFeed({accessToken: this.props.accessToken, start: start, finish: finish})
+    return Api.getFeed({ accessToken: this.props.accessToken, start: start, finish: finish })
     .then((data) => {
-      this.setState({feed: data.message});
-    })
+      this.setState({ feed: data.message });
+    });
   }
 
   /* APPLY FILTER */
-  applyFilter(start, finish){
-    this.setState({start: start, finish: finish}, () => this.getFeed());
+  applyFilter(start, finish) {
+    this.setState({ start: start, finish: finish }, () => this.getFeed());
   }
 
   /* CLEAR FILTER */
-  clearFilter(){
-    this.setState({start: undefined, finish: undefined}, () => this.getFeed());
+  clearFilter() {
+    this.setState({ start: undefined, finish: undefined }, () => this.getFeed());
   }
 
-  showFeed(){
-    if(this.state.feed === undefined){
-      return <div className="homeFeed">No feed</div>
+  showFeed() {
+    if (this.state.feed === undefined) {
+      return <div className="homeFeed">No feed</div>;
     }
 
-    const feed = this.state.feed.map((el) => {
-      return (
+    const feed = this.state.feed.map((el) =>
         <div key={el.id}>
           <SlotListing
             id={el.id}
@@ -67,8 +67,7 @@ class Home extends React.Component{
             accessToken={this.props.accessToken}
             />
         </div>
-      );
-    });
+    );
 
     return (
       <div className="homeFeed">
@@ -77,8 +76,8 @@ class Home extends React.Component{
     );
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <RB.Grid fluid>
           <RB.Col md={8}>
             <RB.Row>
@@ -90,7 +89,10 @@ class Home extends React.Component{
           </RB.Col>
 
           <RB.Col md={4}>
-            <Filter applyFilter={(s, f)=>this.applyFilter(s, f)} clearFilter={()=>this.clearFilter()}/>
+            <Filter
+              applyFilter={(s, f)=>this.applyFilter(s, f)}
+              clearFilter={()=>this.clearFilter()}
+            />
           </RB.Col>
       </RB.Grid>
     );

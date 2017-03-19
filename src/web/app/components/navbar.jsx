@@ -14,14 +14,16 @@ const FormInput = require('./formInput.jsx');
 
 /* AUTHENTICATED USER NAVIGATION */
 class AuthNav extends React.Component{
-  render(){
-    return(
+  render() {
+    return (
       <RB.Nav pullRight={true}>
         <li>
-          <Link to={"/user/" + this.props.user.username}>{this.props.user.firstName + " " + this.props.user.lastName}</Link>
+          <Link to={'/user/' + this.props.user.username}>
+            {this.props.user.firstName + ' ' + this.props.user.lastName}
+          </Link>
         </li>
         <li>
-          <Link to={"#"} onClick={this.props.logout}>Logout</Link>
+          <Link to={'#'} onClick={this.props.logout}>Logout</Link>
         </li>
       </RB.Nav>
     );
@@ -30,50 +32,50 @@ class AuthNav extends React.Component{
 
 /* UNAUTHENTICATED USER NAVIGATION */
 class UnauthNav extends React.Component{
-  render(){
-    return(
+  render() {
+    return (
       <RB.Nav pullRight={true}>
         <li>
-          <Link to={"/login"}>Login</Link>
+          <Link to={'/login'}>Login</Link>
         </li>
         <li>
-          <Link to={"/register"}>Register</Link>
+          <Link to={'/register'}>Register</Link>
         </li>
       </RB.Nav>
-    )
+    );
   }
 }
 
 /* USER SEARCH BAR */
 class SearchBar extends React.Component{
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      searchResults: []
+      searchResults: [],
     };
   }
 
-  changeHandler(value){
-    if(value == ""){
-      return this.setState({"searchResults": []});
+  changeHandler(value) {
+    if (value == '') {
+      return this.setState({ searchResults: [] });
     }
 
     Api.search(value)
     .then((data) => {
-      this.setState({"searchResults": data});
+      this.setState({ searchResults: data });
     });
   }
 
-  clickHandler(obj){
-    History.push('/user/'+ obj.value)
+  clickHandler(obj) {
+    History.push('/user/' + obj.value);
   }
 
-  render(){
-    if(!this.props.visible){
+  render() {
+    if (!this.props.visible) {
       return null;
     }
 
-    return(
+    return (
       <RB.Navbar.Form pullLeft={true}>
         <RB.FormGroup>
           <Select
@@ -92,22 +94,22 @@ class SearchBar extends React.Component{
 
 /* NAVBAR */
 class Navbar extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
   }
 
-  getNavItems(){
-    if(this.props.auth){
+  getNavItems() {
+    if (this.props.auth) {
       return (<AuthNav user={this.props.user} logout={this.props.logout}/>);
     }
 
     return (<UnauthNav/>);
   }
 
-  render(){
+  render() {
     const navItems = this.getNavItems();
 
-    return(
+    return (
       <RB.Navbar>
         <SearchBar visible={this.props.auth}/>
         {navItems}

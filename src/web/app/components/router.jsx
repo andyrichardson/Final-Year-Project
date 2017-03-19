@@ -17,8 +17,8 @@ const User = require('./user.jsx');
 const NotFound = require('./notFound.jsx');
 
 class RouterComponent extends React.Component {
-  render(){
-    return(
+  render() {
+    return (
       <Router history={History}>
         <Route path="/" component={App}>
           <Route path="/login" component={SignIn}/>

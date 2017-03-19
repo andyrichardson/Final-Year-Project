@@ -10,38 +10,38 @@ class SignUpForm extends React.Component {
     super(props);
   }
 
-  handleSubmit(e){
+  handleSubmit(e) {
     e.preventDefault(e);
 
     return Api.register(this.state)
-    .then(function(data){
-      if(data.status != 200){
-        return alert("Unable to register: " + data.message);
+    .then(function (data) {
+      if (data.status != 200) {
+        return alert('Unable to register: ' + data.message);
       }
 
-      alert("Registration successful.")
+      alert('Registration successful.');
     });
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <div>
         <h1>Sign Up</h1>
         <form onSubmit={(e) => this.handleSubmit(e)}>
           Username
-          <FormInput name="username" type="text" validate={Validate.username} parent={this}></FormInput>
+          <FormInput name="username" type="text" validate={Validate.username} parent={this}/>
 
           Password
-          <FormInput name="password" type="password" validate={Validate.password} parent={this}></FormInput>
+          <FormInput name="password" type="password" validate={Validate.password} parent={this}/>
 
           Email
-          <FormInput name="email" type="text" validate={Validate.email} parent={this}></FormInput>
+          <FormInput name="email" type="text" validate={Validate.email} parent={this}/>
 
           First Name
-          <FormInput name="firstName" type="text" validate={Validate.firstName} parent={this}></FormInput>
+          <FormInput name="firstName" type="text" validate={Validate.firstName} parent={this}/>
 
           Last Name
-          <FormInput name="lastName" type="text" validate={Validate.lastName} parent={this}></FormInput>
+          <FormInput name="lastName" type="text" validate={Validate.lastName} parent={this}/>
           <input type="submit" value="Submit" />
         </form>
       </div>
