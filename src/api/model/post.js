@@ -1,22 +1,24 @@
 'use strict'
-const model = require('seraph-model')
+const model = require('seraph-model');
 
 class PostModel {
-    init(db){
-        this.model = model(db, 'Post')
-    }
-    getModel(){
-        return this.model;
-    }
+  init(db) {
+    this.model = model(db, 'Post');
+  }
+
+  getModel() {
+    return this.model;
+  }
 }
 
 var postModel = new PostModel();
 
 module.exports = {
-    init: function(db){
+    init: function (db) {
         return postModel.init(db);
-    },
-    model: function(){
+      },
+
+    model: function () {
         return postModel.getModel();
-    }
-}
+      },
+  };

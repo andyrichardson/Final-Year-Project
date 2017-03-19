@@ -8,9 +8,9 @@ const slotRouter = require('./api/slot');
 router.use('/user', userRouter);
 router.use('/slot', slotRouter);
 
-router.get('/test', function(req, res, next){
+router.get('/test', (req, res, next) => {
   res.status = 200;
   res.end();
-})
+});
 
 module.exports = router;

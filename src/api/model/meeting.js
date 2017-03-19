@@ -5,68 +5,65 @@ const Token = require('./token');
 const User = require('./user');
 const Slot = require('./slot');
 const Notification = require('./notification');
-const Moment = require("moment");
+const Moment = require('moment');
 
 /* SCHEMA */
 const schema = {
   start: {
     type: Number,
-    required: true
+    required: true,
   },
   finish: {
     type: Number,
-    required: true
-  }
-}
+    required: true,
+  },
+};
 
 /* VALIDATION */
 const validator = {
-  validate: function(data, callback){
-    return validator.datesValid(data)
+  validate: (data, callback) =>
+    validator.datesValid(data)
     .then(validator.datesOrdered)
     .then(callback)
-    .catch(callback);
-  },
-  datesValid: function(data){
-    return new Prom(function(resolve, reject){
-      if (isNaN(data.start) || isNaN(data.finish)){
-        reject(new Error("Validation failed. Date(s) are invalid."));
-      }
-      resolve(data);
-    });
-  },
-  datesOrdered: function(data){
-    return new Promise(function(resolve, reject) {
-      if(!(data.start < data.finish)){
-        reject(new Error("Validation failed. Start date must be before end date."));
-      }
-      resolve();
-    });
-  }
-}
+    .catch(callback),
 
-const MeetingHandler = new ModelHandler("Meeting", schema);
-let model, db;
+  datesValid: (data) =>
+    new Prom((resolve, reject) => {
+      if (isNaN(data.start) || isNaN(data.finish)) {
+        reject(new Error('Validation failed. Date(s) are invalid.'));
+      }
+
+      resolve(data);
+    }),
+
+  datesOrdered: (data) =>
+    new Promise((resolve, reject) => {
+      if (!(data.start < data.finish)) {
+        reject(new Error('Validation failed. Start date must be before end date.'));
+      }
+
+      resolve();
+    }),
+};
+
+const MeetingHandler = new ModelHandler('Meeting', schema);
+let model;
+let db;
 
 /* INITIALIZE */
-module.exports.init = function(database){
+module.exports.init = (database) => {
   MeetingHandler.init(database);
 
-  model = Prom.promisifyAll(MeetingHandler.getModel(), {suffix: 'Prom'});
-  model.on("validate", validator.validate);
+  model = Prom.promisifyAll(MeetingHandler.getModel(), { suffix: 'Prom' });
+  model.on('validate', validator.validate);
 
-  db = Prom.promisifyAll(database, {suffix: 'Prom'});
-}
+  db = Prom.promisifyAll(database, { suffix: 'Prom' });
+};
 
 /* CREATE MEETING */
-module.exports.create = function(slot, user1, user2){
-  const meeting = {
-    start: slot.start,
-    finish: slot.finish
-  };
-
-  return model.saveProm(meeting)
-  .then(function(meeting){
+module.exports.create = ({ id, start, finish }, user1, user2) =>
+  model.saveProm({ start, finish, })
+  .then(function (meeting) {
     const query = `MATCH (a:User),(b:User),(m:Meeting)
     WHERE a.username = "${user1}"
     AND b.username = "${user2}"
@@ -75,12 +72,7 @@ module.exports.create = function(slot, user1, user2){
 
     return db.queryProm(query);
   })
-  .then(function(){
-    return Slot.delete(slot.id);
-  });
-}
+  .then(() => Slot.delete(id));
 
 /* MODEL */
-module.exports.model = function(){
-  return model;
-}
+module.exports.model = () => model;

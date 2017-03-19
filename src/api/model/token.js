@@ -5,21 +5,21 @@ const mime = require('rest/interceptor/mime');
 const request = Rest.wrap(mime, { mime: 'application/json' });
 
 /* HTTP ERROR CHECKER */
-const errorCheck = function(response){
-  return new Prom(function(resolve, reject){
-    if(response.status == undefined){
-      const error = new Error("Unable to communicate with authentication server.")
+const errorCheck = function (response) {
+  return new Prom(function (resolve, reject) {
+    if (response.status == undefined) {
+      const error = new Error('Unable to communicate with authentication server.');
       error.status = 500;
       return reject(error);
     }
 
-    if(response.entity.message == "jwt malformed"){
-      const error = new Error("Invalid/malformed authentication token");
+    if (response.entity.message == 'jwt malformed') {
+      const error = new Error('Invalid/malformed authentication token');
       error.status = 400;
       return reject(error);
     }
 
-    if(response.status.code != 200 && response.status.code != 201){
+    if (response.status.code != 200 && response.status.code != 201) {
       const error = new Error(response.entity.message);
       error.status = response.entity.status;
       return reject(error);
@@ -31,79 +31,79 @@ const errorCheck = function(response){
 
 class TokenMiddleware{
   /* SET AUTH SERVER URL */
-  init(url){
+  init(url) {
     this.authServer = url;
   }
 
   /* REGISTER */
-  register(username, password){
+  register(username, password) {
     return request({
       path: this.authServer + '/auth/user',
       method: 'POST',
       entity: {
         username: username,
-        password: password
-      }
+        password: password,
+      },
     })
     .catch(errorCheck)
     .then(errorCheck)
-    .then(function(response){
+    .then(function (response) {
       return response;
-    })
+    });
   }
 
   /* CREATE TOKEN USING USER CREDENTIALS */
-  create(username, password){
+  create(username, password) {
     return request({
       path: this.authServer + '/auth',
       method: 'POST',
       entity: {
         username: username,
-        password: password
-      }
+        password: password,
+      },
     })
     .catch(errorCheck)
     .then(errorCheck)
-    .then(function(response){
+    .then(function (response) {
       return response.entity.token;
     });
   }
 
   /* UPDATE PASSWORD */
-  password(username, password){
+  password(username, password) {
     return request({
       path: this.authServer + '/auth/user',
       method: 'PATCH',
       entity: {
         username: username,
-        password: password
-      }
+        password: password,
+      },
     })
     .catch(errorCheck)
     .then(errorCheck);
   }
 
   /* DELETE TOKEN */
-  delete(token){
+  delete(token) {
     return request({
       path: this.authServer + '/auth',
       method: 'DELETE',
       entity: {
-        token: token
-      }
+        token: token,
+      },
     })
     .catch(errorCheck)
     .then(errorCheck)
-    .then(function(response){
+    .then(function (response) {
       return response.entity;
     });
   }
 
   /* VALIDATE USER TOKEN */
-  validate(req, res, next){
+  validate(req, res, next) {
     return new Prom((resolve, reject) => {
       const token = req.body.accessToken || req.query.accessToken;
-      if(!token){
+      if (!token) {
         const error = new Error('Permission denied. Please log in');
         error.status = 403;
         return reject(error);
@@ -111,15 +111,15 @@ class TokenMiddleware{
 
       return request({
         path: this.authServer + '/auth?token=' + token,
-        method: 'GET'
+        method: 'GET',
       })
       .catch(errorCheck)
       .then(errorCheck)
-      .then(function(response){
+      .then(function (response) {
         req.auth = response.entity;
         return next();
       })
-      .catch(function(err){
+      .catch(function (err) {
         return reject(err);
       });
     });
@@ -129,31 +129,31 @@ class TokenMiddleware{
 let Token = new TokenMiddleware();
 
 /* SET AUTH SERVER URL */
-module.exports.init = function(url){
+module.exports.init = function (url) {
   Token.init(url);
 };
 
 /* REGISTER */
-module.exports.register = function(username, password){
+module.exports.register = function (username, password) {
   return Token.register(username, password);
 };
 
 /* CREATE TOKEN USING USER CREDENTIALS */
-module.exports.create = function(username, password){
+module.exports.create = function (username, password) {
   return Token.create(username, password);
 };
 
 /* CHANGE USER PASSWORD */
-module.exports.password = function(username, password){
+module.exports.password = function (username, password) {
   return Token.password(username, password);
 };
 
 /* DELETE TOKEN */
-module.exports.delete = function(token){
+module.exports.delete = function (token) {
   return Token.delete(token);
 };
 
 /* VALIDATE USER TOKEN */
-module.exports.validate = function(req, res, next){
+module.exports.validate = function (req, res, next) {
   return Token.validate(req, res, next);
 };

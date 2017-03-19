@@ -1,35 +1,31 @@
-const errorHandler = function(err, req, res, next){
-    if(process.env.NODE_ENV == 'development'){
-        console.log(err);
-    }
+module.exports = (err, req, res, next) => {
+  if (process.env.NODE_ENV == 'development') {
+    console.log(err);
+  }
 
-    const error = {
-        message: err.message,
-        status: err.status
-    };
+  const error = {
+    message: err.message,
+    status: err.status,
+  };
 
-    // Validation errors
-    if(err.message && error.message.toUpperCase().includes('VALIDATION')){
-        error.status = 400;
-    }
+  // Validation errors
+  if (err.message && error.message.toUpperCase().includes('VALIDATION')) {
+    error.status = 400;
+  }
 
-    // Other errors
-    switch (error.message) {
-        case "Not found":
-            error.status = 404;
-            break;
+  // Other errors
+  switch (error.message) {
+    case 'Not found':
+      error.status = 404;
+      break;
 
-        default:
-            if(error.status === undefined){
-                error.status = 500;
-            }
-            break;
-    }
+    default:
+      error.status = (error.status === undefined) ? 500 : error.status;
+      break;
+  }
 
-
-
-    res.status(error.status);
-    res.json(error);
+  res.status(error.status);
+  res.json(error);
 };
 
 module.exports = errorHandler;
