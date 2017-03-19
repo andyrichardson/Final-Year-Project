@@ -4,6 +4,7 @@ const RB = require('react-bootstrap');
 const Moment = require('moment');
 
 const Api = require('../includes/api');
+const Meeting = require('./meetings/meeting.jsx');
 
 class Meetings extends React.Component {
   /* CREATE FULL NAME LINK FROM USERNAME */
@@ -27,9 +28,12 @@ class Meetings extends React.Component {
 
     const data = this.props.user.meetings.map((meeting) =>
         <div key={meeting.id}>
-          Start: {Moment.unix(meeting.start).calendar()}<br/>
-          Finish: {Moment.unix(meeting.finish).calendar()}<br/>
-          With: {this.usernameLink(meeting.username)}
+          <Meeting
+            start={meeting.start}
+            finish={meeting.finish}
+            username={meeting.username}
+            user={this.props.user}
+          />
         </div>
     );
 
