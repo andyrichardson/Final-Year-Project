@@ -14,7 +14,7 @@ before_install:
   - ./dist/auth.sh -t
   - ./dist/api.sh -t
   - ./dist/web.sh -t
-  - sleep 3m
+  - sleep 4m
 
 script:
   - cd spec
