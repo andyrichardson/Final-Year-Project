@@ -111,6 +111,7 @@ class Navbar extends React.Component {
 
     return (
       <RB.Navbar>
+        <RB.Button onClick={() => this.props.toggleSidenav()}>Toggle</RB.Button>
         <SearchBar visible={this.props.auth}/>
         {navItems}
       </RB.Navbar>

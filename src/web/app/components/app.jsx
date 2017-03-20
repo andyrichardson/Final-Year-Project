@@ -15,6 +15,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       accessToken: Cookie.get('accessToken'),
+      sidenav: false,
     };
   }
 
@@ -78,12 +79,32 @@ class App extends React.Component {
     });
   }
 
+  /* TOGGLE SIDENAV */
+  toggleSidenav() {
+    this.setState({
+      sidenav: !this.state.sidenav,
+    });
+  }
+
+  getClassName() {
+    if (this.state.sidenav) {
+      return 'app app-pushed';
+    }
+
+    return 'app';
+  }
+
   /* RENDER */
   render() {
     return (
-      <div>
-        <Navbar auth={this.isAuthenticated()} user={this.state.user} logout={() => this.logout()}/>
-        <SideNav auth={this.isAuthenticated()}/>
+      <div className={this.getClassName()}>
+        <Navbar
+          auth={this.isAuthenticated()}
+          user={this.state.user}
+          logout={() => this.logout()}
+          toggleSidenav={() => this.toggleSidenav()}
+        />
+        <SideNav auth={this.isAuthenticated()} visible={this.state.sidenav}/>
         <RB.Col id={'content'} xs={12} lg={(this.isAuthenticated()) ? 10 : 12}>
           {this.renderChildren()}
         </RB.Col>

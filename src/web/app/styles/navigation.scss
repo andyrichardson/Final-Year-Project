@@ -6,4 +6,28 @@
   height: 100%;
   background-color: #858585;
   padding-top: $navbar-padding;
+
+  transition: margin-left 1s;
+}
+
+@media (max-width: $lg-width) {
+  #sideNav{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 2;
+  }
+
+  .app-pushed{
+    margin-left: 58%;
+  }
+
+  .sidenav-hidden{
+    margin-left: -60%;
+  }
+
+  .app{
+    transition: margin-left 1s;
+  }
 }

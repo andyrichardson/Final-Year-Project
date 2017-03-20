@@ -17,13 +17,20 @@ class SideNav extends React.Component{
     History.push(selectedKey);
   }
 
+  hiddenClass() {
+    if (this.props.visible) {
+      return 'sidenav-visible';
+    }
+
+    return 'sidenav-hidden';
+  }
   render() {
     if (!this.props.auth) {
       return <div></div>;
     }
 
     return (
-      <RB.Col id={'sideNav'} xsHidden mdHidden smHidden lg={2}>
+      <RB.Col id={'sideNav'} className={this.hiddenClass()} xs={7} lg={2}>
         <RB.Nav
           bsStyle="pills"
           stacked
