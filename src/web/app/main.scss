@@ -9,6 +9,7 @@
 
 html, body, #react-container, #react-container>div{
   height: 100%;
+  overflow: hidden;
 }
 
 .row{
