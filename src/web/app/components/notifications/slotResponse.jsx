@@ -89,11 +89,19 @@ class SlotResponse extends React.Component {
               </RB.Col>
             </RB.Row>
             <RB.Row>
-              <RB.Button className="pull-right" onClick={()=>this.confirmMeeting()}>
+              <RB.Button
+                className="pull-right"
+                bsStyle="primary"
+                onClick={()=>this.confirmMeeting()}
+              >
                 Confirm
               </RB.Button>
-              
-              <RB.Button className="pull-right" onClick={()=>this.declineMeeting()}>
+
+              <RB.Button
+                className="pull-right"
+                bsStyle="secondary pull-right"
+                onClick={()=>this.declineMeeting()}
+              >
                 Decline
               </RB.Button>
             </RB.Row>

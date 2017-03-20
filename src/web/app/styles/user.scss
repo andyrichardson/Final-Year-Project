@@ -2,4 +2,14 @@
   img{
     border-radius: 5px;
   }
+
+  .userSlot{
+    background-color: $card-background;
+    border: $card-border;
+    padding: $card-padding;
+
+    h2{
+      margin-top: 0;
+    }
+  }
 }

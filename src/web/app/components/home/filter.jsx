@@ -64,30 +64,47 @@ class Filter extends React.Component{
 
   render() {
     return (
-      <div>
-        <h2>Filter</h2>
-
+      <div className="filter">
         <RB.Row>
-          <DatePicker inline selected={this.state.day} onChange={(d) => this.dateChange(d)}/>
-        </RB.Row>
+          <RB.Col xs={12}>
+            <h2>Filter</h2>
 
-        <RB.Row>
-          <TimePicker
-            showSecond={false}
-            value={this.state.start}
-            onChange={(d) => this.startChange(d)}
-          />
-          {' - '}
-          <TimePicker
-            showSecond={false}
-            value={this.state.finish}
-            onChange={(d) => this.endChange(d)}
-          />
-        </RB.Row>
+            <RB.Row>
+              <DatePicker inline selected={this.state.day} onChange={(d) => this.dateChange(d)}/>
+            </RB.Row>
 
-        <RB.Row>
-          <RB.Button onClick={()=>this.applyFilter()}>Apply</RB.Button>
-          <RB.Button onClick={() => this.clearFilter()}>Reset</RB.Button>
+            <RB.Row>
+              <TimePicker
+                showSecond={false}
+                value={this.state.start}
+                onChange={(d) => this.startChange(d)}
+              />
+              {' - '}
+              <TimePicker
+                showSecond={false}
+                value={this.state.finish}
+                onChange={(d) => this.endChange(d)}
+              />
+            </RB.Row>
+
+            <RB.Row>
+              <RB.Button
+                className="pull-right"
+                bsStyle="primary"
+                onClick={()=>this.applyFilter()}
+              >
+                Apply
+              </RB.Button>
+
+              <RB.Button
+                className="pull-right"
+                bsStyle="secondary"
+                onClick={() => this.clearFilter()}
+              >
+                Reset
+              </RB.Button>
+            </RB.Row>
+          </RB.Col>
         </RB.Row>
       </div>
     );

@@ -6,6 +6,7 @@ const Moment = require('moment');
 const Api = require('../includes/api');
 
 const UploadPhotoModal = require('./user/uploadPhoto.jsx');
+const Slot = require('./user/slot.jsx');
 
 class User extends React.Component {
   /* CONSTRUCTOR */
@@ -86,36 +87,21 @@ class User extends React.Component {
       return <div></div>;
     }
 
+    const btnClass = 'btn-primary pull-right';
+
     // For each slot
-    const slots = this.state.user.slots.map((el, index) => {
-      const start = Moment.unix(el.start);
-      const finish = Moment.unix(el.finish);
-      let button = <RB.Button onClick={() => this.respondToSlot(el.id)}>Respond</RB.Button>;
-
-      // If already responded
-      if (this.props.user.slotRequests != undefined) {
-        this.props.user.slotRequests.forEach(sl => {
-          if (sl.id == el.id) {
-            button = <RB.Button>Responded</RB.Button>;
-          }
-        });
-      }
-
-      // If viewing own profile
-      if (this.props.user.username == this.props.params.username) {
-        button = <div></div>;
-      }
-
-      return (
-        <div style={{ border: 'solid 1px black' }} key={index}>
-          <label>Start:</label> {start.calendar()}
-
-          <br/>
-          <label>Finish:</label> {finish.calendar()}
-          {button}
-        </div>
-      );
-    });
+    const slots = this.state.user.slots.map((el, index) =>
+      <div key={index}>
+        <Slot
+          id={el.id}
+          start={el.start}
+          finish={el.finish}
+          user={this.props.user}
+          slotUser={this.state.user}
+          respond={(id) => this.respondToSlot(id)}
+        />
+      </div>
+    );
 
     return (
       <div>

@@ -1,5 +1,19 @@
 .navbar{
   margin-bottom: 0;
+  background-color: $brand-primary;
+  border-radius: 0;
+  border: none;
+
+  $font-color: #fff;
+
+  navbar-nav, li, a{
+    color: $font-color !important;
+    font-weight: bold;
+
+    &:hover{
+      color: darken($font-color, 10%) !important;
+    }
+  }
 }
 
 #sideNav{

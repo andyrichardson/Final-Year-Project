@@ -50,3 +50,13 @@
     border-radius: 4px;
   }
 }
+
+.filter{
+  background-color: $card-background;
+  border: $card-border;
+  padding: $card-padding;
+
+  h2{
+    margin-top: 0;
+  }
+}

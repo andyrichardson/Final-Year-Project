@@ -88,7 +88,9 @@ class AddSlot extends React.Component{
             <RB.Col md={6}>
               <TimePicker showSecond={false} onChange={(t)=>this.setFinishTime(t)}/>
             </RB.Col>
-            <RB.Button bsClass='btn pull-right' onClick={()=>this.onSubmit()}>Add</RB.Button>
+            <RB.Button className="pull-right" bsStyle="primary" onClick={()=>this.onSubmit()}>
+              Add
+            </RB.Button>
           </div>
         </RB.Col>
       </RB.Row>
